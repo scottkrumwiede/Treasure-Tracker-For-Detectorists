@@ -1,0 +1,97 @@
+<resources>
+    <string name="app_name">Treasure Tracker</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="action_settings">Settings</string>
+    <string name="action_sortby">Sort By</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_add_treasure">AddTreasureActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string name="country_prompt">Choose a country</string>
+    <string-array name="countries_array">
+        <item>United States</item>
+        <item>Canada</item>
+        <item>Mexico</item>
+        <item>Custom...</item>
+    </string-array>
+
+    <string name="uscoin_prompt">Choose a U.S. coin</string>
+    <string-array name="uscoin_array">
+        <item>1-cent (Penny)</item>
+        <item>5-cent (Nickel)</item>
+        <item>10-cent (Dime)</item>
+        <item>25-cent (Quarter)</item>
+        <item>50-cent (Half dollar)</item>
+        <item>100-cent (Dollar)</item>
+        <item>Custom...</item>
+    </string-array>
+
+    <string name="uscoin_penny_series_prompt">Choose a design:</string>
+    <string-array name="uscoin_penny_series_array">
+        <item>Lincoln Union Shield</item>
+        <item>Lincoln Bicentennial 4 Reverse designs</item>
+        <item>Lincoln Memorial</item>
+        <item>Lincoln Wheat</item>
+        <item>Indian Head</item>
+        <item>Flying Eagle</item>
+        <item>Braided Hair (Large)</item>
+        <item>Coronet (Large)</item>
+        <item>Classic Head (Large)</item>
+        <item>Draped Bust (Large)</item>
+        <item>Liberty Cap (Large)</item>
+        <item>Flowing Hair Wreath (Large)</item>
+        <item>Flowing Hair Chain (Large)</item>
+        <item>Custom...</item>
+    </string-array>
+
+    <string name="uscoin_nickel_series_prompt">Choose a design:</string>
+    <string-array name="uscoin_nickel_series_array"></string-array>
+
+    <string name="uscoin_dime_series_prompt">Choose a design:</string>
+    <string-array name="uscoin_dime_series_array"></string-array>
+
+    <string name="uscoin_quarter_series_prompt">Choose a design:</string>
+    <string-array name="uscoin_quarter_series_array"></string-array>
+
+    <string name="uscoin_halfdollar_series_prompt">Choose a design:</string>
+    <string-array name="uscoin_halfdollar_series_array"></string-array>
+
+    <string name="uscoin_dollar_series_prompt">Choose a design:</string>
+    <string-array name="uscoin_dollar_series_array"></string-array>
+
+    <string name="material_prompt">Choose a material type</string>
+    <string-array name="material_array">
+        <item>Silver</item>
+        <item>Copper</item>
+        <item>Gold</item>
+        <item>Nickel</item>
+        <item>Aluminum</item>
+        <item>Zinc</item>
+        <item>Steel</item>
+        <item>Brass</item>
+        <item>Custom...</item>
+    </string-array>
+
+    <string name="mint_prompt">Choose a mint mark</string>
+    <string-array name="mint_array">
+        <item>None</item>
+        <item>D (Denver)</item>
+        <item>S (San Francisco)</item>
+        <item>P (Philadelphia)</item>
+        <item>O (New Orleans)</item>
+        <item>W (West Point)</item>
+        <item>C (Charlotte)</item>
+        <item>CC (Carson City)</item>
+        <item>D (Dahlonega)</item>
+        <item>M (Manila)</item>
+        <item>Custom...</item>
+    </string-array>
+
+</resources>

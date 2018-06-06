@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_summary"
+            android:icon="@drawable/ic_menu_camera"
+            android:title="Summary" />
+        <item
+            android:id="@+id/nav_coins"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Coins" />
+        <item
+            android:id="@+id/nav_tokens"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Tokens" />
+        <item
+            android:id="@+id/nav_jewelry"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Jewelry" />
+        <item
+            android:id="@+id/nav_relics"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="Relics" />
+        <item
+            android:id="@+id/nav_clad"
+            android:icon="@drawable/ic_menu_manage"
+            android:title="Clad" />
+    </group>
+
+    <item android:title="Communicate">
+        <menu>
+            <item
+                android:id="@+id/nav_share"
+                android:icon="@drawable/ic_menu_share"
+                android:title="Share" />
+            <item
+                android:id="@+id/nav_send"
+                android:icon="@drawable/ic_menu_send"
+                android:title="Send" />
+        </menu>
+    </item>
+
+</menu>

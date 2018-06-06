@@ -1,0 +1,123 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
+    android:orientation="vertical"
+    android:weightSum="1.25"
+    android:id="@+id/poop">
+
+    <TextView
+        android:layout_weight=".05"
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="Country:" />
+
+    <Spinner
+        android:layout_weight=".1"
+        android:id="@+id/countrySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:entries="@array/countries_array"
+        android:prompt="@string/country_prompt"/>
+
+    <TextView
+        android:layout_weight=".05"
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="Denomination:" />
+
+    <Spinner
+        android:layout_weight=".1"
+        android:id="@+id/uscointypeSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:entries="@array/uscoin_array"
+        android:prompt="@string/uscoin_prompt"/>
+
+    <EditText
+        android:layout_weight=".1"
+        android:id="@+id/customcointype"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        android:hint="Custom Coin Type" />
+    <TextView
+        android:layout_weight=".05"
+        android:id="@+id/coinSeriesLabel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="Design/Series:" />
+    <Spinner
+        android:layout_weight=".1"
+        android:id="@+id/uscoindesignSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:entries="@array/uscoin_penny_series_array"
+        android:prompt="@string/uscoin_penny_series_prompt"/>
+    <EditText
+        android:layout_weight=".1"
+        android:id="@+id/customcoindesign"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        android:hint="Custom Coin Design" />
+    <TextView
+        android:layout_weight=".05"
+        android:id="@+id/yearLabel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="Year:" />
+    <EditText
+        android:layout_weight=".1"
+        android:id="@+id/yearEditText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        android:inputType="number"
+        android:maxLength="4"
+        android:hint="Year" />
+
+
+    <TextView
+        android:layout_weight=".05"
+        android:id="@+id/PhotosLabel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="Mint:" />
+
+    <EditText
+        android:layout_weight=".1"
+        android:id="@+id/mintEditText"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="visible"
+        android:inputType="text"
+        android:maxLength="4"
+        android:hint="Mint" />
+
+    <TextView
+        android:layout_weight=".05"
+        android:id="@+id/materialLabel"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="Material:" />
+
+    <Spinner
+        android:layout_weight=".1"
+        android:id="@+id/materialSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:entries="@array/material_array"
+        android:prompt="@string/material_prompt"/>
+
+    <Button
+        android:layout_weight=".15"
+        android:id="@+id/nextButton"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:text="Next" />
+
+</LinearLayout>
