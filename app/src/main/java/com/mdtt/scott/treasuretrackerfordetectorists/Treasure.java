@@ -13,16 +13,16 @@ public class Treasure{
     final private int treasureYear;
     final private String treasureLocationFound;
     final private int treasureFoundYear;
-    final private Bitmap treasurePhoto;
+    final private String treasurePhotoPath;
 
-    public Treasure(int treasureId, String treasureType, String treasureName, int treasureYear, String treasureLocationFound, int treasureFoundYear, Bitmap treasurePhoto) {
+    public Treasure(int treasureId, String treasureType, String treasureName, int treasureYear, String treasureLocationFound, int treasureFoundYear, String treasurePhotoPath) {
         this.treasureId = treasureId;
         this.treasureType = treasureType;
         this.treasureName = treasureName;
         this.treasureYear = treasureYear;
         this.treasureLocationFound = treasureLocationFound;
         this.treasureFoundYear = treasureFoundYear;
-        this.treasurePhoto = treasurePhoto;
+        this.treasurePhotoPath = treasurePhotoPath;
     }
 
     public int getTreasureId() {
@@ -49,7 +49,9 @@ public class Treasure{
         return treasureFoundYear;
     }
 
-    public Bitmap getTreasurePhoto() {
-        return treasurePhoto;
-    }
+    public String getTreasurePhotoPath() { return treasurePhotoPath; }
+
+    //public Bitmap getTreasurePhoto() {
+        //return treasurePhoto;
+    //}
 }

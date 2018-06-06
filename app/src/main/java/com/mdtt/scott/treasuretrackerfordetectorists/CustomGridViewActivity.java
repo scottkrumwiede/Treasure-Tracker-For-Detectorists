@@ -67,12 +67,21 @@ public class CustomGridViewActivity extends BaseAdapter {
             grid = (ViewHolder) convertView.getTag();
         }
         Log.d("myTag", "poop4");
-        grid.treasureImage.setImageBitmap(gridViewImageId.get(position));
-        grid.treasureName.setText(gridViewTreasureName.get(position));
+        if(!gridViewImageId.isEmpty())
+        {
+            grid.treasureImage.setImageBitmap(gridViewImageId.get(position));
+        }
+
+        if(!gridViewTreasureName.isEmpty())
+        {
+            grid.treasureName.setText(gridViewTreasureName.get(position));
+        }
+
         if(!gridViewTreasureYear.isEmpty())
         {
             grid.treasureYear.setText(Integer.toString(gridViewTreasureYear.get(position)));
         }
+
         if(!gridViewFoundYear.isEmpty())
         {
             if(gridViewFoundYear.get(position) == 0)
@@ -84,9 +93,9 @@ public class CustomGridViewActivity extends BaseAdapter {
                 grid.foundYear.setText("Found: "+Integer.toString(gridViewFoundYear.get(position)));
             }
         }
+
         Log.d("myTag", "poop5");
-
-
+        
         return convertView;
     }
 

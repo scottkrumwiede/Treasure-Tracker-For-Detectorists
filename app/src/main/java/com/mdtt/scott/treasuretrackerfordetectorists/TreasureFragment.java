@@ -41,6 +41,7 @@ public class TreasureFragment extends Fragment {
     ArrayList<String> treasureNames = new ArrayList<>();
     ArrayList<Integer> treasureYears = new ArrayList<>();
     ArrayList<Integer> treasureFoundYears = new ArrayList<>();
+    ArrayList<String> treasurePhotoPaths = new ArrayList<>();
     ArrayList<Bitmap> treasurePhotos = new ArrayList<>();
     TextView treasureCountLabel;
 
@@ -93,8 +94,12 @@ public class TreasureFragment extends Fragment {
                 Log.d("myTag", "4");
                 treasureFoundYears.add(g.getTreasureFoundYear());
                 Log.d("myTag", "5");
-                treasurePhotos.add(g.getTreasurePhoto());
+                treasurePhotoPaths.add(g.getTreasurePhotoPath());
                 Log.d("myTag", "6");
+
+                //TODO: Use photo acquired photopath to retrieve actual photo now and add it to treasurePhotos
+                Log.d("myTag", "7");
+
             }
             return 1;
         }
