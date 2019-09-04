@@ -1,0 +1,92 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:orientation="vertical"
+        android:id="@+id/poop">
+
+    <TextView
+        android:id="@+id/relicNameLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Item:" />
+
+    <EditText
+        android:id="@+id/relicNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:background="@drawable/shadow_13"
+        android:paddingLeft="30dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeStepGranularity="2sp"
+        android:hint="Item" />
+
+    <TextView
+        android:id="@+id/relicSeriesLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Design/Series:" />
+    <EditText
+        android:id="@+id/relicSeriesEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:background="@drawable/shadow_13"
+        android:paddingLeft="30dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeStepGranularity="2sp"
+        android:hint="Design/Series" />
+
+    <TextView
+        android:id="@+id/relicYearLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Year:" />
+    <EditText
+        android:id="@+id/relicYearEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:inputType="number"
+        android:maxLength="4"
+        android:background="@drawable/shadow_13"
+        android:paddingLeft="30dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeStepGranularity="2sp"
+        android:hint="Year" />
+
+    <TextView
+        android:id="@+id/relicMaterialLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Material:" />
+
+    <Spinner
+        android:id="@+id/relicMaterialSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/relic_material_array"
+        android:background="@drawable/shadow_13"
+        android:paddingLeft="30dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeStepGranularity="2sp"
+        android:prompt="@string/material_prompt"/>
+
+</LinearLayout>
+</ScrollView>

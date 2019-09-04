@@ -1,0 +1,92 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:orientation="vertical"
+        android:id="@+id/poop">
+
+    <TextView
+        android:id="@+id/tokenNameLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Maker:" />
+
+    <EditText
+        android:id="@+id/tokenNameEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:background="@drawable/shadow_13"
+        android:paddingLeft="30dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeStepGranularity="2sp"
+        android:hint="Maker" />
+
+    <TextView
+        android:id="@+id/tokenSeriesLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Design/Series:" />
+    <EditText
+        android:id="@+id/tokenSeriesEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:background="@drawable/shadow_13"
+        android:paddingLeft="30dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeStepGranularity="2sp"
+        android:hint="Design/Series" />
+
+    <TextView
+        android:id="@+id/tokenYearLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Year:" />
+    <EditText
+        android:id="@+id/tokenYearEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:inputType="number"
+        android:maxLength="4"
+        android:background="@drawable/shadow_13"
+        android:paddingLeft="30dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeStepGranularity="2sp"
+        android:hint="Year" />
+
+    <TextView
+        android:id="@+id/tokenMaterialLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Material:" />
+
+    <Spinner
+        android:id="@+id/tokenMaterialSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/token_material_array"
+        android:background="@drawable/shadow_13"
+        android:paddingLeft="30dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeStepGranularity="2sp"
+        android:prompt="@string/material_prompt"/>
+
+</LinearLayout>
+</ScrollView>

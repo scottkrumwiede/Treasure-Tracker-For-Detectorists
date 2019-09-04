@@ -1,0 +1,171 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="16dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:orientation="vertical"
+    android:id="@+id/poop">
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Country:" />
+
+    <Spinner
+        android:id="@+id/coinCountrySpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/countries_array"
+        android:background="@drawable/shadow_13"
+        android:paddingLeft="30dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeStepGranularity="2sp"
+        android:prompt="@string/country_prompt"/>
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Denomination:" />
+
+    <Spinner
+        android:id="@+id/coinTypeSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/uscoin_type_array"
+        android:background="@drawable/shadow_13"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="100sp"
+        android:paddingLeft="30dp"
+        android:autoSizeStepGranularity="2sp"
+        android:prompt="@string/uscointype_prompt"/>
+
+    <EditText
+        android:id="@+id/customTypeEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:layout_marginBottom="15dp"
+        android:background="@drawable/shadow_13"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:paddingLeft="30dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeStepGranularity="2sp"
+        android:hint="Choose a denomination" />
+
+    <TextView
+        android:id="@+id/coinSeriesLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Design/Series:" />
+    <Spinner
+        android:id="@+id/coinSeriesSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/uscoin_penny_series_array"
+        android:background="@drawable/shadow_13"
+        android:autoSizeTextType="uniform"
+        android:paddingLeft="30dp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeStepGranularity="2sp"
+        android:prompt="@string/uscoin_penny_series_prompt"/>
+
+    <EditText
+        android:id="@+id/customDesignEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="@drawable/shadow_13"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:paddingLeft="30dp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeStepGranularity="2sp"
+        android:hint="Choose a design" />
+
+    <TextView
+        android:id="@+id/yearLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Year:" />
+    <EditText
+        android:id="@+id/coinYearEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        android:inputType="number"
+        android:background="@drawable/shadow_13"
+        android:autoSizeTextType="uniform"
+        android:paddingLeft="30dp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeStepGranularity="2sp"
+        android:maxLength="4"
+        android:hint="Year" />
+
+
+    <TextView
+        android:id="@+id/mintLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Mint:" />
+
+    <Spinner
+        android:id="@+id/coinMintSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/uscoin_mint_array"
+        android:background="@drawable/shadow_13"
+        android:paddingLeft="30dp"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeStepGranularity="2sp"
+        android:prompt="@string/mint_prompt"/>
+
+    <EditText
+        android:id="@+id/customMintEditText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:background="@drawable/shadow_13"
+        android:autoSizeTextType="uniform"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="100sp"
+        android:paddingLeft="30dp"
+        android:autoSizeStepGranularity="2sp"
+        android:hint="Choose a mint" />
+
+    <TextView
+        android:id="@+id/materialLabel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Material:" />
+
+    <Spinner
+        android:id="@+id/coinMaterialSpinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/coin_material_array"
+        android:background="@drawable/shadow_13"
+        android:autoSizeTextType="uniform"
+        android:paddingLeft="30dp"
+        android:autoSizeMinTextSize="12sp"
+        android:autoSizeMaxTextSize="100sp"
+        android:autoSizeStepGranularity="2sp"
+        android:prompt="@string/material_prompt"/>
+
+</LinearLayout>
+</ScrollView>

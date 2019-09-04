@@ -1,9 +1,13 @@
 package com.mdtt.scott.treasuretrackerfordetectorists;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.SystemClock;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.android.gms.ads.MobileAds;
 
 
 public class SplashActivity extends AppCompatActivity {
@@ -11,7 +15,9 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Start home activity
-        //SystemClock.sleep(5000);
+
+        MobileAds.initialize(this, "@string/admob_app_id");
+
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
         // close splash activity

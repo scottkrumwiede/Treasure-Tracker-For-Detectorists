@@ -1,0 +1,94 @@
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="16dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:orientation="vertical"
+        android:id="@+id/poop">
+
+        <TextView
+            android:id="@+id/clad_amount_textview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Amount:" />
+
+        <EditText
+            android:id="@+id/clad_amount_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+
+            android:background="@drawable/shadow_13"
+            android:paddingLeft="30dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="6sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeStepGranularity="2sp"
+            android:maxLength="7"
+            android:hint="Amount:"
+            android:inputType="numberDecimal" />
+
+        <Spinner
+            android:id="@+id/clad_currency_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/shadow_13"
+            android:paddingLeft="30dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="6sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeStepGranularity="2sp"
+            android:entries="@array/clad_currency_array"/>
+
+        <TextView
+            android:id="@+id/cladLocationFoundTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Location Found:" />
+        <EditText
+            android:id="@+id/cladLocationFoundEditText"
+            android:layout_width="match_parent"
+            android:background="@drawable/shadow_14"
+            android:paddingLeft="30dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeStepGranularity="2sp"
+            android:layout_height="wrap_content"
+            android:visibility="visible"
+            android:hint="Include the location of your find"/>
+
+        <Button
+            android:id="@+id/placePickerButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Use Current Location"
+            android:background="@drawable/shadow_13"/>
+
+        <TextView
+            android:id="@+id/cladDateFoundLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date Found:" />
+
+
+        <TextView
+            android:id="@+id/cladFoundTextView"
+            android:layout_width="match_parent"
+            android:background="@drawable/shadow_13"
+            android:autoSizeTextType="uniform"
+            android:paddingLeft="30dp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="20sp"
+            android:autoSizeStepGranularity="2sp"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:hint="Include the date of your find" />
+
+    </LinearLayout>
+</ScrollView>

@@ -2,7 +2,8 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-
+    <item android:title="Treasures">
+    <menu>
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_summary"
@@ -26,20 +27,29 @@
             android:title="Relics" />
         <item
             android:id="@+id/nav_clad"
-            android:icon="@drawable/ic_menu_manage"
+            android:icon="@drawable/ic_menu_gallery"
             android:title="Clad" />
     </group>
-
-    <item android:title="Communicate">
+    </menu>
+    </item>
+    <item android:title="Other">
         <menu>
+            <group android:checkableBehavior="single">
             <item
-                android:id="@+id/nav_share"
-                android:icon="@drawable/ic_menu_share"
-                android:title="Share" />
+                android:id="@+id/nav_collection"
+                android:icon="@drawable/ic_menu_gallery"
+                android:title="Collections" />
+            </group>
+
             <item
-                android:id="@+id/nav_send"
-                android:icon="@drawable/ic_menu_send"
-                android:title="Send" />
+                android:id="@+id/nav_locations"
+                android:icon="@drawable/ic_menu_gallery"
+                android:title="Locations" />
+
+            <item
+                android:id="@+id/nav_detectors"
+                android:icon="@drawable/ic_menu_gallery"
+                android:title="Detectors" />
         </menu>
     </item>
 

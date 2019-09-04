@@ -1,0 +1,59 @@
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/activity_treasure_detailed_scrollview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="16dp">
+    <LinearLayout
+    android:id="@+id/activity_treasure_detailed_LL_main"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#dee9ed"
+    android:orientation="vertical">
+        <ProgressBar
+            android:id="@+id/activity_treasure_detailed_progressBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:indeterminate="true" />
+
+        <TextView
+            android:id="@+id/activity_treasure_detailed_tv_images"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:text="Treasure Photos:" />
+
+    <HorizontalScrollView
+        android:id="@+id/activity_treasure_detailed_horizontal_scroll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp">
+
+        <LinearLayout
+            android:id="@+id/activity_treasure_detailed_LL_images"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+        </LinearLayout>
+
+    </HorizontalScrollView>
+
+        <TextView
+            android:id="@+id/activity_treasure_detailed_tv_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="25dp"
+            android:text="Treasure Info:" />
+
+
+        <LinearLayout
+            android:id="@+id/activity_treasure_detailed_LL_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/shadow_13"
+            android:orientation="vertical"
+            android:padding="40dp"></LinearLayout>
+
+</LinearLayout>
+    </ScrollView>

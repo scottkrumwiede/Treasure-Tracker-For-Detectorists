@@ -1,29 +1,35 @@
 package com.mdtt.scott.treasuretrackerfordetectorists;
 
-import android.content.Context;
+import android.content.ContextWrapper;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
-import android.widget.GridView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.w3c.dom.Text;
+import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.Fragment;
 
-import java.lang.reflect.Array;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+import com.google.android.material.snackbar.Snackbar;
+
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.Arrays;
 
 
 /**
@@ -32,27 +38,37 @@ import java.util.Map;
 public class TreasureFragment extends Fragment {
 
     private String type;
-    private GridView gridView;
-    BackgroundTask bt;
+    private AutoGridView gridView;
+    private BackgroundTask bt;
+    private AdView mAdView;
+    private ProgressBar mProgressBar;
+    private ArrayList<Treasure> treasureList;
 
-    ArrayList<Treasure> treasureList;
+    private ArrayList<Integer> treasureIds = new ArrayList<>();
+    private ArrayList<String> treasureNames = new ArrayList<>();
+    private ArrayList<String> treasureSeries = new ArrayList<>();
+    private ArrayList<String> treasureMaterials = new ArrayList<>();
+    private ArrayList<String> treasureYears = new ArrayList<>();
+    private ArrayList<String> treasureDatesFound = new ArrayList<>();
+    private ArrayList<String> treasurePhotoPaths = new ArrayList<>();
+    private ArrayList<Bitmap> treasurePhotos = new ArrayList<>();
+    private TextView treasureCountLabel, sortByLabel;
+    private String sortType;
+    private Animation myAnim;
 
-    ArrayList<Integer> treasureIds = new ArrayList<>();
-    ArrayList<String> treasureNames = new ArrayList<>();
-    ArrayList<Integer> treasureYears = new ArrayList<>();
-    ArrayList<Integer> treasureFoundYears = new ArrayList<>();
-    ArrayList<String> treasurePhotoPaths = new ArrayList<>();
-    ArrayList<Bitmap> treasurePhotos = new ArrayList<>();
-    TextView treasureCountLabel;
+    private AdRequest adRequest;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("myTag", "HI!!!!!!!!!!!!!!");
-        type = getArguments().getString("type");
+        if (getArguments() != null) {
+            type = getArguments().getString("type");
+            sortType = getArguments().getString("sortBy");
+        }
+        adRequest = new AdRequest.Builder().build();
+        myAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.bounceonce);
         bt = new BackgroundTask();
         bt.execute();
-
     }
 
     @Override
@@ -64,100 +80,338 @@ public class TreasureFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        mAdView.loadAd(adRequest);
+    }
+
+
+    @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        gridView = (GridView) view.findViewById(R.id.treasure_gridview);
-        treasureCountLabel = (TextView) view.findViewById(R.id.treasurecount_label);
+
+        gridView = view.findViewById(R.id.treasure_gridview);
+        mProgressBar = view.findViewById(R.id.progressBar);
+        treasureCountLabel = view.findViewById(R.id.treasurecount_label);
+        sortByLabel = view.findViewById(R.id.sortBy_label);
+
+        // Use bounce interpolator with amplitude 0.2 and frequency 20
+        MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
+        myAnim.setInterpolator(interpolator);
+
+        mAdView = view.findViewById(R.id.fragmentTreasureAdView);
+
+        mAdView.setAdListener(new AdListener() {
+            @Override
+            public void onAdLoaded() {
+                super.onAdLoaded();
+                mAdView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onAdFailedToLoad(int errorCode) {
+                super.onAdFailedToLoad(errorCode);
+                mAdView.setVisibility(View.GONE);
+            }
+        });
     }
 
     @Override
-    public void onDetach() {
-        super.onDetach();
+    public void onPause() {
+        super.onPause();
         bt.cancel(true);
     }
 
-    private class BackgroundTask extends AsyncTask<Void, Void, Integer> {
+    private class BackgroundTask extends AsyncTask<String, Void, String> {
 
-        protected Integer doInBackground(Void...voids) {
+        protected String doInBackground(String...params) {
             final MySQliteHelper helper = new MySQliteHelper(getContext());
-            Log.d("myTag", type);
+            if(params.length == 0) {
+                Log.d("myTag", type);
 
-            treasureList = helper.getTreasureNamesSortByAddDate(type);
-            for (Treasure g: treasureList) {
+                if (type.equals("coin")) {
+                    treasureList = helper.getAllCoins(sortType);
+                } else if (type.equals("token")) {
+                    treasureList = helper.getAllTokens(sortType);
+                } else if (type.equals("jewelry")) {
+                    treasureList = helper.getAllJewelry(sortType);
+                } else if (type.equals("relic")) {
+                    treasureList = helper.getAllRelics(sortType);
+                } else if (type.equals("collection")) {
+                    treasureList = helper.getAllCollections(sortType);
+                }
 
-                Log.d("myTag", "1");
-                treasureIds.add(g.getTreasureId());
-                Log.d("myTag", "2");
-                treasureNames.add(g.getTreasureName());
-                Log.d("myTag", "3");
-                treasureYears.add(g.getTreasureYear());
-                Log.d("myTag", "4");
-                treasureFoundYears.add(g.getTreasureFoundYear());
-                Log.d("myTag", "5");
-                treasurePhotoPaths.add(g.getTreasurePhotoPath());
-                Log.d("myTag", "6");
+                treasureIds.clear();
+                treasureNames.clear();
+                treasureSeries.clear();
+                treasureMaterials.clear();
+                treasureYears.clear();
+                treasureDatesFound.clear();
+                treasurePhotoPaths.clear();
+                treasurePhotos.clear();
 
-                //TODO: Use photo acquired photopath to retrieve actual photo now and add it to treasurePhotos
-                Log.d("myTag", "7");
+                ContextWrapper cw = new ContextWrapper(getActivity().getApplicationContext());
+                // path to /data/data/yourapp/app_data/files
+                File directory = getActivity().getFilesDir();
+                File subDir = new File(directory, "imageDir");
+                if( !subDir.exists() )
+                    subDir.mkdir();
 
+                for (Treasure g : treasureList) {
+
+                    treasureIds.add(g.getTreasureId());
+                    treasureNames.add(g.getTreasureName());
+                    treasureSeries.add(g.getTreasureSeries());
+                    treasureMaterials.add(g.getTreasureMaterial());
+                    treasureYears.add(g.getTreasureYear());
+                    treasureDatesFound.add(g.getTreasureDateFound());
+                    treasurePhotoPaths.add(g.getTreasurePhotoPath());
+
+                    //Use photo acquired photopath to retrieve actual photo now and add it to treasurePhotos
+                    final String prefix = g.getTreasurePhotoPath();
+                    Log.d("myTag", "Prefix is: "+prefix);
+                    Bitmap photo;
+                    if (prefix != null) {
+
+                        File[] files = subDir.listFiles(new FilenameFilter() {
+                            @Override
+                            public boolean accept(File directory, String name) {
+                                Log.d("myTag", "Name of photo found is: "+name);
+                                return name.startsWith(prefix);
+                            }
+                        });
+
+                        //listFiles returns in reverse alphabetical order, so we need to sort to get alphabetical
+                        // so that photo order remains the same as when added.
+                        Arrays.sort(files);
+
+                        if (files.length > 0) {
+                            String filepath = files[0].getPath();
+
+                            // First decode with inJustDecodeBounds=true to check dimensions
+                            BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inJustDecodeBounds = true;
+
+                            // Calculate inSampleSize
+                            options.inSampleSize = calculateInSampleSize(options, 100, 100);
+
+                            // Decode bitmap with inSampleSize set
+                            options.inJustDecodeBounds = false;
+                            photo = BitmapFactory.decodeFile(filepath, options);
+
+                        } else {
+                            photo = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.defaultphoto);
+                        }
+
+                    } else {
+                        photo = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.defaultphoto);
+                    }
+                    treasurePhotos.add(photo);
+
+                }
             }
-            return 1;
+            else if(params[0].equals("deleteTreasure"))
+            {
+                helper.deleteTreasure(String.valueOf(treasureIds.get(Integer.valueOf(params[1]))));
+                return treasurePhotoPaths.get(Integer.valueOf(params[1]));
+            }
+            return "Retrieved all treasures";
         }
 
-        protected void onPostExecute(Integer result) {
+        protected void onPostExecute(String result) {
 
-            //for (HashMap<Integer, String> map : treasureList) {
-            //    for (Map.Entry<Integer, String> mapEntry : map.entrySet()) {
-            //       Log.d("myTag", "" + mapEntry.getKey());
-            //        Log.d("myTag", "" + mapEntry.getValue());
-            //    }
+            Log.d("myTag", "ONPOSTEXECUTE: "+result);
 
-            Log.d("myTag", "ONPOSTEXECUTE");
-
-            if(!treasureList.isEmpty())
+            if(result.equals("Retrieved all treasures"))
             {
-                CustomGridViewActivity adapterViewAndroid = new CustomGridViewActivity(getActivity(), treasureNames, treasureYears, treasureFoundYears, treasurePhotos);
-                Log.d("myTag", "ONPOSTEXECUTE2");
+                if(!treasureList.isEmpty())
+                {
+                    Log.d("TEST", treasureIds.size() + ", "+ treasureSeries.size() + ", "+treasureYears.size() + ", "+treasureDatesFound.size()+", "+treasurePhotos.size());
 
-                gridView.setAdapter(adapterViewAndroid);
-                gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view,
-                                            int i, long id) {
-                        Toast.makeText(getActivity(), "GridView Item: " + treasureNames.get(i), Toast.LENGTH_LONG).show();
+                    CustomGridViewAdapter adapterViewAndroid;
+                    if(type.equals("coin"))
+                    {
+                        adapterViewAndroid = new CustomGridViewAdapter(getActivity(), treasureIds, treasureSeries, treasureYears, treasureDatesFound, treasurePhotos);
+                        gridView.setAdapter(adapterViewAndroid);
                     }
-                });
-                Log.d("myTag", "non-empty treasure list...");
-                treasureCountLabel.setText("You're tracking "+treasureList.size()+" "+type+"s so far!");
+                    else if(type.equals("token"))
+                    {
+                        adapterViewAndroid = new CustomGridViewAdapter(getActivity(), treasureIds, treasureNames, treasureYears, treasureDatesFound, treasurePhotos);
+                        gridView.setAdapter(adapterViewAndroid);
+                    }
+                    else if(type.equals("jewelry"))
+                    {
+                        adapterViewAndroid = new CustomGridViewAdapter(getActivity(), treasureIds, treasureNames, treasureMaterials, treasureDatesFound, treasurePhotos);
+                        gridView.setAdapter(adapterViewAndroid);
+                    }
+                    else if(type.equals("relic"))
+                    {
+                        adapterViewAndroid = new CustomGridViewAdapter(getActivity(), treasureIds, treasureNames, treasureYears, treasureDatesFound, treasurePhotos);
+                        gridView.setAdapter(adapterViewAndroid);
+                    }
+                    else if(type.equals("collection"))
+                    {
+                        adapterViewAndroid = new CustomGridViewAdapter(getActivity(), treasureIds, treasureNames, treasureDatesFound, treasureYears, treasurePhotos);
+                        gridView.setAdapter(adapterViewAndroid);
+                    }
+
+                    mProgressBar.setVisibility(View.GONE);
+
+                    Log.d("myTag", "ONPOSTEXECUTE2");
+
+                    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view,
+                                                int i, long id) {
+                            Intent myIntent = new Intent(getActivity(), TreasureDetailedActivity.class);
+                            myIntent.putExtra("treasureId", treasureIds.get(i));
+                            myIntent.putExtra("type", type);
+                            startActivity(myIntent);
+                        }
+                    });
+
+                    gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> parent, View view,
+                                                       final int i, long id) {
+                            final CharSequence[] items = {"Yes", "Cancel"};
+                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            builder.setTitle("Are you sure you want to PERMANENTLY DELETE this treasure?");
+                            builder.setItems(items, new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int item) {
+                                    if (items[item].equals("Yes")) {
+
+                                        Log.d("TEST", "The value of i is: "+i);
+                                        BackgroundTask bt = new BackgroundTask();
+                                        bt.execute("deleteTreasure", Integer.toString(i));
+
+                                    } else if (items[item].equals("Cancel")) {
+                                        dialog.dismiss();
+                                    }
+                                }
+                            });
+                            builder.show();
+                            return true;
+                        }
+                    });
+
+                    Log.d("myTag", "non-empty treasure list...");
+
+                    if(type.equals("jewelry"))
+                    {
+                        treasureCountLabel.setText("You're tracking "+treasureList.size()+" pieces of "+type+" so far!");
+                    }
+                    else
+                    {
+                        treasureCountLabel.setText("You're tracking "+treasureList.size()+" "+type+"s so far!");
+                    }
+
+                    if(sortType.equals("TreasureID"))
+                    {
+                        sortByLabel.setText("Sorting by: Most Recently Added");
+                    }
+                    else if(sortType.equals("TreasureYear"))
+                    {
+                        sortByLabel.setText("Sorting by: Treasure Year");
+                    }
+                    else if(sortType.equals("TreasureCountry"))
+                    {
+                        sortByLabel.setText("Sorting by: Treasure Country");
+                    }
+                    else if(sortType.equals("TreasureMaterial"))
+                    {
+                        sortByLabel.setText("Sorting by: Treasure Material");
+                    }
+                    else if(sortType.equals("TreasureWeight"))
+                    {
+                        sortByLabel.setText("Sorting by: Treasure Weight");
+                    }
+                    else if(sortType.equals("TreasureLocationFound"))
+                    {
+                        sortByLabel.setText("Sorting by: Treasure Location Found");
+                    }
+                    else if(sortType.equals("TreasureDateFound"))
+                    {
+                        sortByLabel.setText("Sorting by: Treasure Date Found");
+                    }
+                    else if(sortType.equals("TreasureMaker"))
+                    {
+                        sortByLabel.setText("Sorting by: Treasure Maker");
+                    }
+
+                    Log.d("myTag", "Going out: "+treasureList.size());
+
+
+                }
+                else
+                {
+                    sortByLabel.startAnimation(myAnim);
+                    gridView.setAdapter(null);
+                    mProgressBar.setVisibility(View.GONE);
+                    Log.d("myTag", "empty treasure list...");
+                    if(type.equals("jewelry"))
+                    {
+                        treasureCountLabel.setText("You haven't added any "+type+" yet...");
+                    }
+                    else
+                    {
+                        treasureCountLabel.setText("You haven't added any "+type+"s yet...");
+                    }
+                    sortByLabel.setText("Click the blue circle below to add one now!");
+                }
             }
+            //deleted a treasure
             else
             {
-                Log.d("myTag", "empty treasure list...");
-                treasureCountLabel.setText("You haven't added any "+type+"s yet...");
-            }
+                File directory = getActivity().getFilesDir();
+                File subDir = new File(directory, "imageDir");
+                if( !subDir.exists() )
+                    subDir.mkdir();
+                final String prefix = result;
 
+                File [] files = subDir.listFiles(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File directory, String name) {
+                        return name.startsWith(prefix);
+                    }
+                });
 
-
-
-
-
-
-            //gridView.setAdapter(adapter);
-            /*
-            gridView.setOnItemClickListener(new OnItemClickListener() {
-                public void onItemClick(AdapterView<?> parent, View v,
-                                        int position, long id) {
-                    Toast.makeText(getApplicationContext(),
-                            ((TextView) v).getText(), Toast.LENGTH_SHORT).show();
+                for (File file : files) {
+                    Log.d("TEST", "Deleting file at path: "+file.getPath());
+                    file.delete();
                 }
-            });
-            */
+                Snackbar.make(getActivity().findViewById(android.R.id.content), "Your treasure was deleted!", Snackbar.LENGTH_SHORT).show();
 
+                BackgroundTask bt = new BackgroundTask();
+                bt.execute();
+            }
         }
     }
 
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
 
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
+    }
 }
 
 

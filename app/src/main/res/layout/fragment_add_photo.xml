@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/scroll"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:weightSum=".75"
+        android:paddingTop="16dp"
+        android:paddingLeft="16dp"
+        android:paddingRight="16dp"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/addphoto_button"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".1"
+            android:minLines="1"
+            android:background="@drawable/shadow_13"
+            android:text="Add Photo" />
+
+        <GridView
+            android:id="@+id/addtreasure_gridview"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight=".65"
+            android:columnWidth="110dp"
+            android:gravity="center"
+            android:layout_marginBottom="15dp"
+            android:background="@drawable/border"
+            android:numColumns="auto_fit"
+            />
+
+    </LinearLayout>
+</ScrollView>

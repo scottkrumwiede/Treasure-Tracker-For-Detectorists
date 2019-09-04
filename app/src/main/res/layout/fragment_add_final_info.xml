@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fragment_add_treasure_final_scrollview"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="16dp"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:id="@+id/fragment_add_treasure_final_linearlayout">
+
+        <TextView
+            android:id="@+id/collectionNameLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:text="Name:" />
+        <EditText
+            android:id="@+id/collectionNameEditText"
+            android:layout_width="match_parent"
+            android:background="@drawable/shadow_14"
+            android:autoSizeTextType="uniform"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="30dp"
+            android:paddingTop="10dp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeStepGranularity="2sp"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:hint="Include a name for your collection"/>
+
+        <TextView
+            android:id="@+id/treasureLocationFoundLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Location Found:" />
+        <EditText
+            android:id="@+id/treasureLocationEditText"
+            android:layout_width="match_parent"
+            android:background="@drawable/shadow_14"
+            android:autoSizeTextType="uniform"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="30dp"
+            android:paddingTop="10dp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeStepGranularity="2sp"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:minLines="1"
+            android:hint="Include a location for your find" />
+
+        <Button
+            android:id="@+id/placePickerButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Use Current Location"
+            android:background="@drawable/shadow_13"/>
+
+        <TextView
+            android:id="@+id/treasureDateFoundLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Date Found:" />
+
+
+        <TextView
+            android:id="@+id/treasureDateFoundTextView"
+            android:layout_width="match_parent"
+            android:background="@drawable/shadow_13"
+            android:autoSizeTextType="uniform"
+            android:paddingLeft="30dp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="20sp"
+            android:autoSizeStepGranularity="2sp"
+            android:gravity="center_vertical"
+            android:layout_height="wrap_content"
+            android:maxLines="1"
+            android:hint="Include the date of your find" />
+
+        <TextView
+            android:id="@+id/treasureInfoLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Additional Info:" />
+
+        <EditText
+            android:id="@+id/treasureInfoEditText"
+            android:layout_width="match_parent"
+            android:background="@drawable/shadow_13"
+            android:autoSizeTextType="uniform"
+            android:paddingLeft="30dp"
+            android:paddingRight="30dp"
+            android:paddingBottom="40dp"
+            android:paddingTop="10dp"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeStepGranularity="2sp"
+            android:layout_height="wrap_content"
+            android:gravity="top"
+            android:minLines="3"
+            android:hint="Include any additional info about your find" />
+
+    </LinearLayout>
+</ScrollView>
