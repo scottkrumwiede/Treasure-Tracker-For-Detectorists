@@ -4,7 +4,6 @@ package com.mdtt.scott.treasuretrackerfordetectorists;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +24,14 @@ import java.util.Arrays;
 /**
  * A simple {@link Fragment} subclass.
  */
+@SuppressWarnings("WeakerAccess")
 public class AddTokenInfoFragment extends Fragment {
 
-    Bundle bundle;
-    Spinner tokenMaterialSpinner;
-    EditText tokenNameEditText, tokenSeriesEditText, tokenYearEditText;
+    private Bundle bundle;
+    private Spinner tokenMaterialSpinner;
+    private EditText tokenNameEditText;
+    private EditText tokenSeriesEditText;
+    private EditText tokenYearEditText;
     private int tokenMaterialSelected;
     private ArrayList<String> tokenMaterialList;
 
@@ -41,32 +43,31 @@ public class AddTokenInfoFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = getArguments();
-        tokenMaterialList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.token_material_array)));
+        tokenMaterialList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.token_material_array)));
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_add_token_info, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_add_token_info, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        tokenMaterialSpinner = (Spinner) view.findViewById(R.id.tokenMaterialSpinner);
-        tokenNameEditText = (EditText) view.findViewById(R.id.tokenNameEditText);
-        tokenSeriesEditText = (EditText) view.findViewById(R.id.tokenSeriesEditText);
-        tokenYearEditText = (EditText) view.findViewById(R.id.tokenYearEditText);
+        tokenMaterialSpinner = view.findViewById(R.id.tokenMaterialSpinner);
+        tokenNameEditText = view.findViewById(R.id.tokenNameEditText);
+        tokenSeriesEditText = view.findViewById(R.id.tokenSeriesEditText);
+        tokenYearEditText = view.findViewById(R.id.tokenYearEditText);
 
-        Log.d("test", "on view created we're here");
+        //Log.d("test", "on view created we're here");
 
         tokenMaterialSelected = tokenMaterialSpinner.getSelectedItemPosition();
-        Log.d("test", "Material: " + tokenMaterialSelected);
+        //Log.d("test", "Material: " + tokenMaterialSelected);
 
-        ArrayAdapter<String> tokenMaterialSpinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, tokenMaterialList);
+        ArrayAdapter<String> tokenMaterialSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, tokenMaterialList);
         tokenMaterialSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         tokenMaterialSpinner.setAdapter(tokenMaterialSpinnerAdapter);
         tokenMaterialSpinner.setSelection(tokenMaterialSelected);
@@ -78,7 +79,7 @@ public class AddTokenInfoFragment extends Fragment {
                 if(tokenMaterialSelected != position)
                 {
                     final int previousMaterial = tokenMaterialSelected;
-                    Log.d("test", "starting tokenMaterialSpinner because:\ntokenMaterialSelected= "+tokenMaterialSelected+"\nposition= "+position);
+                    //Log.d("test", "starting tokenMaterialSpinner because:\ntokenMaterialSelected= "+tokenMaterialSelected+"\nposition= "+position);
                     if(parentView.getItemAtPosition(position).toString().equals("Custom..."))
                     {
                         final EditText taskEditText = new EditText(getContext());
@@ -101,7 +102,7 @@ public class AddTokenInfoFragment extends Fragment {
                                         }
                                         tokenMaterialList.add(task);
                                         tokenMaterialList.add("Custom...");
-                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, tokenMaterialList);
+                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, tokenMaterialList);
                                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                         tokenMaterialSpinner.setAdapter(spinnerAdapter);
                                         tokenMaterialSpinner.setSelection(tokenMaterialList.size()-2);
@@ -127,7 +128,7 @@ public class AddTokenInfoFragment extends Fragment {
                         });
                     }
                 }
-                Log.d("test", "relicMaterialSelected="+tokenMaterialSelected+" changed to "+position);
+                //Log.d("test", "relicMaterialSelected="+tokenMaterialSelected+" changed to "+position);
                 tokenMaterialSelected = position;
             }
 

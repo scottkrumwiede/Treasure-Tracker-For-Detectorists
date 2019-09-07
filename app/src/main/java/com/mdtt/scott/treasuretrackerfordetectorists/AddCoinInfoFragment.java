@@ -4,7 +4,6 @@ package com.mdtt.scott.treasuretrackerfordetectorists;
 
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,11 +25,19 @@ import java.util.Arrays;
 /**
  * A simple {@link Fragment} subclass.
  */
+@SuppressWarnings("WeakerAccess")
 public class AddCoinInfoFragment extends Fragment {
 
-    Bundle bundle;
-    Spinner coinCountrySpinner, coinTypeSpinner, coinSeriesSpinner, coinMintSpinner, coinMaterialSpinner;
-    EditText coinYearEditText, customTypeEditText, customDesignEditText, customMintEditText;
+    private Bundle bundle;
+    private Spinner coinCountrySpinner;
+    private Spinner coinTypeSpinner;
+    private Spinner coinSeriesSpinner;
+    private Spinner coinMintSpinner;
+    private Spinner coinMaterialSpinner;
+    private EditText coinYearEditText;
+    private EditText customTypeEditText;
+    private EditText customDesignEditText;
+    private EditText customMintEditText;
     private int coinCountrySelected, coinTypeSelected, coinSeriesSelected, coinMintSelected, coinMaterialSelected;
     private ArrayList<String> countriesList, coinTypeList, coinSeriesList, coinMintList, coinMaterialList;
     private int coinSeriesListSize;
@@ -44,12 +51,12 @@ public class AddCoinInfoFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = getArguments();
-        countriesList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.countries_array)));
-        coinTypeList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.uscoin_type_array)));
-        coinSeriesList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.uscoin_penny_series_array)));
+        countriesList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.countries_array)));
+        coinTypeList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.uscoin_type_array)));
+        coinSeriesList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.uscoin_penny_series_array)));
         coinSeriesListSize = coinSeriesList.size();
-        coinMintList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.uscoin_mint_array)));
-        coinMaterialList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.coin_material_array)));
+        coinMintList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.uscoin_mint_array)));
+        coinMaterialList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.coin_material_array)));
 
     }
 
@@ -63,64 +70,63 @@ public class AddCoinInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_add_coin_info, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_add_coin_info, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        coinCountrySpinner = (Spinner) view.findViewById(R.id.coinCountrySpinner);
-        coinTypeSpinner = (Spinner) view.findViewById(R.id.coinTypeSpinner);
-        coinSeriesSpinner = (Spinner) view.findViewById(R.id.coinSeriesSpinner);
-        coinYearEditText = (EditText) view.findViewById(R.id.coinYearEditText);
-        coinMintSpinner = (Spinner) view.findViewById(R.id.coinMintSpinner);
-        coinMaterialSpinner = (Spinner) view.findViewById(R.id.coinMaterialSpinner);
+        coinCountrySpinner = view.findViewById(R.id.coinCountrySpinner);
+        coinTypeSpinner = view.findViewById(R.id.coinTypeSpinner);
+        coinSeriesSpinner = view.findViewById(R.id.coinSeriesSpinner);
+        coinYearEditText = view.findViewById(R.id.coinYearEditText);
+        coinMintSpinner = view.findViewById(R.id.coinMintSpinner);
+        coinMaterialSpinner = view.findViewById(R.id.coinMaterialSpinner);
 
-        customTypeEditText = (EditText) view.findViewById(R.id.customTypeEditText);
-        customDesignEditText = (EditText) view.findViewById(R.id.customDesignEditText);
-        customMintEditText = (EditText) view.findViewById(R.id.customMintEditText);
+        customTypeEditText = view.findViewById(R.id.customTypeEditText);
+        customDesignEditText = view.findViewById(R.id.customDesignEditText);
+        customMintEditText = view.findViewById(R.id.customMintEditText);
 
-        Log.d("test", "on view created we're here");
+        //Log.d("test", "on view created we're here");
 
         coinCountrySelected = coinCountrySpinner.getSelectedItemPosition();
-        Log.d("test", "Country: "+coinCountrySelected);
+        //Log.d("test", "Country: "+coinCountrySelected);
         //coinTypeSelected = coinTypeSpinner.getSelectedItemPosition();
-        Log.d("test", "Type: "+coinTypeSelected);
+        //Log.d("test", "Type: "+coinTypeSelected);
         //coinSeriesSelected = coinSeriesSpinner.getSelectedItemPosition();
-        Log.d("test", "Series: "+coinSeriesSelected);
+        //Log.d("test", "Series: "+coinSeriesSelected);
         coinMintSelected = coinMintSpinner.getSelectedItemPosition();
-        Log.d("test", "Mint: "+coinMintSelected);
+        //Log.d("test", "Mint: "+coinMintSelected);
         coinMaterialSelected = coinMaterialSpinner.getSelectedItemPosition();
-        Log.d("test", "Material: "+coinMaterialSelected);
+        //Log.d("test", "Material: "+coinMaterialSelected);
 
-        ArrayAdapter<String> countrySpinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, countriesList);
+        ArrayAdapter<String> countrySpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, countriesList);
         countrySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         coinCountrySpinner.setAdapter(countrySpinnerAdapter);
         coinCountrySpinner.setSelection(coinCountrySelected);
         countrySpinnerAdapter.notifyDataSetChanged();
 
-        ArrayAdapter<String> coinTypeSpinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, coinTypeList);
+        ArrayAdapter<String> coinTypeSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, coinTypeList);
         coinTypeSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         coinTypeSpinner.setAdapter(coinTypeSpinnerAdapter);
         coinTypeSpinner.setSelection(coinTypeSelected);
         coinTypeSpinnerAdapter.notifyDataSetChanged();
 
-        Log.d("TEST",coinSeriesList.get(coinSeriesList.size()-2));
-        ArrayAdapter<String> coinSeriesSpinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, coinSeriesList);
+        //Log.d("TEST",coinSeriesList.get(coinSeriesList.size()-2));
+        ArrayAdapter<String> coinSeriesSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, coinSeriesList);
         coinSeriesSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         coinSeriesSpinner.setAdapter(coinSeriesSpinnerAdapter);
         coinSeriesSpinner.setSelection(coinSeriesSelected);
         coinSeriesSpinnerAdapter.notifyDataSetChanged();
 
-        ArrayAdapter<String> coinMintSpinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, coinMintList);
+        ArrayAdapter<String> coinMintSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, coinMintList);
         coinMintSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         coinMintSpinner.setAdapter(coinMintSpinnerAdapter);
         coinMintSpinner.setSelection(coinMintSelected);
         coinMintSpinnerAdapter.notifyDataSetChanged();
 
-        ArrayAdapter<String> coinMaterialSpinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, coinMaterialList);
+        ArrayAdapter<String> coinMaterialSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, coinMaterialList);
         coinMaterialSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         coinMaterialSpinner.setAdapter(coinMaterialSpinnerAdapter);
         coinMaterialSpinner.setSelection(coinMaterialSelected);
@@ -133,7 +139,7 @@ public class AddCoinInfoFragment extends Fragment {
                     if(coinCountrySelected != position)
                     {
                         final int previousCountry = coinCountrySelected;
-                        Log.d("test", "starting countrySpinner because:\ncoinCountrySelected= "+coinCountrySelected+"\nposition= "+position);
+                        //Log.d("test", "starting countrySpinner because:\ncoinCountrySelected= "+coinCountrySelected+"\nposition= "+position);
                         if(parentView.getItemAtPosition(position).toString().equals("United States"))
                         {
                             customDesignEditText.setVisibility(View.GONE);
@@ -142,7 +148,7 @@ public class AddCoinInfoFragment extends Fragment {
                             coinTypeSpinner.setVisibility(View.VISIBLE);
                             coinSeriesSpinner.setVisibility(View.VISIBLE);
                             coinMintSpinner.setVisibility(View.VISIBLE);
-                            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, coinTypeList);
+                            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, coinTypeList);
                             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             coinTypeSpinner.setAdapter(spinnerAdapter);
                             coinTypeSpinner.setSelection(coinTypeSelected);
@@ -171,7 +177,7 @@ public class AddCoinInfoFragment extends Fragment {
                                             }
                                             countriesList.add(task);
                                             countriesList.add("Custom...");
-                                            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, countriesList);
+                                            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, countriesList);
                                             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                             coinCountrySpinner.setAdapter(spinnerAdapter);
                                             coinCountrySpinner.setSelection(countriesList.size()-2);
@@ -214,7 +220,7 @@ public class AddCoinInfoFragment extends Fragment {
                             coinMintSpinner.setVisibility(View.GONE);
                         }
                     }
-                    Log.d("test", "coinCountrySelected="+coinCountrySelected+" changed to "+position);
+                    //Log.d("test", "coinCountrySelected="+coinCountrySelected+" changed to "+position);
                     coinCountrySelected = position;
 
             }
@@ -232,17 +238,17 @@ public class AddCoinInfoFragment extends Fragment {
                 if(coinTypeSelected != position)
                 {
                     final int previousType = coinTypeSelected;
-                    Log.d("test", "starting coinTypeSpinner because:\ncoinTypeSelected= "+coinTypeSelected+"\nposition= "+position);
+                    //Log.d("test", "starting coinTypeSpinner because:\ncoinTypeSelected= "+coinTypeSelected+"\nposition= "+position);
                     ArrayAdapter<String> spinnerAdapter;
                     if(parentView.getItemAtPosition(position).toString().equals("1-cent (Penny)"))
                     {
                         customDesignEditText.setVisibility(View.GONE);
                         coinSeriesSpinner.setVisibility(View.VISIBLE);
 
-                        coinSeriesList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.uscoin_penny_series_array)));
+                        coinSeriesList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.uscoin_penny_series_array)));
                         coinSeriesListSize = coinSeriesList.size();
 
-                        spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_penny_series_array));
+                        spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_penny_series_array));
                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         coinSeriesSpinner.setAdapter(spinnerAdapter);
                         spinnerAdapter.notifyDataSetChanged();
@@ -252,10 +258,10 @@ public class AddCoinInfoFragment extends Fragment {
                         customDesignEditText.setVisibility(View.GONE);
                         coinSeriesSpinner.setVisibility(View.VISIBLE);
 
-                        coinSeriesList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.uscoin_nickel_series_array)));
+                        coinSeriesList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.uscoin_nickel_series_array)));
                         coinSeriesListSize = coinSeriesList.size();
 
-                        spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_nickel_series_array));
+                        spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_nickel_series_array));
                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         coinSeriesSpinner.setAdapter(spinnerAdapter);
                         spinnerAdapter.notifyDataSetChanged();
@@ -265,10 +271,10 @@ public class AddCoinInfoFragment extends Fragment {
                         customDesignEditText.setVisibility(View.GONE);
                         coinSeriesSpinner.setVisibility(View.VISIBLE);
 
-                        coinSeriesList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.uscoin_dime_series_array)));
+                        coinSeriesList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.uscoin_dime_series_array)));
                         coinSeriesListSize = coinSeriesList.size();
 
-                        spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_dime_series_array));
+                        spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_dime_series_array));
                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         coinSeriesSpinner.setAdapter(spinnerAdapter);
                         spinnerAdapter.notifyDataSetChanged();
@@ -278,10 +284,10 @@ public class AddCoinInfoFragment extends Fragment {
                         customDesignEditText.setVisibility(View.GONE);
                         coinSeriesSpinner.setVisibility(View.VISIBLE);
 
-                        coinSeriesList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.uscoin_quarter_series_array)));
+                        coinSeriesList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.uscoin_quarter_series_array)));
                         coinSeriesListSize = coinSeriesList.size();
 
-                        spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_quarter_series_array));
+                        spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_quarter_series_array));
                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         coinSeriesSpinner.setAdapter(spinnerAdapter);
                         spinnerAdapter.notifyDataSetChanged();
@@ -291,10 +297,10 @@ public class AddCoinInfoFragment extends Fragment {
                         customDesignEditText.setVisibility(View.GONE);
                         coinSeriesSpinner.setVisibility(View.VISIBLE);
 
-                        coinSeriesList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.uscoin_halfdollar_series_array)));
+                        coinSeriesList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.uscoin_halfdollar_series_array)));
                         coinSeriesListSize = coinSeriesList.size();
 
-                        spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_halfdollar_series_array));
+                        spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_halfdollar_series_array));
                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         coinSeriesSpinner.setAdapter(spinnerAdapter);
                         spinnerAdapter.notifyDataSetChanged();
@@ -304,10 +310,10 @@ public class AddCoinInfoFragment extends Fragment {
                         customDesignEditText.setVisibility(View.GONE);
                         coinSeriesSpinner.setVisibility(View.VISIBLE);
 
-                        coinSeriesList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.uscoin_dollar_series_array)));
+                        coinSeriesList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.uscoin_dollar_series_array)));
                         coinSeriesListSize = coinSeriesList.size();
 
-                        spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_dollar_series_array));
+                        spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_dollar_series_array));
                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         coinSeriesSpinner.setAdapter(spinnerAdapter);
                         spinnerAdapter.notifyDataSetChanged();
@@ -335,7 +341,7 @@ public class AddCoinInfoFragment extends Fragment {
                                         }
                                         coinTypeList.add(task);
                                         coinTypeList.add("Custom...");
-                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, coinTypeList);
+                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, coinTypeList);
                                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                         coinTypeSpinner.setAdapter(spinnerAdapter);
                                         coinTypeSpinner.setSelection(coinTypeList.size()-2);
@@ -369,7 +375,7 @@ public class AddCoinInfoFragment extends Fragment {
                     }
                 }
 
-                Log.d("test", "coinTypeSelected="+coinTypeSelected+" changed to "+position);
+                //Log.d("test", "coinTypeSelected="+coinTypeSelected+" changed to "+position);
                 coinTypeSelected = position;
             }
 
@@ -386,7 +392,7 @@ public class AddCoinInfoFragment extends Fragment {
                 if(coinSeriesSelected != position)
                 {
                     final int previousSeries = coinSeriesSelected;
-                    Log.d("test", "starting coinSeriesSpinner because:\ncoinSeriesSelected= "+coinSeriesSelected+"\nposition= "+position);
+                    //Log.d("test", "starting coinSeriesSpinner because:\ncoinSeriesSelected= "+coinSeriesSelected+"\nposition= "+position);
                     if(parentView.getItemAtPosition(position).toString().equals("Custom..."))
                     {
                         final EditText taskEditText = new EditText(getContext());
@@ -410,7 +416,7 @@ public class AddCoinInfoFragment extends Fragment {
                                         }
                                         coinSeriesList.add(task);
                                         coinSeriesList.add("Custom...");
-                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, coinSeriesList);
+                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, coinSeriesList);
                                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                         coinSeriesSpinner.setAdapter(spinnerAdapter);
                                         coinSeriesSpinner.setSelection(coinSeriesList.size()-2);
@@ -436,7 +442,7 @@ public class AddCoinInfoFragment extends Fragment {
                         });
                     }
                 }
-                Log.d("test", "coinSeriesSelected="+coinSeriesSelected+" changed to "+position);
+                //Log.d("test", "coinSeriesSelected="+coinSeriesSelected+" changed to "+position);
                 coinSeriesSelected = position;
             }
 
@@ -453,7 +459,7 @@ public class AddCoinInfoFragment extends Fragment {
                 if(coinMintSelected != position)
                 {
                     final int previousMint = coinMintSelected;
-                    Log.d("test", "starting coinMintSpinner because:\ncoinMintSelected= "+coinMintSelected+"\nposition= "+position);
+                    //Log.d("test", "starting coinMintSpinner because:\ncoinMintSelected= "+coinMintSelected+"\nposition= "+position);
                     if(parentView.getItemAtPosition(position).toString().equals("Custom..."))
                     {
                         final EditText taskEditText = new EditText(getContext());
@@ -477,7 +483,7 @@ public class AddCoinInfoFragment extends Fragment {
                                         }
                                         coinMintList.add(task);
                                         coinMintList.add("Custom...");
-                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, coinMintList);
+                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, coinMintList);
                                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                         coinMintSpinner.setAdapter(spinnerAdapter);
                                         coinMintSpinner.setSelection(coinMintList.size()-2);
@@ -503,7 +509,7 @@ public class AddCoinInfoFragment extends Fragment {
                         });
                     }
                 }
-                Log.d("test", "coinMintSelected="+coinMintSelected+" changed to "+position);
+                //Log.d("test", "coinMintSelected="+coinMintSelected+" changed to "+position);
                 coinMintSelected = position;
             }
 
@@ -511,7 +517,6 @@ public class AddCoinInfoFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parentView) {
                 Toast.makeText(getActivity(), "NOTHING added!", Toast.LENGTH_SHORT).show();
             }
-
         });
 
         coinMaterialSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -520,7 +525,7 @@ public class AddCoinInfoFragment extends Fragment {
                 if(coinMaterialSelected != position)
                 {
                     final int previousMaterial = coinMaterialSelected;
-                    Log.d("test", "starting coinMaterialSpinner because:\ncoinMaterialSelected= "+coinMaterialSelected+"\nposition= "+position);
+                    //Log.d("test", "starting coinMaterialSpinner because:\ncoinMaterialSelected= "+coinMaterialSelected+"\nposition= "+position);
                     if(parentView.getItemAtPosition(position).toString().equals("Custom..."))
                     {
                         final EditText taskEditText = new EditText(getContext());
@@ -544,7 +549,7 @@ public class AddCoinInfoFragment extends Fragment {
                                         }
                                         coinMaterialList.add(task);
                                         coinMaterialList.add("Custom...");
-                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, coinMaterialList);
+                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, coinMaterialList);
                                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                         coinMaterialSpinner.setAdapter(spinnerAdapter);
                                         coinMaterialSpinner.setSelection(coinMaterialList.size()-2);
@@ -570,7 +575,7 @@ public class AddCoinInfoFragment extends Fragment {
                         });
                     }
                 }
-                Log.d("test", "coinMaterialSelected="+coinMaterialSelected+" changed to "+position);
+                //Log.d("test", "coinMaterialSelected="+coinMaterialSelected+" changed to "+position);
                 coinMaterialSelected = position;
             }
 
@@ -578,7 +583,6 @@ public class AddCoinInfoFragment extends Fragment {
             public void onNothingSelected(AdapterView<?> parentView) {
                 Toast.makeText(getActivity(), "NOTHING added!", Toast.LENGTH_SHORT).show();
             }
-
         });
     }
 

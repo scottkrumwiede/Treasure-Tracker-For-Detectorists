@@ -4,7 +4,6 @@ package com.mdtt.scott.treasuretrackerfordetectorists;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,11 +20,8 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 
 import java.text.DecimalFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -34,20 +30,34 @@ import java.util.Map;
 /**
  * A simple {@link Fragment} subclass.
  */
+@SuppressWarnings("WeakerAccess")
 public class SummaryFragment extends Fragment {
 
-    TextView totalTextView, coinTextView, tokenTextView, relicTextView, jewelryTextView, cladTextView, collectionTextView, locationsTextView, detectorsTextView;
-    TextView helpTextView;
-    LinearLayout mLL1, mLL2, mLL3;
-    DrawerLayout navDrawer;
+    private TextView totalTextView;
+    private TextView coinTextView;
+    private TextView tokenTextView;
+    private TextView relicTextView;
+    private TextView jewelryTextView;
+    private TextView cladTextView;
+    private TextView collectionTextView;
+    private TextView locationsTextView;
+    private TextView detectorsTextView;
+    private TextView helpTextView;
+    private LinearLayout mLL3;
+    private DrawerLayout navDrawer;
     private ProgressBar mProgressBar;
-    BackgroundTask bt;
-    HashMap<String, Integer> summaryTreasureList;
-    LinkedHashMap<String, Double> summaryCladList;
-    int treasureTotal, coinTotal, tokenTotal, relicTotal, jewelryTotal, collectionTotal, locationTotal, detectorTotal, cladTotal;
+    private BackgroundTask bt;
+    private LinkedHashMap<String, Double> summaryCladList;
+    private int treasureTotal;
+    private int coinTotal;
+    private int tokenTotal;
+    private int relicTotal;
+    private int jewelryTotal;
+    private int collectionTotal;
+    private int cladTotal;
     private AdView mAdView;
-    AdRequest adRequest;
-    DecimalFormat df;
+    private AdRequest adRequest;
+    private DecimalFormat df;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -92,23 +102,23 @@ public class SummaryFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Log.d("myTag", "We're here!");
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        totalTextView = (TextView) view.findViewById(R.id.totalTextView);
-        coinTextView = (TextView) view.findViewById(R.id.coinTextView);
-        tokenTextView = (TextView) view.findViewById(R.id.tokenTextView);
-        jewelryTextView = (TextView) view.findViewById(R.id.jewelryTextView);
-        relicTextView = (TextView) view.findViewById(R.id.relicTextView);
-        helpTextView = (TextView) view.findViewById(R.id.helpTextView);
-        collectionTextView = (TextView) view.findViewById(R.id.collectionsTextView);
-        locationsTextView = (TextView) view.findViewById(R.id.locationsTextView);
-        detectorsTextView = (TextView) view.findViewById(R.id.detectorsTextView);
-        cladTextView = (TextView) view.findViewById(R.id.cladTextView);
-        mLL1 = (LinearLayout) view.findViewById(R.id.fragment_summary_ll1);
-        mLL2 = (LinearLayout) view.findViewById(R.id.fragment_summary_ll2);
-        mLL3 = (LinearLayout) view.findViewById(R.id.fragment_summary_ll3);
-        navDrawer = (DrawerLayout) getActivity().findViewById(R.id.drawer_layout);
-        mAdView = (AdView) view.findViewById(R.id.fragmentTreasureAdView);
+        //Log.d("myTag", "We're here!");
+        mProgressBar = view.findViewById(R.id.progressBar);
+        totalTextView = view.findViewById(R.id.totalTextView);
+        coinTextView = view.findViewById(R.id.coinTextView);
+        tokenTextView = view.findViewById(R.id.tokenTextView);
+        jewelryTextView = view.findViewById(R.id.jewelryTextView);
+        relicTextView = view.findViewById(R.id.relicTextView);
+        helpTextView = view.findViewById(R.id.helpTextView);
+        collectionTextView = view.findViewById(R.id.collectionsTextView);
+        locationsTextView = view.findViewById(R.id.locationsTextView);
+        detectorsTextView = view.findViewById(R.id.detectorsTextView);
+        cladTextView = view.findViewById(R.id.cladTextView);
+        LinearLayout mLL1 = view.findViewById(R.id.fragment_summary_ll1);
+        LinearLayout mLL2 = view.findViewById(R.id.fragment_summary_ll2);
+        mLL3 = view.findViewById(R.id.fragment_summary_ll3);
+        navDrawer = getActivity().findViewById(R.id.drawer_layout);
+        mAdView = view.findViewById(R.id.fragmentTreasureAdView);
 
         mAdView.setAdListener(new AdListener() {
             @Override
@@ -148,25 +158,8 @@ public class SummaryFragment extends Fragment {
         protected Integer doInBackground(Void... voids) {
             final MySQliteHelper helper = new MySQliteHelper(getContext());
 
-            long yourmilliseconds = System.currentTimeMillis();
-            SimpleDateFormat sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");
-            Date resultdate = new Date(yourmilliseconds);
-            Log.d("timecheck", "Right before mysql crap: " + resultdate);
 
-            summaryTreasureList = helper.getSummaryTreasure();
-
-            yourmilliseconds = System.currentTimeMillis();
-            sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");
-            resultdate = new Date(yourmilliseconds);
-            Log.d("timecheck", "Right after mysql crap: " + resultdate);
-
-            yourmilliseconds = System.currentTimeMillis();
-            sdf = new SimpleDateFormat("MMM dd,yyyy HH:mm");
-            resultdate = new Date(yourmilliseconds);
-            Log.d("timecheck", "Right before loading arrays: " + resultdate);
-            boolean once = true;
-
-            Log.d("myTag", "SummaryTreasurelist is of size: " + summaryTreasureList.size());
+            HashMap<String, Integer> summaryTreasureList = helper.getSummaryTreasure();
 
             if(summaryTreasureList.containsKey("coin"))
             {
@@ -210,14 +203,14 @@ public class SummaryFragment extends Fragment {
             }
 
             //TODO: location and detector features not planned until v1.1
-            locationTotal = 0;
-            detectorTotal = 0;
+            //int locationTotal = 0;
+            //int detectorTotal = 0;
 
             treasureTotal = coinTotal + relicTotal + jewelryTotal + tokenTotal;
 
             summaryCladList = helper.getSummaryClad();
 
-            Log.d("myTag", "SummaryCladlist is of size: " + summaryCladList.size());
+            //Log.d("myTag", "SummaryCladlist is of size: " + summaryCladList.size());
 
             cladTotal = summaryCladList.size();
             return 1;
@@ -248,7 +241,7 @@ public class SummaryFragment extends Fragment {
 
                 String newCladAmount = df.format(value);
 
-                Log.d("myTag", "Key: "+key+", value="+value);
+                //Log.d("myTag", "Key: "+key+", value="+value);
 
                 TextView tv1=new TextView(getContext());
                 tv1.setText(newCladAmount+" "+key+"\n");
@@ -263,7 +256,7 @@ public class SummaryFragment extends Fragment {
             locationsTextView.setText("Locations: 0");
             detectorsTextView.setText("Detectors: 0");
 
-            Log.d("myTag", "ONPOSTEXECUTE");
+            //Log.d("myTag", "ONPOSTEXECUTE");
             mProgressBar.setVisibility(View.GONE);
             totalTextView.setVisibility(View.VISIBLE);
             coinTextView.setVisibility(View.VISIBLE);

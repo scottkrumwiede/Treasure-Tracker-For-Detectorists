@@ -1,12 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
 <ScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/activity_treasure_detailed_scrollview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="16dp">
     <LinearLayout
-    android:id="@+id/activity_treasure_detailed_LL_main"
-    android:layout_width="match_parent"
+        android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="#dee9ed"
     android:orientation="vertical">
@@ -17,14 +16,12 @@
             android:indeterminate="true" />
 
         <TextView
-            android:id="@+id/activity_treasure_detailed_tv_images"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
+            android:layout_marginStart="25dp"
             android:text="Treasure Photos:" />
 
     <HorizontalScrollView
-        android:id="@+id/activity_treasure_detailed_horizontal_scroll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="5dp">
@@ -39,10 +36,9 @@
     </HorizontalScrollView>
 
         <TextView
-            android:id="@+id/activity_treasure_detailed_tv_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="25dp"
+            android:layout_marginStart="25dp"
             android:text="Treasure Info:" />
 
 
@@ -53,7 +49,7 @@
             android:layout_marginBottom="10dp"
             android:background="@drawable/shadow_13"
             android:orientation="vertical"
-            android:padding="40dp"></LinearLayout>
+            android:padding="40dp" />
 
 </LinearLayout>
     </ScrollView>

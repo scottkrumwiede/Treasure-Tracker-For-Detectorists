@@ -3,7 +3,6 @@ package com.mdtt.scott.treasuretrackerfordetectorists;
 import android.content.Context;
 import android.content.res.Configuration;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 import android.widget.GridView;
 import android.widget.ListAdapter;
@@ -15,7 +14,6 @@ import android.widget.ListAdapter;
  */
 public class AutoGridView extends GridView {
 
-    private static final String TAG = "AutoGridView";
     private int numColumnsID;
     private int previousFirstVisible;
     private int numColumns = 1;
@@ -51,7 +49,7 @@ public class AutoGridView extends GridView {
                 }
             }
         }
-        Log.d(TAG, "numColumns set to: " + numColumns);
+        //Log.d(TAG, "numColumns set to: " + numColumns);
     }
 
 
@@ -68,7 +66,7 @@ public class AutoGridView extends GridView {
         this.numColumns = numColumns;
         super.setNumColumns(numColumns);
 
-        Log.d(TAG, "setSelection --> " + previousFirstVisible);
+        //Log.d(TAG, "setSelection --> " + previousFirstVisible);
         setSelection(previousFirstVisible);
     }
 
@@ -99,7 +97,6 @@ public class AutoGridView extends GridView {
 
     /**
      * Sets the height of each view in a row equal to the height of the tallest view in this row.
-     * @param firstVisible The first visible position (adapter order)
      */
     private void setHeights() {
         ListAdapter adapter = getAdapter();

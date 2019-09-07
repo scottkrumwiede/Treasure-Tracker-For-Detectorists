@@ -1,16 +1,14 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
-    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingTop="16dp"
         android:paddingLeft="10dp"
         android:paddingRight="10dp"
-        android:orientation="vertical"
-        android:id="@+id/poop">
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/clad_amount_textview"
@@ -24,7 +22,7 @@
             android:layout_height="wrap_content"
 
             android:background="@drawable/shadow_13"
-            android:paddingLeft="30dp"
+            android:paddingStart="30dp"
             android:autoSizeTextType="uniform"
             android:autoSizeMinTextSize="6sp"
             android:autoSizeMaxTextSize="100sp"
@@ -38,7 +36,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/shadow_13"
-            android:paddingLeft="30dp"
+            android:paddingStart="30dp"
             android:autoSizeTextType="uniform"
             android:autoSizeMinTextSize="6sp"
             android:autoSizeMaxTextSize="100sp"
@@ -46,7 +44,6 @@
             android:entries="@array/clad_currency_array"/>
 
         <TextView
-            android:id="@+id/cladLocationFoundTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Location Found:" />
@@ -54,7 +51,7 @@
             android:id="@+id/cladLocationFoundEditText"
             android:layout_width="match_parent"
             android:background="@drawable/shadow_14"
-            android:paddingLeft="30dp"
+            android:paddingStart="30dp"
             android:autoSizeTextType="uniform"
             android:autoSizeMinTextSize="12sp"
             android:autoSizeMaxTextSize="100sp"
@@ -71,7 +68,6 @@
             android:background="@drawable/shadow_13"/>
 
         <TextView
-            android:id="@+id/cladDateFoundLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Date Found:" />
@@ -82,7 +78,7 @@
             android:layout_width="match_parent"
             android:background="@drawable/shadow_13"
             android:autoSizeTextType="uniform"
-            android:paddingLeft="30dp"
+            android:paddingStart="30dp"
             android:autoSizeMinTextSize="12sp"
             android:autoSizeMaxTextSize="20sp"
             android:autoSizeStepGranularity="2sp"

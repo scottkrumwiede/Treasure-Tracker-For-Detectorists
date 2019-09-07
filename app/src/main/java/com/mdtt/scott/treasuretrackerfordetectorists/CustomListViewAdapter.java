@@ -10,11 +10,10 @@ import android.widget.TextView;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 
+@SuppressWarnings("WeakerAccess")
 public class CustomListViewAdapter extends ArrayAdapter<Clad> implements View.OnClickListener{
 
-    private ArrayList<Clad> dataSet;
-    Context mContext;
-    DecimalFormat df;
+    private final DecimalFormat df;
 
     // View lookup cache
     private static class ViewHolder {
@@ -26,20 +25,12 @@ public class CustomListViewAdapter extends ArrayAdapter<Clad> implements View.On
 
     public CustomListViewAdapter(ArrayList<Clad> data, Context context) {
         super(context, R.layout.clad_listview_item, data);
-        this.dataSet = data;
-        this.mContext=context;
         df = new DecimalFormat("#0.00");
     }
 
     @Override
     public void onClick(View v) {
-
-        int position=(Integer) v.getTag();
-        Object object= getItem(position);
-        Clad clad=(Clad)object;
     }
-
-    private int lastPosition = -1;
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
@@ -48,28 +39,20 @@ public class CustomListViewAdapter extends ArrayAdapter<Clad> implements View.On
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
 
-        final View result;
-
         if (convertView == null) {
 
             viewHolder = new ViewHolder();
             LayoutInflater inflater = LayoutInflater.from(getContext());
             convertView = inflater.inflate(R.layout.clad_listview_item, parent, false);
-            viewHolder.txtAmount = (TextView) convertView.findViewById(R.id.clad_amount_textview);
-            viewHolder.txtCurrency = (TextView) convertView.findViewById(R.id.clad_currency_textview);
-            viewHolder.txtDateFound = (TextView) convertView.findViewById(R.id.clad_datefound_textview);
-            viewHolder.txtLocationFound = (TextView) convertView.findViewById(R.id.clad_locationfound_textview);
-
-            result=convertView;
+            viewHolder.txtAmount = convertView.findViewById(R.id.clad_amount_textview);
+            viewHolder.txtCurrency = convertView.findViewById(R.id.clad_currency_textview);
+            viewHolder.txtDateFound = convertView.findViewById(R.id.clad_datefound_textview);
+            viewHolder.txtLocationFound = convertView.findViewById(R.id.clad_locationfound_textview);
 
             convertView.setTag(viewHolder);
         } else {
             viewHolder = (ViewHolder) convertView.getTag();
-            result=convertView;
         }
-
-        //result.startAnimation(animation);
-        lastPosition = position;
 
         double oldCladAmount = (clad.getCladAmount());
         String newCladAmount = df.format(oldCladAmount);

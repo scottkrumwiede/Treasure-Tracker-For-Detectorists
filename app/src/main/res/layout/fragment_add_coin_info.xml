@@ -1,19 +1,16 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/scroll"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="16dp"
     android:paddingLeft="10dp"
     android:paddingRight="10dp"
-    android:orientation="vertical"
-    android:id="@+id/poop">
+    android:orientation="vertical">
 
     <TextView
-        android:id="@+id/textView4"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Country:" />
@@ -24,7 +21,7 @@
         android:layout_height="wrap_content"
         android:entries="@array/countries_array"
         android:background="@drawable/shadow_13"
-        android:paddingLeft="30dp"
+        android:paddingStart="30dp"
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
@@ -32,7 +29,6 @@
         android:prompt="@string/country_prompt"/>
 
     <TextView
-        android:id="@+id/textView5"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Denomination:" />
@@ -46,7 +42,7 @@
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
-        android:paddingLeft="30dp"
+        android:paddingStart="30dp"
         android:autoSizeStepGranularity="2sp"
         android:prompt="@string/uscointype_prompt"/>
 
@@ -59,13 +55,12 @@
         android:background="@drawable/shadow_13"
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="12sp"
-        android:paddingLeft="30dp"
+        android:paddingStart="30dp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
         android:hint="Choose a denomination" />
 
     <TextView
-        android:id="@+id/coinSeriesLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Design/Series:" />
@@ -76,7 +71,7 @@
         android:entries="@array/uscoin_penny_series_array"
         android:background="@drawable/shadow_13"
         android:autoSizeTextType="uniform"
-        android:paddingLeft="30dp"
+        android:paddingStart="30dp"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
@@ -90,13 +85,12 @@
         android:background="@drawable/shadow_13"
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="12sp"
-        android:paddingLeft="30dp"
+        android:paddingStart="30dp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
         android:hint="Choose a design" />
 
     <TextView
-        android:id="@+id/yearLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Year:" />
@@ -108,7 +102,7 @@
         android:inputType="number"
         android:background="@drawable/shadow_13"
         android:autoSizeTextType="uniform"
-        android:paddingLeft="30dp"
+        android:paddingStart="30dp"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
@@ -117,7 +111,6 @@
 
 
     <TextView
-        android:id="@+id/mintLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Mint:" />
@@ -128,7 +121,7 @@
         android:layout_height="wrap_content"
         android:entries="@array/uscoin_mint_array"
         android:background="@drawable/shadow_13"
-        android:paddingLeft="30dp"
+        android:paddingStart="30dp"
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
@@ -144,12 +137,11 @@
         android:autoSizeTextType="uniform"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
-        android:paddingLeft="30dp"
+        android:paddingStart="30dp"
         android:autoSizeStepGranularity="2sp"
         android:hint="Choose a mint" />
 
     <TextView
-        android:id="@+id/materialLabel"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Material:" />
@@ -161,7 +153,7 @@
         android:entries="@array/coin_material_array"
         android:background="@drawable/shadow_13"
         android:autoSizeTextType="uniform"
-        android:paddingLeft="30dp"
+        android:paddingStart="30dp"
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"

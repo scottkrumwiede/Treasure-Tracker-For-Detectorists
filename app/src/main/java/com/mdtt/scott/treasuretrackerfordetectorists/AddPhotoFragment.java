@@ -9,14 +9,12 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.Nullable;
@@ -37,23 +35,23 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
+@SuppressWarnings("WeakerAccess")
 public class AddPhotoFragment extends Fragment {
 
     private Button addPhotoButton;
-    private ImageView imageview;
     //private static final String IMAGE_DIRECTORY = "/demonuts";
     //private int GALLERY = 1, CAMERA = 2;
     private GridView gridView;
     private String timeAtAdd;
-    ArrayList<Integer> photoIds = new ArrayList<>();
-    ArrayList<String> photoNames = new ArrayList<>();
-    ArrayList<String> photoPaths = new ArrayList<>();
-    ArrayList<String> photoYears = new ArrayList<>();
-    ArrayList<String> photoFoundYears = new ArrayList<>();
-    ArrayList<Bitmap> photoBitmaps = new ArrayList<>();
+    private final ArrayList<Integer> photoIds = new ArrayList<>();
+    private final ArrayList<String> photoNames = new ArrayList<>();
+    private final ArrayList<String> photoPaths = new ArrayList<>();
+    private final ArrayList<String> photoYears = new ArrayList<>();
+    private final ArrayList<String> photoFoundYears = new ArrayList<>();
+    private final ArrayList<Bitmap> photoBitmaps = new ArrayList<>();
     private int counter = 0;
-    String type;
-    Bundle bundle;
+    private String type;
+    private Bundle bundle;
 
     public AddPhotoFragment() {
         // Required empty public constructor
@@ -86,11 +84,11 @@ public class AddPhotoFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        gridView = (GridView) view.findViewById(R.id.addtreasure_gridview);
-        addPhotoButton = (Button) view.findViewById(R.id.addphoto_button);
+        gridView = view.findViewById(R.id.addtreasure_gridview);
+        addPhotoButton = view.findViewById(R.id.addphoto_button);
 
         if (counter > 0) {
-            CustomGridViewAdapter adapterViewAndroid = new CustomGridViewAdapter(getActivity(), photoIds, photoNames, photoYears, photoFoundYears, photoBitmaps);
+            CustomGridViewAdapter adapterViewAndroid = new CustomGridViewAdapter(getActivity(), photoIds, photoNames, photoYears, photoBitmaps);
             gridView.setAdapter(adapterViewAndroid);
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -129,7 +127,7 @@ public class AddPhotoFragment extends Fragment {
             public void onClick(DialogInterface dialog, int item) {
                 if (items[item].equals("Yes")) {
 
-                    Log.d("TEST", "The value of i is: "+i);
+                    //Log.d("TEST", "The value of i is: "+i);
 
                     photoNames.remove("Photo "+ i+1);
                     photoYears.remove("");
@@ -137,7 +135,7 @@ public class AddPhotoFragment extends Fragment {
                     photoIds.remove(i);
                     photoBitmaps.remove(i);
 
-                    Log.d("TEST", "The photopath of file to be removed is: "+photoPaths.get(i));
+                    //Log.d("TEST", "The photopath of file to be removed is: "+photoPaths.get(i));
 
                     final String photoPath = photoPaths.get(i);
 
@@ -153,7 +151,7 @@ public class AddPhotoFragment extends Fragment {
 
                     for (File file : files) {
 
-                        Log.d("TEST",""+file.getPath());
+                        //Log.d("TEST",""+file.getPath());
                         //delete file that was saved in saveImage method
                         file.delete();
                         photoPaths.remove(i);
@@ -166,7 +164,7 @@ public class AddPhotoFragment extends Fragment {
                     }
                     else
                     {
-                        CustomGridViewAdapter adapterViewAndroid = new CustomGridViewAdapter(getActivity(), photoIds, photoNames, photoYears, photoFoundYears, photoBitmaps);
+                        CustomGridViewAdapter adapterViewAndroid = new CustomGridViewAdapter(getActivity(), photoIds, photoNames, photoYears, photoBitmaps);
                         gridView.setAdapter(adapterViewAndroid);
                         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -190,19 +188,15 @@ public class AddPhotoFragment extends Fragment {
 
         if (requestCode == CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE) {
             CropImage.ActivityResult result = CropImage.getActivityResult(data);
-            if (resultCode == getActivity().RESULT_OK) {
+            if (resultCode == AddActivity.RESULT_OK) {
                 Uri resultUri = result.getUri();
 
                 try {
                     Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), resultUri);
                     String photoPath = saveImage(bitmap);
-                    if(photoPath.equals("fail"))
-                    {
+                    if (photoPath.equals("fail")) {
                         Toast.makeText(getActivity(), "Photo failed to save...", Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    else
-                    {
+                    } else {
                         counter++;
                         if (counter == 1) {
                             addPhotoButton.setText("ADD ANOTHER PHOTO");
@@ -214,7 +208,7 @@ public class AddPhotoFragment extends Fragment {
                         photoPaths.add(photoPath);
                         photoBitmaps.add(bitmap);
                         //imageview.setImageBitmap(bitmap);
-                        CustomGridViewAdapter adapterViewAndroid = new CustomGridViewAdapter(getActivity(), photoIds, photoNames, photoYears, photoFoundYears, photoBitmaps);
+                        CustomGridViewAdapter adapterViewAndroid = new CustomGridViewAdapter(getActivity(), photoIds, photoNames, photoYears, photoBitmaps);
                         gridView.setAdapter(adapterViewAndroid);
                         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
@@ -225,19 +219,17 @@ public class AddPhotoFragment extends Fragment {
                             }
                         });
 
-                        Log.d("TEST","File exists at this photoPath: "+photoPath+"\n"+result);
+                        //Log.d("TEST","File exists at this photoPath: "+photoPath+"\n"+result);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
                     Toast.makeText(getActivity(), "Failed!", Toast.LENGTH_SHORT).show();
                 }
-            } else if (resultCode == CropImage.CROP_IMAGE_ACTIVITY_RESULT_ERROR_CODE) {
-                Exception error = result.getError();
             }
         }
     }
 
-    public String saveImage(Bitmap myBitmap) {
+    private String saveImage(Bitmap myBitmap) {
         ContextWrapper cw = new ContextWrapper(getActivity().getApplicationContext());
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getFilesDir();
@@ -247,10 +239,10 @@ public class AddPhotoFragment extends Fragment {
         // Create imageDir
         // File saved as unique temp image name 'temp_timeAtAdd_timeAtPhotoAdd.png'
         //temp prefix will be removed once treasure is officially added to database
-        String filename = "temp_" + timeAtAdd + "_" + Long.toString(System.currentTimeMillis())+".jpeg";
+        String filename = "temp_" + timeAtAdd + "_" + System.currentTimeMillis() +".jpeg";
         File path=new File(subDir,filename);
 
-        Log.d("TEST","Path to save image at is:"+path.getPath());
+        //Log.d("TEST","Path to save image at is:"+path.getPath());
 
         FileOutputStream out = null;
         try {
@@ -271,25 +263,22 @@ public class AddPhotoFragment extends Fragment {
     public void nextButtonClicked() {
         bundle.putString("timeAtAdd", timeAtAdd);
         bundle.putString("type", type);
-        if(type.equals("coin"))
-        {
-            ((AddActivity) getActivity()).replaceFragments(AddCoinInfoFragment.class, bundle, "addInfo");
-        }
-        else if(type.equals("token"))
-        {
-            ((AddActivity) getActivity()).replaceFragments(AddTokenInfoFragment.class, bundle, "addInfo");
-        }
-        else if(type.equals("jewelry"))
-        {
-            ((AddActivity) getActivity()).replaceFragments(AddJewelryInfoFragment.class, bundle, "addInfo");
-        }
-        else if(type.equals("relic"))
-        {
-            ((AddActivity) getActivity()).replaceFragments(AddRelicInfoFragment.class, bundle, "addInfo");
-        }
-        else if(type.equals("collection"))
-        {
-            ((AddActivity) getActivity()).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
+        switch (type) {
+            case "coin":
+                ((AddActivity) getActivity()).replaceFragments(AddCoinInfoFragment.class, bundle, "addInfo");
+                break;
+            case "token":
+                ((AddActivity) getActivity()).replaceFragments(AddTokenInfoFragment.class, bundle, "addInfo");
+                break;
+            case "jewelry":
+                ((AddActivity) getActivity()).replaceFragments(AddJewelryInfoFragment.class, bundle, "addInfo");
+                break;
+            case "relic":
+                ((AddActivity) getActivity()).replaceFragments(AddRelicInfoFragment.class, bundle, "addInfo");
+                break;
+            case "collection":
+                ((AddActivity) getActivity()).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
+                break;
         }
     }
 }

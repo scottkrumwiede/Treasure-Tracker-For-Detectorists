@@ -2,6 +2,8 @@
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
         <item android:drawable="@color/colorBlack" />
         <item>
-                <bitmap android:gravity="fill_horizontal" android:src="@drawable/mainlogo"></bitmap>
+                <bitmap
+                    android:gravity="fill_horizontal"
+                    android:src="@drawable/mainlogo" />
         </item>
 </layer-list>

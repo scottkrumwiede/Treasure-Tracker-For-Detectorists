@@ -4,7 +4,6 @@ package com.mdtt.scott.treasuretrackerfordetectorists;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +24,14 @@ import java.util.Arrays;
 /**
  * A simple {@link Fragment} subclass.
  */
+@SuppressWarnings("ALL")
 public class AddRelicInfoFragment extends Fragment {
 
-    Bundle bundle;
-    Spinner relicMaterialSpinner;
-    EditText relicNameEditText, relicSeriesEditText, relicYearEditText;
+    private Bundle bundle;
+    private Spinner relicMaterialSpinner;
+    private EditText relicNameEditText;
+    private EditText relicSeriesEditText;
+    private EditText relicYearEditText;
     private int relicMaterialSelected;
     private ArrayList<String> relicMaterialList;
 
@@ -41,7 +43,7 @@ public class AddRelicInfoFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = getArguments();
-        relicMaterialList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.relic_material_array)));
+        relicMaterialList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.relic_material_array)));
     }
 
     @Override
@@ -54,25 +56,24 @@ public class AddRelicInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_add_relic_info, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_add_relic_info, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        relicMaterialSpinner = (Spinner) view.findViewById(R.id.relicMaterialSpinner);
-        relicNameEditText = (EditText) view.findViewById(R.id.relicNameEditText);
-        relicSeriesEditText = (EditText) view.findViewById(R.id.relicSeriesEditText);
-        relicYearEditText = (EditText) view.findViewById(R.id.relicYearEditText);
+        relicMaterialSpinner = view.findViewById(R.id.relicMaterialSpinner);
+        relicNameEditText = view.findViewById(R.id.relicNameEditText);
+        relicSeriesEditText = view.findViewById(R.id.relicSeriesEditText);
+        relicYearEditText = view.findViewById(R.id.relicYearEditText);
 
-        Log.d("test", "on view created we're here");
+        //Log.d("test", "on view created we're here");
 
         relicMaterialSelected = relicMaterialSpinner.getSelectedItemPosition();
-        Log.d("test", "Material: " + relicMaterialSelected);
+        //Log.d("test", "Material: " + relicMaterialSelected);
 
-        ArrayAdapter<String> relicMaterialSpinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, relicMaterialList);
+        ArrayAdapter<String> relicMaterialSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, relicMaterialList);
         relicMaterialSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         relicMaterialSpinner.setAdapter(relicMaterialSpinnerAdapter);
         relicMaterialSpinner.setSelection(relicMaterialSelected);
@@ -84,7 +85,7 @@ public class AddRelicInfoFragment extends Fragment {
                 if(relicMaterialSelected != position)
                 {
                     final int previousMaterial = relicMaterialSelected;
-                    Log.d("test", "starting relicMaterialSpinner because:\nrelicMaterialSelected= "+relicMaterialSelected+"\nposition= "+position);
+                    //Log.d("test", "starting relicMaterialSpinner because:\nrelicMaterialSelected= "+relicMaterialSelected+"\nposition= "+position);
                     if(parentView.getItemAtPosition(position).toString().equals("Custom..."))
                     {
                         final EditText taskEditText = new EditText(getContext());
@@ -107,7 +108,7 @@ public class AddRelicInfoFragment extends Fragment {
                                         }
                                         relicMaterialList.add(task);
                                         relicMaterialList.add("Custom...");
-                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, relicMaterialList);
+                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, relicMaterialList);
                                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                         relicMaterialSpinner.setAdapter(spinnerAdapter);
                                         relicMaterialSpinner.setSelection(relicMaterialList.size()-2);
@@ -133,7 +134,7 @@ public class AddRelicInfoFragment extends Fragment {
                         });
                     }
                 }
-                Log.d("test", "relicMaterialSelected="+relicMaterialSelected+" changed to "+position);
+                //Log.d("test", "relicMaterialSelected="+relicMaterialSelected+" changed to "+position);
                 relicMaterialSelected = position;
             }
 

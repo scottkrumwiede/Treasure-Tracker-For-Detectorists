@@ -10,23 +10,17 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class AddChooseTypeActivity extends AppCompatActivity {
 
-    Button addCoinButton, addTokenButton, addJewelryButton, addRelicButton, addCladButton, addCollectionButton;
-
-    public AddChooseTypeActivity() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("Add a new treasure:");
         setContentView(R.layout.activity_add_choosetype);
-        addCoinButton = (Button) findViewById(R.id.chooseAddCoin);
-        addTokenButton = (Button) findViewById(R.id.chooseAddToken);
-        addJewelryButton = (Button) findViewById(R.id.chooseAddJewelry);
-        addRelicButton = (Button) findViewById(R.id.chooseAddRelic);
-        addCladButton = (Button) findViewById(R.id.chooseAddClad);
-        addCollectionButton = (Button) findViewById(R.id.chooseAddCollection);
+        Button addCoinButton = findViewById(R.id.chooseAddCoin);
+        Button addTokenButton = findViewById(R.id.chooseAddToken);
+        Button addJewelryButton = findViewById(R.id.chooseAddJewelry);
+        Button addRelicButton = findViewById(R.id.chooseAddRelic);
+        Button addCladButton = findViewById(R.id.chooseAddClad);
+        Button addCollectionButton = findViewById(R.id.chooseAddCollection);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         addCoinButton.setOnClickListener(new View.OnClickListener() {

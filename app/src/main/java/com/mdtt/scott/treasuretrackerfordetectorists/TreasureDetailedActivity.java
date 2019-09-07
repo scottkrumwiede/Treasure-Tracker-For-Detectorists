@@ -5,7 +5,6 @@ import android.app.Dialog;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
-import android.content.ContextWrapper;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -13,7 +12,6 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -44,39 +42,35 @@ import java.util.Map;
 
 public class TreasureDetailedActivity extends AppCompatActivity {
 
-    BackgroundTask bt;
-    int treasureId;
-    Treasure treasure;
-    String type;
+    private BackgroundTask bt;
+    private int treasureId;
+    private Treasure treasure;
     private LinearLayout mLinearLayoutText, mLinearLayoutImages;
-    ArrayList<Bitmap> treasurePhotos = new ArrayList<>();
-    ArrayList<Bitmap> treasurePhotosFull = new ArrayList<>();
+    private final ArrayList<Bitmap> treasurePhotos = new ArrayList<>();
+    private final ArrayList<Bitmap> treasurePhotosFull = new ArrayList<>();
     private ProgressBar mProgressBar;
-
-    Context mContext;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         treasureId = getIntent().getExtras().getInt("treasureId");
-        type = getIntent().getExtras().getString("type");
-        type = type.substring(0,1).toUpperCase()+type.substring(1).toLowerCase();
-        setTitle(type+":");
+        String type = getIntent().getExtras().getString("type");
+        type = type.substring(0,1).toUpperCase()+ type.substring(1).toLowerCase();
+        setTitle(type +":");
         setContentView(R.layout.activity_treasure_detailed);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        mProgressBar = (ProgressBar) findViewById(R.id.activity_treasure_detailed_progressBar);
-        mLinearLayoutText = (LinearLayout) findViewById(R.id.activity_treasure_detailed_LL_text);
-        mLinearLayoutImages = (LinearLayout) findViewById(R.id.activity_treasure_detailed_LL_images);
-        mContext = this;
+        mProgressBar = findViewById(R.id.activity_treasure_detailed_progressBar);
+        mLinearLayoutText = findViewById(R.id.activity_treasure_detailed_LL_text);
+        mLinearLayoutImages = findViewById(R.id.activity_treasure_detailed_LL_images);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        if(((LinearLayout) mLinearLayoutText).getChildCount() > 0)
-            ((LinearLayout) mLinearLayoutText).removeAllViews();
-        if(((LinearLayout) mLinearLayoutImages).getChildCount() > 0)
-            ((LinearLayout) mLinearLayoutImages).removeAllViews();
+        if(mLinearLayoutText.getChildCount() > 0)
+            mLinearLayoutText.removeAllViews();
+        if(mLinearLayoutImages.getChildCount() > 0)
+            mLinearLayoutImages.removeAllViews();
         mProgressBar.setVisibility(View.VISIBLE);
         bt = new BackgroundTask();
         bt.execute();
@@ -96,7 +90,6 @@ public class TreasureDetailedActivity extends AppCompatActivity {
 
             treasurePhotos.clear();
             treasure = helper.getDetailedTreasure(treasureId);
-            ContextWrapper cw = new ContextWrapper(getApplicationContext());
             // path to /data/data/yourapp/app_data/files
             File directory = getApplication().getFilesDir();
             File subDir = new File(directory, "imageDir");
@@ -135,7 +128,7 @@ public class TreasureDetailedActivity extends AppCompatActivity {
                 options.inJustDecodeBounds = false;
                 photo = BitmapFactory.decodeFile(filepath, options);
                 treasurePhotos.add(photo);
-                Log.d("myTag", "Path of photo is: "+filepath);
+                //Log.d("myTag", "Path of photo is: "+filepath);
 
                 //now do the same to get high-res version for full screen version
                 // First decode with inJustDecodeBounds=true to check dimensions
@@ -177,7 +170,7 @@ public class TreasureDetailedActivity extends AppCompatActivity {
             lparamsImages.height = dimensionInDp;
             lparamsImages.width = dimensionInDp;
 
-            Log.d("myTag", "bitmap count = "+treasurePhotos.size());
+            //Log.d("myTag", "bitmap count = "+treasurePhotos.size());
             for (final Bitmap photo: treasurePhotos) {
                 final ImageView imageView = new ImageView(getApplicationContext());
                 imageView.setId(photo.getGenerationId());
@@ -225,7 +218,7 @@ public class TreasureDetailedActivity extends AppCompatActivity {
             ViewGroup.MarginLayoutParams lparamsText = new ViewGroup.MarginLayoutParams(
                     ActionBar.LayoutParams.WRAP_CONTENT, ActionBar.LayoutParams.WRAP_CONTENT);
             lparamsText.bottomMargin= 10;
-            LinkedHashMap<String, String> emptyDetails = new LinkedHashMap<String, String>();
+            LinkedHashMap<String, String> emptyDetails = new LinkedHashMap<>();
 
             for (Map.Entry<String, String> entry : treasure.getTreasureDetailed().entrySet()) {
                 String key = entry.getKey();
@@ -245,7 +238,7 @@ public class TreasureDetailedActivity extends AppCompatActivity {
 
                         tv.setTextColor(R.color.colorPrimaryDark);
 
-                        Log.d("myTag", ""+tv.getText().toString());
+                        //Log.d("myTag", ""+tv.getText().toString());
                         mLinearLayoutText.addView(tv);
                     }
                 }
@@ -286,7 +279,6 @@ public class TreasureDetailedActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             return true;
         }
@@ -296,7 +288,7 @@ public class TreasureDetailedActivity extends AppCompatActivity {
         }
         else if(id == R.id.action_share)
         {
-            ArrayList<Uri> imageUris = new ArrayList<Uri>();
+            ArrayList<Uri> imageUris = new ArrayList<>();
 
             File directory = getApplication().getFilesDir();
             File subDir = new File(directory, "imageDir");
@@ -354,7 +346,7 @@ public class TreasureDetailedActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    public static int calculateInSampleSize(
+    private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
         final int height = options.outHeight;

@@ -4,7 +4,6 @@ package com.mdtt.scott.treasuretrackerfordetectorists;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,11 +24,15 @@ import java.util.Arrays;
 /**
  * A simple {@link Fragment} subclass.
  */
+@SuppressWarnings("WeakerAccess")
 public class AddJewelryInfoFragment extends Fragment {
 
-    Bundle bundle;
-    Spinner jewelryMaterialSpinner;
-    EditText jewelryNameEditText, jewelrySeriesEditText, jewelryYearEditText, jewelryWeightEditText;
+    private Bundle bundle;
+    private Spinner jewelryMaterialSpinner;
+    private EditText jewelryNameEditText;
+    private EditText jewelrySeriesEditText;
+    private EditText jewelryYearEditText;
+    private EditText jewelryWeightEditText;
     private int jewelryMaterialSelected;
     private ArrayList<String> jewelryMaterialList;
 
@@ -42,7 +45,7 @@ public class AddJewelryInfoFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = getArguments();
-        jewelryMaterialList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.jewelry_material_array)));
+        jewelryMaterialList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.jewelry_material_array)));
     }
 
     @Override
@@ -55,26 +58,25 @@ public class AddJewelryInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_add_jewelry_info, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_add_jewelry_info, container, false);
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        jewelryMaterialSpinner = (Spinner) view.findViewById(R.id.jewelryMaterialSpinner);
-        jewelryNameEditText = (EditText) view.findViewById(R.id.jewelryNameEditText);
-        jewelrySeriesEditText = (EditText) view.findViewById(R.id.jewelrySeriesEditText);
-        jewelryYearEditText = (EditText) view.findViewById(R.id.jewelryYearEditText);
-        jewelryWeightEditText = (EditText) view.findViewById(R.id.jewelryWeightEditText);
+        jewelryMaterialSpinner = view.findViewById(R.id.jewelryMaterialSpinner);
+        jewelryNameEditText = view.findViewById(R.id.jewelryNameEditText);
+        jewelrySeriesEditText = view.findViewById(R.id.jewelrySeriesEditText);
+        jewelryYearEditText = view.findViewById(R.id.jewelryYearEditText);
+        jewelryWeightEditText = view.findViewById(R.id.jewelryWeightEditText);
 
-        Log.d("test", "on view created we're here");
+        //Log.d("test", "on view created we're here");
 
         jewelryMaterialSelected = jewelryMaterialSpinner.getSelectedItemPosition();
-        Log.d("test", "Material: " + jewelryMaterialSelected);
+        //Log.d("test", "Material: " + jewelryMaterialSelected);
 
-        ArrayAdapter<String> jewelryMaterialSpinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, jewelryMaterialList);
+        ArrayAdapter<String> jewelryMaterialSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, jewelryMaterialList);
         jewelryMaterialSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         jewelryMaterialSpinner.setAdapter(jewelryMaterialSpinnerAdapter);
         jewelryMaterialSpinner.setSelection(jewelryMaterialSelected);
@@ -86,7 +88,7 @@ public class AddJewelryInfoFragment extends Fragment {
                 if(jewelryMaterialSelected != position)
                 {
                     final int previousMaterial = jewelryMaterialSelected;
-                    Log.d("test", "starting jewelryMaterialSpinner because:\njewelryMaterialSelected= "+jewelryMaterialSelected+"\nposition= "+position);
+                    //Log.d("test", "starting jewelryMaterialSpinner because:\njewelryMaterialSelected= "+jewelryMaterialSelected+"\nposition= "+position);
                     if(parentView.getItemAtPosition(position).toString().equals("Custom..."))
                     {
                         final EditText taskEditText = new EditText(getContext());
@@ -109,7 +111,7 @@ public class AddJewelryInfoFragment extends Fragment {
                                         }
                                         jewelryMaterialList.add(task);
                                         jewelryMaterialList.add("Custom...");
-                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, jewelryMaterialList);
+                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, jewelryMaterialList);
                                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                         jewelryMaterialSpinner.setAdapter(spinnerAdapter);
                                         jewelryMaterialSpinner.setSelection(jewelryMaterialList.size()-2);
@@ -135,7 +137,7 @@ public class AddJewelryInfoFragment extends Fragment {
                         });
                     }
                 }
-                Log.d("test", "jewelryMaterialSelected="+jewelryMaterialSelected+" changed to "+position);
+                //Log.d("test", "jewelryMaterialSelected="+jewelryMaterialSelected+" changed to "+position);
                 jewelryMaterialSelected = position;
             }
 

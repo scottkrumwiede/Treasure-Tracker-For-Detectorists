@@ -93,7 +93,7 @@ public class Treasure{
         return treasureInfo;
     }
     public LinkedHashMap<String, String> getTreasureDetailed(){
-        LinkedHashMap<String, String> lhashMap = new LinkedHashMap<String, String>();
+        LinkedHashMap<String, String> lhashMap = new LinkedHashMap<>();
         lhashMap.put("Country: ",treasureCountry);
         lhashMap.put("Denomination: ",treasureDenomination);
         lhashMap.put("Name: ",treasureName);

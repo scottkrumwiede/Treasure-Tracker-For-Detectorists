@@ -3,7 +3,6 @@ package com.mdtt.scott.treasuretrackerfordetectorists;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,17 +27,16 @@ import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
-    FragmentManager mFragmentManager = getSupportFragmentManager();
+    private final FragmentManager mFragmentManager = getSupportFragmentManager();
     private boolean onSummary;
     private NavigationView navigationView;
     private String sortType;
     private ArrayList<String> sortTypes;
     private boolean treasureListNeedsUpdated;
-    Menu menu;
+    private Menu menu;
 
     @Override
     public void onResume(){
@@ -116,12 +114,12 @@ public class MainActivity extends AppCompatActivity
 
         cleanup();
         treasureListNeedsUpdated = false;
-        Log.d("myTag", "Oncreate mainactivity!!!!");
+        //Log.d("myTag", "Oncreate mainactivity!!!!");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        FloatingActionButton fab = findViewById(R.id.fab);
         final Animation myAnim = AnimationUtils.loadAnimation(this, R.anim.bounce);
 
         // Use bounce interpolator with amplitude 0.2 and frequency 20
@@ -132,13 +130,13 @@ public class MainActivity extends AppCompatActivity
         //default sort type: TreasureID == Most Recently Added in mysqllite
         sortType = getResources().getString(R.string.defaultSortType);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
-        navigationView = (NavigationView) findViewById(R.id.nav_view);
+        navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
         menu = navigationView.getMenu();
 
@@ -184,7 +182,7 @@ public class MainActivity extends AppCompatActivity
                 return name.startsWith(prefix);
             }
         });
-        Log.d("TEST", "The number of temp images to be deleted is: "+files.length+"\n");
+        //Log.d("TEST", "The number of temp images to be deleted is: "+files.length+"\n");
 
         for (File file : files) {
             //deleting all temp images
@@ -194,7 +192,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onBackPressed() {
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START))
         {
             drawer.closeDrawer(GravityCompat.START);
@@ -207,7 +205,7 @@ public class MainActivity extends AppCompatActivity
             setTitle("Summary:");
             onSummary = true;
             invalidateOptionsMenu();
-            NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
+            NavigationView navigationView = findViewById(R.id.nav_view);
             navigationView.setCheckedItem(R.id.nav_summary);
         }
         else {
@@ -240,13 +238,12 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
             Snackbar.make(findViewById(android.R.id.content), "Feature coming soon", Snackbar.LENGTH_SHORT).show();
         }
         else if(id == R.id.action_sorting)
         {
-            sortTypes = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.sortTypes)));
+            sortTypes = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.sortTypes)));
             //remove sorttypes depending on treasure type
 
             if(menu.findItem(R.id.nav_coins).isChecked())
@@ -306,63 +303,47 @@ public class MainActivity extends AppCompatActivity
                 public void onClick(DialogInterface dialog, int which) {
                     //set sortType
                     String oldType = sortType;
-                    if(sortTypes.get(which).equals("Treasure Amount"))
-                    {
-                        sortType = "CladAmount";
-                    }
-                    else if(sortTypes.get(which).equals("Treasure Country"))
-                    {
-                        sortType = "TreasureCountry";
-                    }
-                    else if(sortTypes.get(which).equals("Treasure Maker"))
-                    {
-                        sortType = "TreasureName";
-                    }
-                    else if(sortTypes.get(which).equals("Treasure Material"))
-                    {
-                        sortType = "TreasureMaterial";
-                    }
-                    else if(sortTypes.get(which).equals("Treasure Weight"))
-                    {
-                        sortType = "TreasureWeight";
-                    }
-                    else if(sortTypes.get(which).equals("Treasure Year"))
-                    {
-                        sortType = "TreasureYear";
-                    }
-                    else if(sortTypes.get(which).equals("Treasure Location Found"))
-                    {
-                        if(menu.findItem(R.id.nav_clad).isChecked())
-                        {
-                            sortType = "CladLocationFound";
-                        }
-                        else
-                        {
-                            sortType = "TreasureLocationFound";
-                        }
+                    switch (sortTypes.get(which)) {
+                        case "Treasure Amount":
+                            sortType = "CladAmount";
+                            break;
+                        case "Treasure Country":
+                            sortType = "TreasureCountry";
+                            break;
+                        case "Treasure Maker":
+                            sortType = "TreasureName";
+                            break;
+                        case "Treasure Material":
+                            sortType = "TreasureMaterial";
+                            break;
+                        case "Treasure Weight":
+                            sortType = "TreasureWeight";
+                            break;
+                        case "Treasure Year":
+                            sortType = "TreasureYear";
+                            break;
+                        case "Treasure Location Found":
+                            if (menu.findItem(R.id.nav_clad).isChecked()) {
+                                sortType = "CladLocationFound";
+                            } else {
+                                sortType = "TreasureLocationFound";
+                            }
 
-                    }
-                    else if(sortTypes.get(which).equals("Treasure Date Found"))
-                    {
-                        if(menu.findItem(R.id.nav_clad).isChecked())
-                        {
-                            sortType = "CladDateFound";
-                        }
-                        else
-                        {
-                            sortType = "TreasureDateFound";
-                        }
-                    }
-                    else if(sortTypes.get(which).equals("Most Recently Added"))
-                    {
-                        if(menu.findItem(R.id.nav_clad).isChecked())
-                        {
-                            sortType = "CladID";
-                        }
-                        else
-                        {
-                            sortType = "TreasureID";
-                        }
+                            break;
+                        case "Treasure Date Found":
+                            if (menu.findItem(R.id.nav_clad).isChecked()) {
+                                sortType = "CladDateFound";
+                            } else {
+                                sortType = "TreasureDateFound";
+                            }
+                            break;
+                        case "Most Recently Added":
+                            if (menu.findItem(R.id.nav_clad).isChecked()) {
+                                sortType = "CladID";
+                            } else {
+                                sortType = "TreasureID";
+                            }
+                            break;
                     }
 
                     //sorttype has changed. refresh the treasureFragment to indicate this
@@ -407,7 +388,6 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
         // Handle navigation view item clicks here.
@@ -420,7 +400,7 @@ public class MainActivity extends AppCompatActivity
 
         if(id == R.id.nav_summary && !menu.findItem(R.id.nav_summary).isChecked()) {
             onSummary = true;
-            Log.d("myTag", "GOING TO SUMMARY!!!");
+            //Log.d("myTag", "GOING TO SUMMARY!!!");
             while (mFragmentManager.getBackStackEntryCount() > 0) {
                 mFragmentManager.popBackStackImmediate();
             }
@@ -497,7 +477,7 @@ public class MainActivity extends AppCompatActivity
         }
 
         invalidateOptionsMenu();
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        DrawerLayout drawer = findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }

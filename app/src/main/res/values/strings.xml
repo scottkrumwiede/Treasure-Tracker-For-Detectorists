@@ -2,7 +2,6 @@
     <string name="app_name">Treasure Tracker</string>
     <string name="admob_app_id">ca-app-pub-9595024238231934~8798865468</string>
     <string name="banner_ad_unit_id">ca-app-pub-9595024238231934/7567698365</string>
-    <string name="banner_test_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
 
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
@@ -11,22 +10,15 @@
     <string name="action_settings">Settings</string>
     <string name="action_sortby">Sort By</string>
     <string name="action_edit">Edit treasure</string>
-    <string name="action_delete">Delete treasure</string>
     <string name="action_share">Share treasure</string>
     <string name="action_add_next">Next</string>
-
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="title_activity_add_treasure">AddTreasureActivity</string>
-    <string name="title_home">Home</string>
-    <string name="title_dashboard">Dashboard</string>
-    <string name="title_notifications">Notifications</string>
 
     <string name="imageDir">imageDir</string>
 
     <string name="country_prompt">Choose a country</string>
     <string-array name="countries_array">
         <item>United States</item>
-        <item>Custom...</item>
+        <item>Custom…</item>
     </string-array>
 
     <string name="uscointype_prompt">Choose a U.S. coin</string>
@@ -37,17 +29,7 @@
         <item>25-cent (Quarter)</item>
         <item>50-cent (Half dollar)</item>
         <item>100-cent (Dollar)</item>
-        <item>Custom...</item>
-    </string-array>
-
-    <string-array name="canadacoins_type_array">
-        <item>1-cent (cent)</item>
-        <item>5-cent (Nickel)</item>
-        <item>10-cent (Dime)</item>
-        <item>25-cent (Quarter)</item>
-        <item>100-cent (loonie)</item>
-        <item>200-cent (toonie)</item>
-        <item>Custom...</item>
+        <item>Custom…</item>
     </string-array>
 
     <string name="uscoin_penny_series_prompt">Choose a design:</string>
@@ -65,19 +47,17 @@
         <item>Liberty Cap (Large)</item>
         <item>Flowing Hair Wreath (Large)</item>
         <item>Flowing Hair Chain (Large)</item>
-        <item>Custom...</item>
+        <item>Custom…</item>
     </string-array>
 
-    <string name="uscoin_nickel_series_prompt">Choose a design:</string>
     <string-array name="uscoin_nickel_series_array">
          <item>Jefferson</item>
          <item>Buffalo</item>
          <item>V</item>
          <item>Shield</item>
-         <item>Custom...</item>
+         <item>Custom…</item>
     </string-array>
 
-    <string name="uscoin_dime_series_prompt">Choose a design:</string>
     <string-array name="uscoin_dime_series_array">
         <item>Roosevelt</item>
         <item>Mercury</item>
@@ -85,10 +65,9 @@
         <item>Seated (Legend)</item>
         <item>Seated (Stars)</item>
         <item>Seated (No Stars)</item>
-        <item>Custom...</item>
+        <item>Custom…</item>
     </string-array>
 
-    <string name="uscoin_quarter_series_prompt">Choose a design:</string>
     <string-array name="uscoin_quarter_series_array">
         <item>America the Beautiful</item>
         <item>50 State</item>
@@ -99,10 +78,9 @@
         <item>Seated Liberty</item>
         <item>Capped Bust</item>
         <item>Draped Bust</item>
-        <item>Custom...</item>
+        <item>Custom…</item>
     </string-array>
 
-    <string name="uscoin_halfdollar_series_prompt">Choose a design:</string>
     <string-array name="uscoin_halfdollar_series_array">
         <item>Kennedy</item>
         <item>Bicentennial</item>
@@ -112,10 +90,9 @@
         <item>Seated Liberty</item>
         <item>Capped Bust</item>
         <item>Early Bust</item>
-        <item>Custom...</item>
+        <item>Custom…</item>
     </string-array>
 
-    <string name="uscoin_dollar_series_prompt">Choose a design:</string>
     <string-array name="uscoin_dollar_series_array">
         <item>Presidential</item>
         <item>Sacagawea</item>
@@ -127,7 +104,7 @@
         <item>Gold</item>
         <item>Seated Liberty</item>
         <item>Bust</item>
-        <item>Custom...</item>
+        <item>Custom…</item>
     </string-array>
 
     <string name="material_prompt">Choose a material type</string>
@@ -142,7 +119,7 @@
         <item>Steel</item>
         <item>Bronze</item>
         <item>Gold</item>
-        <item>Custom...</item>
+        <item>Custom…</item>
     </string-array>
 
     <string-array name="token_material_array">
@@ -151,7 +128,7 @@
         <item>Iron</item>
         <item>Brass</item>
         <item>Silver 92.5%</item>
-        <item>Custom...</item>
+        <item>Custom…</item>
     </string-array>
 
     <string-array name="jewelry_material_array">
@@ -164,7 +141,7 @@
         <item>Stainless Steel</item>
         <item>Brass</item>
         <item>Costume</item>
-        <item>Custom...</item>
+        <item>Custom…</item>
     </string-array>
 
     <string-array name="relic_material_array">
@@ -172,7 +149,7 @@
         <item>Copper</item>
         <item>Iron</item>
         <item>Brass</item>
-        <item>Custom...</item>
+        <item>Custom…</item>
     </string-array>
 
 
@@ -191,7 +168,7 @@
         <item>P (Philadelphia)</item>
         <item>D (Dahlonega)</item>
         <item>M (Manila)</item>
-        <item>Custom...</item>
+        <item>Custom…</item>
     </string-array>
 
     <string name="defaultSortType">TreasureID</string>
@@ -214,7 +191,7 @@
         <item>$ (CAD)</item>
         <item>¥ (JPY)</item>
         <item>$ (MEX)</item>
-        <item>Custom...</item>
+        <item>Custom…</item>
     </string-array>
 
     <integer name="grid_columns">3</integer>
