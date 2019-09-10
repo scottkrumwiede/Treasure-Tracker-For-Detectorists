@@ -94,7 +94,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:visibility="visible"
-        android:inputType="number"
+        android:inputType="numberDecimal"
         android:background="@drawable/shadow_13"
         android:paddingStart="30dp"
         android:autoSizeTextType="uniform"

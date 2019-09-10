@@ -15,6 +15,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -225,6 +226,7 @@ public class AddCladInfoFragment extends Fragment {
                     if(parentView.getItemAtPosition(position).toString().equals("Custom…"))
                     {
                         final EditText taskEditText = new EditText(getContext());
+                        taskEditText.setFilters(new InputFilter[] { new InputFilter.LengthFilter(5) });
                         AlertDialog dialog = new AlertDialog.Builder(getActivity())
                                 .setTitle("Custom Currency:")
                                 .setView(taskEditText)

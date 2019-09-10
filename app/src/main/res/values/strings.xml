@@ -186,11 +186,11 @@
     </string-array>
 
     <string-array name="clad_currency_array">
-        <item>$ (USD)</item>
-        <item>€ (EUR)</item>
-        <item>$ (CAD)</item>
-        <item>¥ (JPY)</item>
-        <item>$ (MEX)</item>
+        <item>(USD)</item>
+        <item>(EUR)</item>
+        <item>(CAD)</item>
+        <item>(JPY)</item>
+        <item>(MEX)</item>
         <item>Custom…</item>
     </string-array>
 

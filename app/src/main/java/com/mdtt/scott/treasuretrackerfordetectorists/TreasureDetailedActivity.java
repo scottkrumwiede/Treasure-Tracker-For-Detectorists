@@ -337,11 +337,21 @@ public class TreasureDetailedActivity extends AppCompatActivity {
             clipboard.setPrimaryClip(clip);
 
             Intent shareIntent = new Intent();
-            shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
-            shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris);
-            shareIntent.setType("image/*");
-            shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
-            startActivity(Intent.createChooser(shareIntent, "Share images to.."));
+            if(!imageUris.isEmpty())
+            {
+                shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
+                shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris);
+                shareIntent.setType("image/*");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+                startActivity(Intent.createChooser(shareIntent, "Share photos and info to.."));
+            }
+            else
+            {
+                shareIntent.setAction(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+                startActivity(Intent.createChooser(shareIntent, "Share info to.."));
+            }
         }
         return super.onOptionsItemSelected(item);
     }

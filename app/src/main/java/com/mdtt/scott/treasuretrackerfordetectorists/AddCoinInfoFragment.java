@@ -151,17 +151,26 @@ public class AddCoinInfoFragment extends Fragment {
                         //Log.d("test", "starting countrySpinner because:\ncoinCountrySelected= "+coinCountrySelected+"\nposition= "+position);
                         if(parentView.getItemAtPosition(position).toString().equals("United States"))
                         {
-                            customDesignEditText.setVisibility(View.GONE);
+
                             customTypeEditText.setVisibility(View.GONE);
                             customMintEditText.setVisibility(View.GONE);
                             coinTypeSpinner.setVisibility(View.VISIBLE);
-                            coinSeriesSpinner.setVisibility(View.VISIBLE);
                             coinMintSpinner.setVisibility(View.VISIBLE);
                             ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, coinTypeList);
                             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             coinTypeSpinner.setAdapter(spinnerAdapter);
                             coinTypeSpinner.setSelection(coinTypeSelected);
                             spinnerAdapter.notifyDataSetChanged();
+                            if(!(coinTypeList.size() > 7 && coinTypeSelected == 6))
+                            {
+                                customDesignEditText.setVisibility(View.GONE);
+                                coinSeriesSpinner.setVisibility(View.VISIBLE);
+                            }
+                            else
+                            {
+                                customDesignEditText.setText("");
+                                customDesignEditText.requestFocus();
+                            }
                         }
                         else if(parentView.getItemAtPosition(position).toString().equals("Custom…"))
                         {
@@ -195,9 +204,13 @@ public class AddCoinInfoFragment extends Fragment {
                                             customDesignEditText.setVisibility(View.VISIBLE);
                                             customTypeEditText.setVisibility(View.VISIBLE);
                                             customMintEditText.setVisibility(View.VISIBLE);
+                                            customDesignEditText.setText("");
+                                            customTypeEditText.setText("");
+                                            customMintEditText.setText("");
                                             coinTypeSpinner.setVisibility(View.GONE);
                                             coinSeriesSpinner.setVisibility(View.GONE);
                                             coinMintSpinner.setVisibility(View.GONE);
+                                            customTypeEditText.requestFocus();
 
                                         }
                                     })
@@ -221,17 +234,28 @@ public class AddCoinInfoFragment extends Fragment {
                         }
                         else
                         {
+                            if(customDesignEditText.getVisibility() == View.VISIBLE)
+                            {
+                                customDesignEditText.setText("");
+                            }
                             customDesignEditText.setVisibility(View.VISIBLE);
                             customTypeEditText.setVisibility(View.VISIBLE);
                             customMintEditText.setVisibility(View.VISIBLE);
                             coinTypeSpinner.setVisibility(View.GONE);
                             coinSeriesSpinner.setVisibility(View.GONE);
                             coinMintSpinner.setVisibility(View.GONE);
+                            if(customTypeEditText.getText().toString().equals(""))
+                            {
+                                customTypeEditText.requestFocus();
+                            }
+                            else
+                            {
+                                customDesignEditText.requestFocus();
+                            }
                         }
                     }
                     //Log.d("test", "coinCountrySelected="+coinCountrySelected+" changed to "+position);
                     coinCountrySelected = position;
-
             }
 
             @Override
@@ -357,6 +381,8 @@ public class AddCoinInfoFragment extends Fragment {
                                         coinTypeSpinner.setSelection(coinTypeList.size()-2);
                                         spinnerAdapter.notifyDataSetChanged();
                                         customDesignEditText.setVisibility(View.VISIBLE);
+                                        customDesignEditText.setText("");
+                                        customDesignEditText.requestFocus();
                                         coinSeriesSpinner.setVisibility(View.GONE);
                                     }
                                 })

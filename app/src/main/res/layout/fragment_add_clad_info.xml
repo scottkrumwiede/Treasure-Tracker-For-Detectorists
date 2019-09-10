@@ -26,7 +26,7 @@
             android:autoSizeMinTextSize="6sp"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeStepGranularity="2sp"
-            android:maxLength="5"
+            android:maxLength="6"
             android:hint="Amount:"
             android:inputType="numberDecimal"
             android:importantForAutofill="no"

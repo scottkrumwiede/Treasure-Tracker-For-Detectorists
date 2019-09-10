@@ -57,8 +57,10 @@ public class CustomListViewAdapter extends ArrayAdapter<Clad> implements View.On
         double oldCladAmount = (clad.getCladAmount());
         String newCladAmount = df.format(oldCladAmount);
 
-        viewHolder.txtAmount.setText(newCladAmount);
         viewHolder.txtCurrency.setText(clad.getCladCurrency());
+
+        viewHolder.txtAmount.setText(newCladAmount);
+
         viewHolder.txtDateFound.setText(clad.getCladDateFound());
         if(clad.getCladDateFound().equals(""))
         {

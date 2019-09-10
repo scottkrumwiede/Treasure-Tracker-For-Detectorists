@@ -123,7 +123,7 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:text="Clad: " />
+                android:text="Clad Totals: " />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
