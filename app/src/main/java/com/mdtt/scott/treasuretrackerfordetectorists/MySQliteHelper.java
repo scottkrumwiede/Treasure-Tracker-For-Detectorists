@@ -438,7 +438,7 @@ public class MySQliteHelper extends SQLiteOpenHelper {
         //get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
 
-        //int result = db.delete(TABLE_TREASURE, colTreasureID+"=?",new String[]{treasureID});
+        db.delete(TABLE_TREASURE, colTreasureID+"=?",new String[]{treasureID});
         db.close();
     }
 
@@ -447,7 +447,7 @@ public class MySQliteHelper extends SQLiteOpenHelper {
         //get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
 
-        //int result = db.delete(TABLE_CLAD, colCladID+"=?",new String[]{cladID});
+        db.delete(TABLE_CLAD, colCladID+"=?",new String[]{cladID});
         db.close();
     }
 }

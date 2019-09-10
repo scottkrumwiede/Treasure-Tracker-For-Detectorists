@@ -58,7 +58,8 @@
         android:paddingStart="30dp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
-        android:hint="Choose a denomination" />
+        android:hint="Choose a denomination"
+        android:importantForAutofill="no" />
 
     <TextView
         android:layout_width="match_parent"
@@ -88,7 +89,8 @@
         android:paddingStart="30dp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
-        android:hint="Choose a design" />
+        android:hint="Choose a design"
+        android:importantForAutofill="no" />
 
     <TextView
         android:layout_width="match_parent"
@@ -107,7 +109,8 @@
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
         android:maxLength="4"
-        android:hint="Year" />
+        android:hint="Year"
+        android:importantForAutofill="no" />
 
 
     <TextView
@@ -139,7 +142,8 @@
         android:autoSizeMaxTextSize="100sp"
         android:paddingStart="30dp"
         android:autoSizeStepGranularity="2sp"
-        android:hint="Choose a mint" />
+        android:hint="Choose a mint"
+        android:importantForAutofill="no" />
 
     <TextView
         android:layout_width="match_parent"

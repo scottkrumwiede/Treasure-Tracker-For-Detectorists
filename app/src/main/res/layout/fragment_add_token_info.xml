@@ -26,7 +26,8 @@
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
-        android:hint="Maker" />
+        android:hint="Maker"
+        android:importantForAutofill="no" />
 
     <TextView
         android:layout_width="match_parent"
@@ -43,7 +44,8 @@
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
-        android:hint="Design/Series" />
+        android:hint="Design/Series"
+        android:importantForAutofill="no" />
 
     <TextView
         android:layout_width="match_parent"
@@ -62,7 +64,8 @@
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
-        android:hint="Year" />
+        android:hint="Year"
+        android:importantForAutofill="no" />
 
     <TextView
         android:layout_width="match_parent"

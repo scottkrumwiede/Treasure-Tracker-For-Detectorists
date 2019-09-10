@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -177,14 +178,14 @@ public class TreasureFragment extends Fragment {
 
                     //Use photo acquired photopath to retrieve actual photo now and add it to treasurePhotos
                     final String prefix = g.getTreasurePhotoPath();
-                    //Log.d("myTag", "Prefix is: "+prefix);
+                    Log.d("myTag", "Prefix is: "+prefix);
                     Bitmap photo;
                     if (prefix != null) {
 
                         File[] files = subDir.listFiles(new FilenameFilter() {
                             @Override
                             public boolean accept(File directory, String name) {
-                                //Log.d("myTag", "Name of photo found is: "+name);
+                                Log.d("myTag", "Name of photo found is: "+name);
                                 return name.startsWith(prefix);
                             }
                         });
@@ -192,6 +193,8 @@ public class TreasureFragment extends Fragment {
                         //listFiles returns in reverse alphabetical order, so we need to sort to get alphabetical
                         // so that photo order remains the same as when added.
                         Arrays.sort(files);
+
+                        Log.d("myTag", "Sizes of photos found is: "+files.length);
 
                         if (files.length > 0) {
                             String filepath = files[0].getPath();

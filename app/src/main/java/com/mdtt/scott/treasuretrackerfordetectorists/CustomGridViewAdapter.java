@@ -43,7 +43,7 @@ public class CustomGridViewAdapter extends BaseAdapter {
         if(convertView == null)
         {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            gridView = inflater.inflate(R.layout.treasure_gridview_item, null);
+            gridView = inflater.inflate(R.layout.treasure_gridview_item, parent, false);
         }
 
         ImageView treasureImage = gridView.findViewById(R.id.android_gridview_image);

@@ -222,7 +222,7 @@ public class AddCladInfoFragment extends Fragment {
                 {
                     final int previousCurrency = cladCurrencyPositionSelected;
                     //Log.d("test", "starting currencySpinner because:\ncladCurrencyPositionSelected= "+cladCurrencyPositionSelected+"\nposition= "+position);
-                    if(parentView.getItemAtPosition(position).toString().equals("Custom..."))
+                    if(parentView.getItemAtPosition(position).toString().equals("Custom…"))
                     {
                         final EditText taskEditText = new EditText(getContext());
                         AlertDialog dialog = new AlertDialog.Builder(getActivity())
@@ -243,7 +243,7 @@ public class AddCladInfoFragment extends Fragment {
                                             currencyList.remove(currencyList.size()-1);
                                         }
                                         currencyList.add(task);
-                                        currencyList.add("Custom...");
+                                        currencyList.add("Custom…");
                                         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, currencyList);
                                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                         cladCurrencySpinner.setAdapter(spinnerAdapter);

@@ -1,7 +1,6 @@
 package com.mdtt.scott.treasuretrackerfordetectorists;
 
 
-import android.content.Context;
 import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -63,8 +62,12 @@ public class AddPhotoFragment extends Fragment {
 
         if (getArguments() != null) {
             type = getArguments().getString("type");
+            bundle = getArguments();
         }
-        bundle = new Bundle();
+        else
+        {
+            bundle = new Bundle();
+        }
         timeAtAdd = Long.toString(System.currentTimeMillis());
     }
 
@@ -140,9 +143,13 @@ public class AddPhotoFragment extends Fragment {
                     final String photoPath = photoPaths.get(i);
 
                     ContextWrapper cw = new ContextWrapper(getActivity().getApplicationContext());
-                    File directory = cw.getDir(getResources().getString(R.string.imageDir), Context.MODE_PRIVATE);
+                    // path to /data/data/yourapp/app_data/imageDir
+                    File directory = cw.getFilesDir();
+                    File subDir = new File(directory, "imageDir");
+                    if( !subDir.exists() )
+                        subDir.mkdir();
 
-                    File [] files = directory.listFiles(new FilenameFilter() {
+                    File [] files = subDir.listFiles(new FilenameFilter() {
                         @Override
                         public boolean accept(File directory, String name) {
                             return name.equals(photoPath);
@@ -151,7 +158,7 @@ public class AddPhotoFragment extends Fragment {
 
                     for (File file : files) {
 
-                        //Log.d("TEST",""+file.getPath());
+                        //Log.d("TEST", "file to be removed is: "+file.getPath());
                         //delete file that was saved in saveImage method
                         file.delete();
                         photoPaths.remove(i);
@@ -262,7 +269,6 @@ public class AddPhotoFragment extends Fragment {
 
     public void nextButtonClicked() {
         bundle.putString("timeAtAdd", timeAtAdd);
-        bundle.putString("type", type);
         switch (type) {
             case "coin":
                 ((AddActivity) getActivity()).replaceFragments(AddCoinInfoFragment.class, bundle, "addInfo");

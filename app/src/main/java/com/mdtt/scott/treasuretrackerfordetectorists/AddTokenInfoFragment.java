@@ -63,11 +63,21 @@ public class AddTokenInfoFragment extends Fragment {
         tokenYearEditText = view.findViewById(R.id.tokenYearEditText);
 
         //Log.d("test", "on view created we're here");
+        ArrayAdapter<String> tokenMaterialSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, tokenMaterialList);
 
-        tokenMaterialSelected = tokenMaterialSpinner.getSelectedItemPosition();
+        //If the user had previously filled out info here but then backed up to a previous fragment before returning
+        if(bundle.containsKey("treasureName"))
+        {
+            repopulateInfo();
+        }
+        //first entry into this fragment
+        else
+        {
+            tokenMaterialSelected = tokenMaterialSpinner.getSelectedItemPosition();
+        }
+
         //Log.d("test", "Material: " + tokenMaterialSelected);
 
-        ArrayAdapter<String> tokenMaterialSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, tokenMaterialList);
         tokenMaterialSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         tokenMaterialSpinner.setAdapter(tokenMaterialSpinnerAdapter);
         tokenMaterialSpinner.setSelection(tokenMaterialSelected);
@@ -80,7 +90,7 @@ public class AddTokenInfoFragment extends Fragment {
                 {
                     final int previousMaterial = tokenMaterialSelected;
                     //Log.d("test", "starting tokenMaterialSpinner because:\ntokenMaterialSelected= "+tokenMaterialSelected+"\nposition= "+position);
-                    if(parentView.getItemAtPosition(position).toString().equals("Custom..."))
+                    if(parentView.getItemAtPosition(position).toString().equals("Custom…"))
                     {
                         final EditText taskEditText = new EditText(getContext());
                         AlertDialog dialog = new AlertDialog.Builder(getContext())
@@ -101,7 +111,7 @@ public class AddTokenInfoFragment extends Fragment {
                                             tokenMaterialList.remove(tokenMaterialList.size()-1);
                                         }
                                         tokenMaterialList.add(task);
-                                        tokenMaterialList.add("Custom...");
+                                        tokenMaterialList.add("Custom…");
                                         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, tokenMaterialList);
                                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                         tokenMaterialSpinner.setAdapter(spinnerAdapter);
@@ -140,10 +150,38 @@ public class AddTokenInfoFragment extends Fragment {
     }
 
     public void nextButtonClicked() {
+        addToBundle();
+        ((AddActivity) getActivity()).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
+    }
+
+    public void addToBundle() {
         bundle.putString("treasureName", tokenNameEditText.getText().toString());
         bundle.putString("treasureSeries", tokenSeriesEditText.getText().toString());
         bundle.putString("treasureYear", tokenYearEditText.getText().toString());
         bundle.putString("treasureMaterial", tokenMaterialSpinner.getSelectedItem().toString());
-        ((AddActivity) getActivity()).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
+    }
+
+    private void repopulateInfo() {
+        //set maker
+        tokenNameEditText.setText(bundle.getString("treasureName"));
+        //set design
+        tokenSeriesEditText.setText(bundle.getString("treasureSeries"));
+        //set year
+        tokenYearEditText.setText(bundle.getString("treasureYear"));
+        //check if material is in list, otherwise add. then set spinner to position.
+        if(tokenMaterialList.contains(bundle.getString("treasureMaterial")))
+        {
+            tokenMaterialSelected = tokenMaterialList.indexOf(bundle.getString("treasureMaterial"));
+        }
+        else
+        {
+            while(tokenMaterialList.size() > 10)
+            {
+                tokenMaterialList.remove(tokenMaterialList.size()-1);
+            }
+            tokenMaterialList.add(bundle.getString("treasureMaterial"));
+            tokenMaterialList.add("Custom…");
+            tokenMaterialSelected = tokenMaterialList.size()-2;
+        }
     }
 }

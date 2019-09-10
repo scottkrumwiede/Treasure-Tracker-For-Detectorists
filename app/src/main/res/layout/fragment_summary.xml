@@ -8,7 +8,7 @@
     android:fillViewport="true">
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:orientation="vertical">
@@ -19,7 +19,8 @@
                 android:layout_gravity="center"
                 android:layout_height="200px"
                 android:layout_margin="15dp"
-                android:src="@drawable/mainlogo_tp_200x200"/>
+                android:src="@drawable/mainlogo_tp_200x200"
+                android:contentDescription="main logo" />
 
 
 
@@ -198,6 +199,6 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id">
+        ads:adUnitId="@string/test_banner_ad_unit_id">
     </com.google.android.gms.ads.AdView>
 </RelativeLayout>

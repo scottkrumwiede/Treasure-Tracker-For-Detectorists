@@ -1,6 +1,7 @@
 package com.mdtt.scott.treasuretrackerfordetectorists;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -50,9 +51,9 @@ public class AddActivity extends AppCompatActivity {
             }
             else
             {
-                AddPhotoFragment addTreasurePhotoFragment = new AddPhotoFragment();
-                addTreasurePhotoFragment.setArguments(bundle);
-                fm.beginTransaction().replace(R.id.main_fragment, addTreasurePhotoFragment, "addPhoto").commit();
+                AddPhotoFragment addPhotoFragment = new AddPhotoFragment();
+                addPhotoFragment.setArguments(bundle);
+                fm.beginTransaction().replace(R.id.main_fragment, addPhotoFragment, "addPhoto").commit();
             }
         }
     }
@@ -158,5 +159,53 @@ public class AddActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.main_fragment, fragment, tag);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
+    }
+
+    @Override
+    public void onBackPressed()
+    {
+            Log.d("myTag", "we're in back pressed!");
+            Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment);
+            String fragmentTag = fragment.getTag();
+            if(fragmentTag != null)
+            {
+                if(fragmentTag.equals("addInfo"))
+                {
+                    Log.d("myTag", "we're in addinfo of back pressed!");
+                    switch (type)
+                    {
+                        case "coin": {
+                            AddCoinInfoFragment frag = (AddCoinInfoFragment) fragment;
+                         frag.addToBundle();
+                          break;
+                        }
+                         case "token": {
+                         AddTokenInfoFragment frag = (AddTokenInfoFragment) fragment;
+                          frag.addToBundle();
+                           break;
+                        }
+                        case "relic": {
+                        AddRelicInfoFragment frag = (AddRelicInfoFragment) fragment;
+                        frag.addToBundle();
+                        break;
+                        }
+                          case "jewelry": {
+                          AddJewelryInfoFragment frag = (AddJewelryInfoFragment) fragment;
+                          frag.addToBundle();
+                        break;
+                      }
+                    }
+                }
+                else if(fragmentTag.equals("addFinal"))
+                 {
+                    if(!type.equals("clad"))
+                    {
+                        AddFinalInfoFragment frag = (AddFinalInfoFragment) fragment;
+                         frag.addToBundle();
+                     }
+                 }
+            }
+            Log.d("myTag", "we're leaving back pressed!");
+            super.onBackPressed();
     }
 }

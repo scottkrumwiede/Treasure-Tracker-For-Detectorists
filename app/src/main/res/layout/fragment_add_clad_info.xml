@@ -20,16 +20,17 @@
             android:id="@+id/clad_amount_edittext"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
             android:background="@drawable/shadow_13"
             android:paddingStart="30dp"
             android:autoSizeTextType="uniform"
             android:autoSizeMinTextSize="6sp"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeStepGranularity="2sp"
-            android:maxLength="7"
+            android:maxLength="5"
             android:hint="Amount:"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:importantForAutofill="no"
+            />
 
         <Spinner
             android:id="@+id/clad_currency_spinner"
@@ -58,6 +59,7 @@
             android:autoSizeStepGranularity="2sp"
             android:layout_height="wrap_content"
             android:visibility="visible"
+            android:importantForAutofill="no"
             android:hint="Include the location of your find"/>
 
         <Button

@@ -93,6 +93,12 @@ public class AddFinalInfoFragment extends Fragment {
         String date = month + 1 + "/" + day + "/" + year;
         treasureDateFoundTextView.setText(date);
 
+        //If the user had previously filled out info here but then backed up to a previous fragment before returning
+        if(bundle.containsKey("treasureDateFound"))
+        {
+            repopulateInfo();
+        }
+
         treasureDateFoundTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,6 +169,18 @@ public class AddFinalInfoFragment extends Fragment {
         });
 
         return view;
+    }
+
+    private void repopulateInfo() {
+
+        treasureDateFoundTextView.setText(bundle.getString("treasureDateFound"));
+        treasureLocationFoundEditText.setText(bundle.getString("treasureLocationFound"));
+        treasureInfoEditText.setText(bundle.getString("treasureInfo"));
+
+        if(bundle.getString("type").equals("collection"))
+        {
+            collectionNameEditText.setText(bundle.getString("collectionName"));
+        }
     }
 
     private void renameTempImages(final String timeAtAdd)
@@ -275,5 +293,16 @@ public class AddFinalInfoFragment extends Fragment {
 
                     }
                 }).create().show();
+    }
+
+    public void addToBundle() {
+        bundle.putString("treasureDateFound", treasureDateFoundTextView.getText().toString());
+        bundle.putString("treasureLocationFound", treasureLocationFoundEditText.getText().toString());
+        bundle.putString("treasureInfo", treasureInfoEditText.getText().toString().trim());
+
+        if(bundle.getString("type").equals("collection"))
+        {
+            bundle.putString("collectionName", collectionNameEditText.getText().toString());
+        }
     }
 }

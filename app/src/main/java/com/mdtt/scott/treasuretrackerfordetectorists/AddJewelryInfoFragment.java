@@ -72,11 +72,21 @@ public class AddJewelryInfoFragment extends Fragment {
         jewelryWeightEditText = view.findViewById(R.id.jewelryWeightEditText);
 
         //Log.d("test", "on view created we're here");
+        ArrayAdapter<String> jewelryMaterialSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, jewelryMaterialList);
 
-        jewelryMaterialSelected = jewelryMaterialSpinner.getSelectedItemPosition();
+        //If the user had previously filled out info here but then backed up to a previous fragment before returning
+        if(bundle.containsKey("treasureName"))
+        {
+            repopulateInfo();
+        }
+        //first entry into this fragment
+        else
+        {
+            jewelryMaterialSelected = jewelryMaterialSpinner.getSelectedItemPosition();
+        }
+
         //Log.d("test", "Material: " + jewelryMaterialSelected);
 
-        ArrayAdapter<String> jewelryMaterialSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, jewelryMaterialList);
         jewelryMaterialSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         jewelryMaterialSpinner.setAdapter(jewelryMaterialSpinnerAdapter);
         jewelryMaterialSpinner.setSelection(jewelryMaterialSelected);
@@ -89,7 +99,7 @@ public class AddJewelryInfoFragment extends Fragment {
                 {
                     final int previousMaterial = jewelryMaterialSelected;
                     //Log.d("test", "starting jewelryMaterialSpinner because:\njewelryMaterialSelected= "+jewelryMaterialSelected+"\nposition= "+position);
-                    if(parentView.getItemAtPosition(position).toString().equals("Custom..."))
+                    if(parentView.getItemAtPosition(position).toString().equals("Custom…"))
                     {
                         final EditText taskEditText = new EditText(getContext());
                         AlertDialog dialog = new AlertDialog.Builder(getContext())
@@ -110,7 +120,7 @@ public class AddJewelryInfoFragment extends Fragment {
                                             jewelryMaterialList.remove(jewelryMaterialList.size()-1);
                                         }
                                         jewelryMaterialList.add(task);
-                                        jewelryMaterialList.add("Custom...");
+                                        jewelryMaterialList.add("Custom…");
                                         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, jewelryMaterialList);
                                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                         jewelryMaterialSpinner.setAdapter(spinnerAdapter);
@@ -149,11 +159,41 @@ public class AddJewelryInfoFragment extends Fragment {
     }
 
     public void nextButtonClicked() {
+        addToBundle();
+        ((AddActivity) getActivity()).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
+    }
+
+    private void repopulateInfo() {
+        //set maker
+        jewelryNameEditText.setText(bundle.getString("treasureName"));
+        //set design
+        jewelrySeriesEditText.setText(bundle.getString("treasureSeries"));
+        //set year
+        jewelryYearEditText.setText(bundle.getString("treasureYear"));
+        //set weight
+        jewelryWeightEditText.setText(bundle.getString("treasureWeight"));
+        //check if material is in list, otherwise add. then set spinner to position.
+        if(jewelryMaterialList.contains(bundle.getString("treasureMaterial")))
+        {
+            jewelryMaterialSelected = jewelryMaterialList.indexOf(bundle.getString("treasureMaterial"));
+        }
+        else
+        {
+            while(jewelryMaterialList.size() > 10)
+            {
+                jewelryMaterialList.remove(jewelryMaterialList.size()-1);
+            }
+            jewelryMaterialList.add(bundle.getString("treasureMaterial"));
+            jewelryMaterialList.add("Custom…");
+            jewelryMaterialSelected = jewelryMaterialList.size()-2;
+        }
+    }
+
+    public void addToBundle() {
         bundle.putString("treasureName", jewelryNameEditText.getText().toString());
         bundle.putString("treasureSeries", jewelrySeriesEditText.getText().toString());
         bundle.putString("treasureYear", jewelryYearEditText.getText().toString());
         bundle.putString("treasureMaterial", jewelryMaterialSpinner.getSelectedItem().toString());
         bundle.putString("treasureWeight", jewelryWeightEditText.getText().toString());
-        ((AddActivity) getActivity()).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
     }
 }

@@ -69,11 +69,22 @@ public class AddRelicInfoFragment extends Fragment {
         relicYearEditText = view.findViewById(R.id.relicYearEditText);
 
         //Log.d("test", "on view created we're here");
+        ArrayAdapter<String> relicMaterialSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, relicMaterialList);
 
-        relicMaterialSelected = relicMaterialSpinner.getSelectedItemPosition();
+        //If the user had previously filled out info here but then backed up to a previous fragment before returning
+        if(bundle.containsKey("treasureName"))
+        {
+            repopulateInfo();
+        }
+        //first entry into this fragment
+        else
+        {
+            relicMaterialSelected = relicMaterialSpinner.getSelectedItemPosition();
+        }
+
         //Log.d("test", "Material: " + relicMaterialSelected);
 
-        ArrayAdapter<String> relicMaterialSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, relicMaterialList);
+
         relicMaterialSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         relicMaterialSpinner.setAdapter(relicMaterialSpinnerAdapter);
         relicMaterialSpinner.setSelection(relicMaterialSelected);
@@ -86,7 +97,7 @@ public class AddRelicInfoFragment extends Fragment {
                 {
                     final int previousMaterial = relicMaterialSelected;
                     //Log.d("test", "starting relicMaterialSpinner because:\nrelicMaterialSelected= "+relicMaterialSelected+"\nposition= "+position);
-                    if(parentView.getItemAtPosition(position).toString().equals("Custom..."))
+                    if(parentView.getItemAtPosition(position).toString().equals("Custom…"))
                     {
                         final EditText taskEditText = new EditText(getContext());
                         AlertDialog dialog = new AlertDialog.Builder(getContext())
@@ -107,7 +118,7 @@ public class AddRelicInfoFragment extends Fragment {
                                             relicMaterialList.remove(relicMaterialList.size()-1);
                                         }
                                         relicMaterialList.add(task);
-                                        relicMaterialList.add("Custom...");
+                                        relicMaterialList.add("Custom…");
                                         ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, relicMaterialList);
                                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                         relicMaterialSpinner.setAdapter(spinnerAdapter);
@@ -145,11 +156,39 @@ public class AddRelicInfoFragment extends Fragment {
         });
     }
 
+    private void repopulateInfo() {
+        //set maker
+        relicNameEditText.setText(bundle.getString("treasureName"));
+        //set design
+        relicSeriesEditText.setText(bundle.getString("treasureSeries"));
+        //set year
+        relicYearEditText.setText(bundle.getString("treasureYear"));
+        //check if material is in list, otherwise add. then set spinner to position.
+        if(relicMaterialList.contains(bundle.getString("treasureMaterial")))
+        {
+            relicMaterialSelected = relicMaterialList.indexOf(bundle.getString("treasureMaterial"));
+        }
+        else
+        {
+            while(relicMaterialList.size() > 10)
+            {
+                relicMaterialList.remove(relicMaterialList.size()-1);
+            }
+            relicMaterialList.add(bundle.getString("treasureMaterial"));
+            relicMaterialList.add("Custom…");
+            relicMaterialSelected = relicMaterialList.size()-2;
+        }
+    }
+
     public void nextButtonClicked() {
+        addToBundle();
+        ((AddActivity) getActivity()).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
+    }
+
+    public void addToBundle() {
         bundle.putString("treasureName", relicNameEditText.getText().toString());
         bundle.putString("treasureSeries", relicSeriesEditText.getText().toString());
         bundle.putString("treasureYear", relicYearEditText.getText().toString());
         bundle.putString("treasureMaterial", relicMaterialSpinner.getSelectedItem().toString());
-        ((AddActivity) getActivity()).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
     }
 }

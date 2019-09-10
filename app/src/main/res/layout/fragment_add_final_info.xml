@@ -31,7 +31,8 @@
             android:autoSizeStepGranularity="2sp"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:hint="Include a name for your collection"/>
+            android:hint="Include a name for your collection"
+            android:importantForAutofill="no" />
 
         <TextView
             android:layout_width="match_parent"
@@ -52,7 +53,8 @@
             android:layout_height="wrap_content"
             android:gravity="top"
             android:minLines="1"
-            android:hint="Include a location for your find" />
+            android:hint="Include a location for your find"
+            android:importantForAutofill="no" />
 
         <Button
             android:id="@+id/placePickerButton"
@@ -101,7 +103,8 @@
             android:layout_height="wrap_content"
             android:gravity="top"
             android:minLines="3"
-            android:hint="Include any additional info about your find" />
+            android:hint="Include any additional info about your find"
+            android:importantForAutofill="no" />
 
     </LinearLayout>
 </ScrollView>
