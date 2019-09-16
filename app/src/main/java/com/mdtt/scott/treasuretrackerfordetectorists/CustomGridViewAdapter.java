@@ -2,7 +2,6 @@ package com.mdtt.scott.treasuretrackerfordetectorists;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,30 +15,24 @@ import java.util.ArrayList;
  * Created by Scott on 1/28/2018.
  */
 
+@SuppressWarnings("WeakerAccess")
 public class CustomGridViewAdapter extends BaseAdapter {
 
     private final ArrayList<Integer> gridViewIds;
     private final ArrayList<String> gridViewFirstLines;
     private final ArrayList<String> gridViewSecondLines;
-    private final ArrayList<String> gridViewThirdLines;
     private final ArrayList<Bitmap> gridViewImages;
-    private Context mContext;
-    private LayoutInflater inflater;
+    private final Context mContext;
 
-    public CustomGridViewAdapter(Context context, ArrayList<Integer> gridViewIds, ArrayList<String> gridViewFirstLines, ArrayList<String> gridViewSecondLines, ArrayList<String> gridViewThirdLines, ArrayList<Bitmap> gridViewImages) {
+    public CustomGridViewAdapter(Context context, ArrayList<Integer> gridViewIds, ArrayList<String> gridViewFirstLines, ArrayList<String> gridViewSecondLines, ArrayList<Bitmap> gridViewImages) {
         this.gridViewIds = gridViewIds;
         this.gridViewImages = gridViewImages;
         this.gridViewFirstLines = gridViewFirstLines;
         this.gridViewSecondLines = gridViewSecondLines;
-        this.gridViewThirdLines = gridViewThirdLines;
         mContext = context;
     }
 
-    public static class ViewHolder {
-        public TextView treasureFirstLine;
-        public ImageView treasureImage;
-        public TextView treasureSecondLine;
-        public TextView treasureThirdLine;
+    private static class ViewHolder {
     }
 
     @Override
@@ -49,15 +42,15 @@ public class CustomGridViewAdapter extends BaseAdapter {
 
         if(convertView == null)
         {
-            inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            gridView = inflater.inflate(R.layout.treasure_gridview_item, null);
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            gridView = inflater.inflate(R.layout.treasure_gridview_item, parent, false);
         }
 
-        ImageView treasureImage = (ImageView) gridView.findViewById(R.id.android_gridview_image);
-        Log.d("myTag", "size of gridViewImages: "+gridViewImages.size());
-        TextView treasureFirstLine = (TextView) gridView.findViewById(R.id.android_gridview_firstline);
-        TextView treasureSecondLine = (TextView) gridView.findViewById(R.id.android_gridview_secondline);
-        TextView treasureThirdLine = (TextView) gridView.findViewById(R.id.android_gridview_thirdline);
+        ImageView treasureImage = gridView.findViewById(R.id.android_gridview_image);
+        //Log.d("myTag", "size of gridViewImages: "+gridViewImages.size());
+        TextView treasureFirstLine = gridView.findViewById(R.id.android_gridview_firstline);
+        TextView treasureSecondLine = gridView.findViewById(R.id.android_gridview_secondline);
+        TextView treasureThirdLine = gridView.findViewById(R.id.android_gridview_thirdline);
 
         treasureImage.setImageBitmap(gridViewImages.get(position));
 
@@ -88,7 +81,7 @@ public class CustomGridViewAdapter extends BaseAdapter {
             }
         }
 
-        Log.d("test", " THIS IS THE CONTEXT WE FOUND: "+mContext.getClass().getSimpleName());
+        //Log.d("test", " THIS IS THE CONTEXT WE FOUND: "+mContext.getClass().getSimpleName());
 
         if(mContext.getClass().getSimpleName().equals("AddActivity"))
         {

@@ -1,11 +1,10 @@
 package com.mdtt.scott.treasuretrackerfordetectorists;
 
-import java.util.LinkedHashMap;
-
 /**
  * Created by Scott on 8/27/2019.
  */
 
+@SuppressWarnings("WeakerAccess")
 public class Clad{
     final private int cladId;
     final private String cladCurrency;
@@ -41,12 +40,4 @@ public class Clad{
         return cladDateFound;
     }
 
-    public LinkedHashMap<String, String> getCladDetailed(){
-        LinkedHashMap<String, String> lhashMap = new LinkedHashMap<String, String>();
-        lhashMap.put("Currency: ",cladCurrency);
-        lhashMap.put("Amount: ",Double.toString(cladAmount));
-        lhashMap.put("Location Found: ",cladLocationFound);
-        lhashMap.put("Date Found: ",cladDateFound);
-        return lhashMap;
-    }
 }

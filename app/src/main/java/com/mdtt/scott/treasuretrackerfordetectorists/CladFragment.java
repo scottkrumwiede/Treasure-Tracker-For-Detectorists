@@ -4,7 +4,6 @@ package com.mdtt.scott.treasuretrackerfordetectorists;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,7 +21,6 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.ads.AdListener;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
-import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
@@ -31,21 +29,26 @@ import java.util.ArrayList;
 /**
  * A simple {@link Fragment} subclass.
  */
+@SuppressWarnings("WeakerAccess")
 public class CladFragment extends Fragment {
 
     private ListView listView;
-    BackgroundTask bt;
+    private BackgroundTask bt;
     private AdView mAdView;
     private ProgressBar mProgressBar;
-    private static CustomListViewAdapter adapter;
-    Animation myAnim;
+    private Animation myAnim;
 
-    ArrayList<Clad> cladList;
+    private ArrayList<Clad> cladList;
 
-    TextView cladCountLabel, sortByLabel;
-    String sortType;
+    private TextView cladCountLabel;
+    private TextView sortByLabel;
+    private String sortType;
 
-    AdRequest adRequest;
+    private AdRequest adRequest;
+
+    public CladFragment() {
+        // Required empty public constructor
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,16 +79,16 @@ public class CladFragment extends Fragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        listView = (ListView) view.findViewById(R.id.clad_listview);
-        mProgressBar = (ProgressBar) view.findViewById(R.id.progressBar);
-        cladCountLabel = (TextView) view.findViewById(R.id.cladcount_label);
-        sortByLabel = (TextView) view.findViewById(R.id.sortBy_label);
+        listView = view.findViewById(R.id.clad_listview);
+        mProgressBar = view.findViewById(R.id.progressBar);
+        cladCountLabel = view.findViewById(R.id.cladcount_label);
+        sortByLabel = view.findViewById(R.id.sortBy_label);
 
         // Use bounce interpolator with amplitude 0.2 and frequency 20
         MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
         myAnim.setInterpolator(interpolator);
 
-        mAdView = (AdView) view.findViewById(R.id.fragmentCladAdView);
+        mAdView = view.findViewById(R.id.fragmentCladAdView);
 
         mAdView.setAdListener(new AdListener() {
             @Override
@@ -127,18 +130,12 @@ public class CladFragment extends Fragment {
 
         protected void onPostExecute(String result) {
 
-            Log.d("myTag", "ONPOSTEXECUTE: "+result);
+            //Log.d("myTag", "ONPOSTEXECUTE: "+result);
             if(result.equals("Retrieved all clad"))
             {
                 if (!cladList.isEmpty()) {
-                    adapter = new CustomListViewAdapter(cladList, getActivity());
+                    CustomListViewAdapter adapter = new CustomListViewAdapter(cladList, getActivity());
                     listView.setAdapter(adapter);
-                    listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            Clad clad= cladList.get(position);
-                        }
-                    });
 
                     listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
 
@@ -153,7 +150,6 @@ public class CladFragment extends Fragment {
                                 public void onClick(DialogInterface dialog, int item) {
                                     if (items[item].equals("Yes")) {
 
-                                        Log.d("TEST", "The value of i is: "+i);
                                         BackgroundTask bt = new BackgroundTask();
                                         bt.execute("deleteClad", Integer.toString(i));
 
@@ -169,28 +165,33 @@ public class CladFragment extends Fragment {
 
                     mProgressBar.setVisibility(View.GONE);
 
-                    Log.d("myTag", "ONPOSTEXECUTE2");
+                    //Log.d("myTag", "ONPOSTEXECUTE2");
 
                     cladCountLabel.setText("You've added " + cladList.size() + " clad so far!");
 
 
-                    if (sortType.equals("CladID")) {
-                        sortByLabel.setText("Sorting by: Most Recently Added");
-                    } else if (sortType.equals("CladDateFound")) {
-                        sortByLabel.setText("Sorting by: Clad Date Found");
-                    } else if (sortType.equals("CladAmount")) {
-                        sortByLabel.setText("Sorting by: Clad Amount");
-                    } else if (sortType.equals("CladLocationFound")) {
-                        sortByLabel.setText("Sorting by: Clad Location Found");
+                    switch (sortType) {
+                        case "CladID":
+                            sortByLabel.setText("Sorting by: Most Recently Added");
+                            break;
+                        case "CladDateFound":
+                            sortByLabel.setText("Sorting by: Clad Date Found");
+                            break;
+                        case "CladAmount":
+                            sortByLabel.setText("Sorting by: Clad Amount");
+                            break;
+                        case "CladLocationFound":
+                            sortByLabel.setText("Sorting by: Clad Location Found");
+                            break;
                     }
 
-                    Log.d("myTag", "Going out: " + cladList.size());
+                    //Log.d("myTag", "Going out: " + cladList.size());
 
                 } else {
                     sortByLabel.startAnimation(myAnim);
                     listView.setAdapter(null);
                     mProgressBar.setVisibility(View.GONE);
-                    Log.d("myTag", "empty clad list...");
+                    //Log.d("myTag", "empty clad list...");
 
                     cladCountLabel.setText("You haven't added any clad yet...");
                     sortByLabel.setText("Click the blue circle below to add one now!");

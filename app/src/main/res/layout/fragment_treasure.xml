@@ -6,8 +6,7 @@
 
 
 <LinearLayout
-        android:id="@+id/android_gridview_example"
-        android:layout_width="wrap_content"
+    android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:background="#dee9ed">
@@ -59,7 +58,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id">
+        ads:adUnitId="@string/test_banner_ad_unit_id">
     </com.google.android.gms.ads.AdView>
 
 </RelativeLayout>

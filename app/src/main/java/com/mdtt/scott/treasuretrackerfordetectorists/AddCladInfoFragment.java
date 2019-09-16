@@ -15,7 +15,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
-import android.util.Log;
+import android.text.InputFilter;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,20 +48,21 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  */
+@SuppressWarnings("WeakerAccess")
 public class AddCladInfoFragment extends Fragment {
 
-    Bundle bundle;
     private static final int MY_PERMISSIONS_REQUEST_FINE_LOCATION = 1;
-    EditText cladAmountEditText, cladLocationFoundEditText;
+    private EditText cladAmountEditText;
+    private EditText cladLocationFoundEditText;
     private TextView cladDateFoundTextView;
     private Spinner cladCurrencySpinner;
-    private Button placePickerButton;
     private int cladCurrencyPositionSelected;
     private ArrayList<String> currencyList;
     private DatePickerDialog.OnDateSetListener mDateSetListener;
-    Calendar cal;
-    int year, month, day;
-    InputMethodManager inputManager;
+    private int year;
+    private int month;
+    private int day;
+    private InputMethodManager inputManager;
 
     public AddCladInfoFragment() {
         // Required empty public constructor
@@ -70,7 +71,6 @@ public class AddCladInfoFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        bundle = getArguments();
         inputManager = (InputMethodManager)
                 getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         super.onCreate(savedInstanceState);
@@ -86,8 +86,7 @@ public class AddCladInfoFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_add_clad_info, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_add_clad_info, container, false);
     }
 
     @Override
@@ -96,7 +95,7 @@ public class AddCladInfoFragment extends Fragment {
 
         final DecimalFormat df = new DecimalFormat("#0.00");
 
-        cladAmountEditText = (EditText) view.findViewById(R.id.clad_amount_edittext);
+        cladAmountEditText = view.findViewById(R.id.clad_amount_edittext);
 
         cladAmountEditText.setOnFocusChangeListener(new View.OnFocusChangeListener(){
 
@@ -123,15 +122,15 @@ public class AddCladInfoFragment extends Fragment {
 
         });
 
-        cladLocationFoundEditText = (EditText) view.findViewById(R.id.cladLocationFoundEditText);
+        cladLocationFoundEditText = view.findViewById(R.id.cladLocationFoundEditText);
 
-        cal = Calendar.getInstance();
+        Calendar cal = Calendar.getInstance();
         year = cal.get(Calendar.YEAR);
         month = cal.get(Calendar.MONTH);
         day = cal.get(Calendar.DAY_OF_MONTH);
         String date = month + 1 + "/" + day + "/" + year;
 
-        cladDateFoundTextView = (TextView) view.findViewById(R.id.cladFoundTextView);
+        cladDateFoundTextView = view.findViewById(R.id.cladFoundTextView);
         cladDateFoundTextView.setText(date);
         cladDateFoundTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -151,7 +150,7 @@ public class AddCladInfoFragment extends Fragment {
             @Override
             public void onDateSet(DatePicker datePicker, int newYear, int newMonth, int newDay) {
 
-                Log.d("TEST", "onDateSet: mm/dd/yyy: " + newMonth + "/" + newDay + "/" + newYear);
+                //Log.d("TEST", "onDateSet: mm/dd/yyy: " + newMonth + "/" + newDay + "/" + newYear);
 
                 year = newYear;
                 month = newMonth;
@@ -162,7 +161,7 @@ public class AddCladInfoFragment extends Fragment {
             }
         };
 
-        placePickerButton = (Button) view.findViewById(R.id.placePickerButton);
+        Button placePickerButton = view.findViewById(R.id.placePickerButton);
         placePickerButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -206,11 +205,11 @@ public class AddCladInfoFragment extends Fragment {
             }
         });
 
-        cladCurrencySpinner = (Spinner) view.findViewById(R.id.clad_currency_spinner);
+        cladCurrencySpinner = view.findViewById(R.id.clad_currency_spinner);
         cladCurrencyPositionSelected = cladCurrencySpinner.getSelectedItemPosition();
-        currencyList = new ArrayList<String>(Arrays.asList(getResources().getStringArray(R.array.clad_currency_array)));
+        currencyList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.clad_currency_array)));
 
-        ArrayAdapter<String> currencySpinnerAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, currencyList);
+        ArrayAdapter<String> currencySpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, currencyList);
         currencySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         cladCurrencySpinner.setAdapter(currencySpinnerAdapter);
         cladCurrencySpinner.setSelection(cladCurrencyPositionSelected);
@@ -223,10 +222,11 @@ public class AddCladInfoFragment extends Fragment {
                 if(cladCurrencyPositionSelected != position)
                 {
                     final int previousCurrency = cladCurrencyPositionSelected;
-                    Log.d("test", "starting currencySpinner because:\ncladCurrencyPositionSelected= "+cladCurrencyPositionSelected+"\nposition= "+position);
-                    if(parentView.getItemAtPosition(position).toString().equals("Custom..."))
+                    //Log.d("test", "starting currencySpinner because:\ncladCurrencyPositionSelected= "+cladCurrencyPositionSelected+"\nposition= "+position);
+                    if(parentView.getItemAtPosition(position).toString().equals("Custom…"))
                     {
                         final EditText taskEditText = new EditText(getContext());
+                        taskEditText.setFilters(new InputFilter[] { new InputFilter.LengthFilter(5) });
                         AlertDialog dialog = new AlertDialog.Builder(getActivity())
                                 .setTitle("Custom Currency:")
                                 .setView(taskEditText)
@@ -245,8 +245,8 @@ public class AddCladInfoFragment extends Fragment {
                                             currencyList.remove(currencyList.size()-1);
                                         }
                                         currencyList.add(task);
-                                        currencyList.add("Custom...");
-                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, currencyList);
+                                        currencyList.add("Custom…");
+                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, currencyList);
                                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                         cladCurrencySpinner.setAdapter(spinnerAdapter);
                                         cladCurrencySpinner.setSelection(currencyList.size()-2);
@@ -273,7 +273,7 @@ public class AddCladInfoFragment extends Fragment {
                         });
                     }
                 }
-                Log.d("test", "coinCountrySelected="+cladCurrencyPositionSelected+" changed to "+position);
+                //Log.d("test", "coinCountrySelected="+cladCurrencyPositionSelected+" changed to "+position);
                 cladCurrencyPositionSelected = position;
 
             }

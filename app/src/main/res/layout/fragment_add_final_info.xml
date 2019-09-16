@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/fragment_add_treasure_final_scrollview"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -10,8 +9,7 @@
         android:orientation="vertical"
         android:paddingTop="16dp"
         android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:id="@+id/fragment_add_treasure_final_linearlayout">
+        android:paddingRight="10dp">
 
         <TextView
             android:id="@+id/collectionNameLabel"
@@ -33,10 +31,10 @@
             android:autoSizeStepGranularity="2sp"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:hint="Include a name for your collection"/>
+            android:hint="Include a name for your collection"
+            android:importantForAutofill="no" />
 
         <TextView
-            android:id="@+id/treasureLocationFoundLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Location Found:" />
@@ -55,7 +53,8 @@
             android:layout_height="wrap_content"
             android:gravity="top"
             android:minLines="1"
-            android:hint="Include a location for your find" />
+            android:hint="Include a location for your find"
+            android:importantForAutofill="no" />
 
         <Button
             android:id="@+id/placePickerButton"
@@ -65,7 +64,6 @@
             android:background="@drawable/shadow_13"/>
 
         <TextView
-            android:id="@+id/treasureDateFoundLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Date Found:" />
@@ -76,7 +74,7 @@
             android:layout_width="match_parent"
             android:background="@drawable/shadow_13"
             android:autoSizeTextType="uniform"
-            android:paddingLeft="30dp"
+            android:paddingStart="30dp"
             android:autoSizeMinTextSize="12sp"
             android:autoSizeMaxTextSize="20sp"
             android:autoSizeStepGranularity="2sp"
@@ -86,7 +84,6 @@
             android:hint="Include the date of your find" />
 
         <TextView
-            android:id="@+id/treasureInfoLabel"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Additional Info:" />
@@ -106,7 +103,8 @@
             android:layout_height="wrap_content"
             android:gravity="top"
             android:minLines="3"
-            android:hint="Include any additional info about your find" />
+            android:hint="Include any additional info about your find"
+            android:importantForAutofill="no" />
 
     </LinearLayout>
 </ScrollView>

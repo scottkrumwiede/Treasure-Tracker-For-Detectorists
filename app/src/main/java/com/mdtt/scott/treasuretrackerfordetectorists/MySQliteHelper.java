@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -15,6 +14,7 @@ import java.util.LinkedHashMap;
  * Created by Scott on 1/25/2018.
  */
 
+@SuppressWarnings("WeakerAccess")
 public class MySQliteHelper extends SQLiteOpenHelper {
 
     // Database Version
@@ -51,15 +51,12 @@ public class MySQliteHelper extends SQLiteOpenHelper {
     private static final String colCladDateFound="CladDateFound";
 
 
-    private Context mcontext;
-
     public MySQliteHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
-        mcontext = context;
     }
 
     @Override public void onCreate(SQLiteDatabase db) {
-        Log.d("myTag", "WE RECREATED DATABASE TABLES!");
+        //Log.d("myTag", "WE RECREATED DATABASE TABLES!");
 
         //creates treasure table
         String createTreasureTable = "CREATE TABLE "+TABLE_TREASURE +
@@ -78,7 +75,7 @@ public class MySQliteHelper extends SQLiteOpenHelper {
                 colTreasureInfo+" TEXT," +
                 colTreasurePhotoPath+" TEXT)";
 
-        Log.d("myTag", createTreasureTable);
+        //Log.d("myTag", createTreasureTable);
         db.execSQL(createTreasureTable);
 
         //creates treasure table
@@ -89,7 +86,7 @@ public class MySQliteHelper extends SQLiteOpenHelper {
                 colCladLocationFound+" TEXT," +
                 colCladDateFound+" TEXT)";
 
-        Log.d("myTag", createCladTable);
+        //Log.d("myTag", createCladTable);
         db.execSQL(createCladTable);
     }
 
@@ -122,10 +119,10 @@ public class MySQliteHelper extends SQLiteOpenHelper {
                     +colTreasurePhotoPath+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='coin' ORDER BY "+sortType+" DESC";
         }
 
-        Log.d("myTag", selectQuery);
+        //Log.d("myTag", selectQuery);
         SQLiteDatabase db=this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        Log.d("myTag", "query retrieved.");
+        //Log.d("myTag", "query retrieved.");
 
         if(cursor.moveToFirst()){
             do {
@@ -156,10 +153,10 @@ public class MySQliteHelper extends SQLiteOpenHelper {
                     +colTreasurePhotoPath+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='token' ORDER BY "+sortType+" DESC";
         }
 
-        Log.d("myTag", selectQuery);
+        //Log.d("myTag", selectQuery);
         SQLiteDatabase db=this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        Log.d("myTag", "query retrieved.");
+        //Log.d("myTag", "query retrieved.");
 
         if(cursor.moveToFirst()){
             do {
@@ -196,10 +193,10 @@ public class MySQliteHelper extends SQLiteOpenHelper {
                     +colTreasurePhotoPath+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='jewelry' ORDER BY "+sortType+" DESC";
         }
 
-        Log.d("myTag", selectQuery);
+        //Log.d("myTag", selectQuery);
         SQLiteDatabase db=this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        Log.d("myTag", "query retrieved.");
+        //Log.d("myTag", "query retrieved.");
 
         if(cursor.moveToFirst()){
             do {
@@ -231,10 +228,10 @@ public class MySQliteHelper extends SQLiteOpenHelper {
                     +colTreasurePhotoPath+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='relic' ORDER BY "+sortType+" DESC";
         }
 
-        Log.d("myTag", selectQuery);
+        //Log.d("myTag", selectQuery);
         SQLiteDatabase db=this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        Log.d("myTag", "query retrieved.");
+        //Log.d("myTag", "query retrieved.");
 
         if(cursor.moveToFirst()){
             do {
@@ -264,10 +261,10 @@ public class MySQliteHelper extends SQLiteOpenHelper {
                     +colTreasurePhotoPath+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='collection' ORDER BY "+sortType+" DESC";
         }
 
-        Log.d("myTag", selectQuery);
+        //Log.d("myTag", selectQuery);
         SQLiteDatabase db=this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        Log.d("myTag", "query retrieved.");
+        //Log.d("myTag", "query retrieved.");
 
         if(cursor.moveToFirst()){
             do {
@@ -278,7 +275,7 @@ public class MySQliteHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
 
-        Log.d("myTag", ""+treasureList.size());
+        //Log.d("myTag", ""+treasureList.size());
 
         return treasureList;
     }
@@ -287,10 +284,10 @@ public class MySQliteHelper extends SQLiteOpenHelper {
     {
         Treasure treasure;
         String selectQuery = "SELECT * FROM "+TABLE_TREASURE+" WHERE "+colTreasureID+"="+treasureId;
-        Log.d("myTag", selectQuery);
+        //Log.d("myTag", selectQuery);
         SQLiteDatabase db=this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        Log.d("myTag", "query retrieved.");
+        //Log.d("myTag", "query retrieved.");
         if(cursor.moveToFirst()){
             treasure = new Treasure(cursor.getInt(cursor.getColumnIndex(colTreasureID)), cursor.getString(cursor.getColumnIndex(colTreasureType)), cursor.getString(cursor.getColumnIndex(colTreasureCountry)), cursor.getString(cursor.getColumnIndex(colTreasureDenomination)), cursor.getString(cursor.getColumnIndex(colTreasureSeries)), cursor.getString(cursor.getColumnIndex(colTreasureName)), cursor.getString(cursor.getColumnIndex(colTreasureYear)), cursor.getString(cursor.getColumnIndex(colTreasureMint)), cursor.getString(cursor.getColumnIndex(colTreasureMaterial)),cursor.getString(cursor.getColumnIndex(colTreasureWeight)) ,cursor.getString(cursor.getColumnIndex(colTreasureLocationFound)), cursor.getString(cursor.getColumnIndex(colTreasureDateFound)), cursor.getString(cursor.getColumnIndex(colTreasureInfo)), cursor.getString(cursor.getColumnIndex(colTreasurePhotoPath)));
             cursor.close();
@@ -319,14 +316,14 @@ public class MySQliteHelper extends SQLiteOpenHelper {
         //treasure date found, most recently added
         else
         {
-            selectQuery = selectQuery = "SELECT "+colCladID+","+colCladCurrency+","+colCladAmount+","+colCladLocationFound+","
+            selectQuery = "SELECT "+colCladID+","+colCladCurrency+","+colCladAmount+","+colCladLocationFound+","
                     +colCladDateFound+" FROM "+TABLE_CLAD+" ORDER BY "+sortType+" DESC";
         }
 
-        Log.d("myTag", selectQuery);
+        //Log.d("myTag", selectQuery);
         SQLiteDatabase db=this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        Log.d("myTag", "query retrieved.");
+        //Log.d("myTag", "query retrieved.");
 
         if(cursor.moveToFirst()){
             do {
@@ -343,15 +340,15 @@ public class MySQliteHelper extends SQLiteOpenHelper {
     {
         HashMap<String, Integer> summaryList = new HashMap<>();
         String selectQuery = "SELECT "+colTreasureType+", COUNT("+colTreasureType+") FROM "+TABLE_TREASURE+" GROUP BY "+colTreasureType;
-        Log.d("myTag", selectQuery);
+        //Log.d("myTag", selectQuery);
         SQLiteDatabase db=this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        Log.d("myTag", "query retrieved.");
+        //Log.d("myTag", "query retrieved.");
 
         if(cursor.moveToFirst()){
             do {
-                Log.d("myTag", "cursor entry...");
-                Log.d("myTag", cursor.getString(0)+": "+cursor.getInt(1));
+                //Log.d("myTag", "cursor entry...");
+                //Log.d("myTag", cursor.getString(0)+": "+cursor.getInt(1));
                 summaryList.put(cursor.getString(0), cursor.getInt(1));
             } while(cursor.moveToNext());
         }
@@ -365,15 +362,15 @@ public class MySQliteHelper extends SQLiteOpenHelper {
     {
         LinkedHashMap<String, Double> summaryList = new LinkedHashMap<>();
         String selectQuery = "SELECT "+colCladCurrency+", SUM("+colCladAmount+") FROM "+TABLE_CLAD+" GROUP BY "+colCladCurrency+ " ORDER BY SUM("+colCladAmount+") DESC";
-        Log.d("myTag", selectQuery);
+        //Log.d("myTag", selectQuery);
         SQLiteDatabase db=this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-        Log.d("myTag", "query retrieved.");
+        //Log.d("myTag", "query retrieved.");
 
         if(cursor.moveToFirst()){
             do {
-                Log.d("myTag", "cursor entry...");
-                Log.d("myTag", cursor.getString(0)+": "+cursor.getDouble(1));
+                //Log.d("myTag", "cursor entry...");
+                //Log.d("myTag", cursor.getString(0)+": "+cursor.getDouble(1));
                 summaryList.put(cursor.getString(0), cursor.getDouble(1));
             } while(cursor.moveToNext());
         }
@@ -436,23 +433,21 @@ public class MySQliteHelper extends SQLiteOpenHelper {
         return result;
     }
 
-    public int deleteTreasure(String treasureID)
+    public void deleteTreasure(String treasureID)
     {
         //get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
 
-        int result = db.delete(TABLE_TREASURE, colTreasureID+"=?",new String[]{treasureID});
+        db.delete(TABLE_TREASURE, colTreasureID+"=?",new String[]{treasureID});
         db.close();
-        return result;
     }
 
-    public int deleteClad(String cladID)
+    public void deleteClad(String cladID)
     {
         //get reference to writable DB
         SQLiteDatabase db = this.getWritableDatabase();
 
-        int result = db.delete(TABLE_CLAD, colCladID+"=?",new String[]{cladID});
+        db.delete(TABLE_CLAD, colCladID+"=?",new String[]{cladID});
         db.close();
-        return result;
     }
 }
