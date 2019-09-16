@@ -1,4 +1,5 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -30,7 +31,7 @@
             android:hint="Amount:"
             android:inputType="numberDecimal"
             android:importantForAutofill="no"
-            />
+            tools:targetApi="o" />
 
         <Spinner
             android:id="@+id/clad_currency_spinner"
@@ -42,7 +43,8 @@
             android:autoSizeMinTextSize="6sp"
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeStepGranularity="2sp"
-            android:entries="@array/clad_currency_array"/>
+            android:entries="@array/clad_currency_array"
+            tools:targetApi="o" />
 
         <TextView
             android:layout_width="match_parent"
@@ -60,7 +62,8 @@
             android:layout_height="wrap_content"
             android:visibility="visible"
             android:importantForAutofill="no"
-            android:hint="Include the location of your find"/>
+            android:hint="Include the location of your find"
+            tools:targetApi="o" />
 
         <Button
             android:id="@+id/placePickerButton"
@@ -86,7 +89,8 @@
             android:autoSizeStepGranularity="2sp"
             android:gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:hint="Include the date of your find" />
+            android:hint="Include the date of your find"
+            tools:targetApi="o" />
 
     </LinearLayout>
 </ScrollView>

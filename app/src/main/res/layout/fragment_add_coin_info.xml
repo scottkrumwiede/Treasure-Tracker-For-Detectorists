@@ -1,4 +1,5 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fillViewport="true">
@@ -26,7 +27,8 @@
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
-        android:prompt="@string/country_prompt"/>
+        android:prompt="@string/country_prompt"
+        tools:targetApi="o" />
 
     <TextView
         android:layout_width="match_parent"
@@ -44,7 +46,8 @@
         android:autoSizeMaxTextSize="100sp"
         android:paddingStart="30dp"
         android:autoSizeStepGranularity="2sp"
-        android:prompt="@string/uscointype_prompt"/>
+        android:prompt="@string/uscointype_prompt"
+        tools:targetApi="o" />
 
     <EditText
         android:id="@+id/customTypeEditText"
@@ -59,7 +62,8 @@
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
         android:hint="Choose a denomination"
-        android:importantForAutofill="no" />
+        android:importantForAutofill="no"
+        tools:targetApi="o" />
 
     <TextView
         android:layout_width="match_parent"
@@ -76,7 +80,8 @@
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
-        android:prompt="@string/uscoin_penny_series_prompt"/>
+        android:prompt="@string/uscoin_penny_series_prompt"
+        tools:targetApi="o" />
 
     <EditText
         android:id="@+id/customDesignEditText"
@@ -90,7 +95,8 @@
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
         android:hint="Choose a design"
-        android:importantForAutofill="no" />
+        android:importantForAutofill="no"
+        tools:targetApi="o" />
 
     <TextView
         android:layout_width="match_parent"
@@ -110,7 +116,8 @@
         android:autoSizeStepGranularity="2sp"
         android:maxLength="4"
         android:hint="Year"
-        android:importantForAutofill="no" />
+        android:importantForAutofill="no"
+        tools:targetApi="o" />
 
 
     <TextView
@@ -129,7 +136,8 @@
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
-        android:prompt="@string/mint_prompt"/>
+        android:prompt="@string/mint_prompt"
+        tools:targetApi="o" />
 
     <EditText
         android:id="@+id/customMintEditText"
@@ -143,7 +151,8 @@
         android:paddingStart="30dp"
         android:autoSizeStepGranularity="2sp"
         android:hint="Choose a mint"
-        android:importantForAutofill="no" />
+        android:importantForAutofill="no"
+        tools:targetApi="o" />
 
     <TextView
         android:layout_width="match_parent"
@@ -161,7 +170,8 @@
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
-        android:prompt="@string/material_prompt"/>
+        android:prompt="@string/material_prompt"
+        tools:targetApi="o" />
 
 </LinearLayout>
 </ScrollView>

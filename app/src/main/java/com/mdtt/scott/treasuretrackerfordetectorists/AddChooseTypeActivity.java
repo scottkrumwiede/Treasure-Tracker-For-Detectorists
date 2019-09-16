@@ -8,6 +8,8 @@ import android.widget.Button;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.Objects;
+
 public class AddChooseTypeActivity extends AppCompatActivity {
 
     @Override
@@ -21,7 +23,7 @@ public class AddChooseTypeActivity extends AppCompatActivity {
         Button addRelicButton = findViewById(R.id.chooseAddRelic);
         Button addCladButton = findViewById(R.id.chooseAddClad);
         Button addCollectionButton = findViewById(R.id.chooseAddCollection);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
 
         addCoinButton.setOnClickListener(new View.OnClickListener() {
             @Override

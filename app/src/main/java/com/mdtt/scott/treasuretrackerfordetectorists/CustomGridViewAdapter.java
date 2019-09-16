@@ -50,7 +50,6 @@ public class CustomGridViewAdapter extends BaseAdapter {
         //Log.d("myTag", "size of gridViewImages: "+gridViewImages.size());
         TextView treasureFirstLine = gridView.findViewById(R.id.android_gridview_firstline);
         TextView treasureSecondLine = gridView.findViewById(R.id.android_gridview_secondline);
-        TextView treasureThirdLine = gridView.findViewById(R.id.android_gridview_thirdline);
 
         treasureImage.setImageBitmap(gridViewImages.get(position));
 

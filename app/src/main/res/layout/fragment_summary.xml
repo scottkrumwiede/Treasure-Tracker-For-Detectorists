@@ -1,6 +1,9 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/fragment_summary_layout">
 
 <ScrollView
     android:layout_width="match_parent"
@@ -13,17 +16,13 @@
         android:paddingRight="16dp"
         android:orientation="vertical">
 
-
             <ImageView
-                android:layout_width="200px"
+                android:layout_width="100dp"
                 android:layout_gravity="center"
-                android:layout_height="200px"
+                android:layout_height="100dp"
                 android:layout_margin="15dp"
                 android:src="@drawable/mainlogo_tp_200x200"
                 android:contentDescription="main logo" />
-
-
-
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -51,7 +50,8 @@
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
                 android:paddingBottom="5dp"
-                android:text="Add your first treasure now by clicking the blue circle below." />
+                android:text="Add your first treasure now by clicking the blue circle below."
+                tools:targetApi="o" />
 
             <TextView
                 android:id="@+id/coinTextView"
@@ -63,7 +63,8 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:text="Coins: " />
+                android:text="Coins: "
+                tools:targetApi="o" />
 
             <TextView
                 android:id="@+id/tokenTextView"
@@ -75,7 +76,8 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:text="Tokens: " />
+                android:text="Tokens: "
+                tools:targetApi="o" />
 
             <TextView
                 android:id="@+id/jewelryTextView"
@@ -87,7 +89,8 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:text="Jewelry: " />
+                android:text="Jewelry: "
+                tools:targetApi="o" />
 
             <TextView
                 android:id="@+id/relicTextView"
@@ -99,7 +102,8 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:text="Relics: " />
+                android:text="Relics: "
+                tools:targetApi="o" />
 
             <TextView
                 android:id="@+id/totalTextView"
@@ -110,7 +114,8 @@
                 android:autoSizeStepGranularity="2sp"
                 android:autoSizeTextType="uniform"
                 android:gravity="center_horizontal"
-                android:text="Total: " />
+                android:text="Total: "
+                tools:targetApi="o" />
 
             <TextView
                 android:id="@+id/cladTextView"
@@ -123,7 +128,8 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:text="Clad Totals: " />
+                android:text="Clad Totals: "
+                tools:targetApi="o" />
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -154,7 +160,8 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:text="Collections: " />
+                android:text="Collections: "
+                tools:targetApi="o" />
 
             <TextView
                 android:id="@+id/locationsTextView"
@@ -166,7 +173,8 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:text="Locations: " />
+                android:text="Locations: "
+                tools:targetApi="o" />
 
             <TextView
                 android:id="@+id/detectorsTextView"
@@ -178,7 +186,8 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:text="Metal Detectors: " />
+                android:text="Metal Detectors: "
+                tools:targetApi="o" />
 
 
 
@@ -199,6 +208,6 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/test_banner_ad_unit_id">
+        ads:adUnitId="@string/banner_ad_unit_id">
     </com.google.android.gms.ads.AdView>
 </RelativeLayout>

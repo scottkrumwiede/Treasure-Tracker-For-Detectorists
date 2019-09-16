@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -141,11 +142,15 @@ public class MainActivity extends AppCompatActivity
         menu = navigationView.getMenu();
 
         FragmentManager fm = getSupportFragmentManager();
-        setTitle("Summary:");
-        SummaryFragment summaryFragment = new SummaryFragment();
-        fm.beginTransaction().replace(R.id.main_fragment, summaryFragment).commit();
-        navigationView.setCheckedItem(R.id.nav_summary);
-        onSummary = true;
+        if(savedInstanceState == null)
+        {
+            //Log.d("myTag", "We just entered becaused savedInstanceState was null");
+            //setTitle("Summary:");
+            SummaryFragment summaryFragment = new SummaryFragment();
+            fm.beginTransaction().replace(R.id.main_fragment, summaryFragment).commit();
+            navigationView.setCheckedItem(R.id.nav_summary);
+            onSummary = true;
+        }
 
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -200,9 +205,10 @@ public class MainActivity extends AppCompatActivity
 
         if (mFragmentManager.getBackStackEntryCount() > 0) {
             while (mFragmentManager.getBackStackEntryCount() > 0) {
+                //Log.d("myTag","Popping immediate backstack!");
                 mFragmentManager.popBackStackImmediate();
             }
-            setTitle("Summary:");
+            //setTitle("Summary:");
             onSummary = true;
             invalidateOptionsMenu();
             NavigationView navigationView = findViewById(R.id.nav_view);
@@ -363,7 +369,7 @@ public class MainActivity extends AppCompatActivity
                         }
                         else
                         {
-                            if(navigationView.getCheckedItem().toString().toLowerCase().equals("jewelry")) {
+                            if(Objects.requireNonNull(navigationView.getCheckedItem()).toString().toLowerCase().equals("jewelry")) {
                                 args.putString("type", navigationView.getCheckedItem().toString().toLowerCase());
                             }
                             else
@@ -404,11 +410,11 @@ public class MainActivity extends AppCompatActivity
             while (mFragmentManager.getBackStackEntryCount() > 0) {
                 mFragmentManager.popBackStackImmediate();
             }
-            setTitle("Summary:");
+            //setTitle("Summary:");
 
         } else if (id == R.id.nav_coins && !menu.findItem(R.id.nav_coins).isChecked()) {
             onSummary = false;
-            setTitle("Coins:");
+            //setTitle("Coins:");
             args.putString("type", "coin");
             args.putString("sortBy", "TreasureID");
             TreasureFragment treasureFragment = new TreasureFragment();
@@ -416,9 +422,11 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.main_fragment, treasureFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
+            //Log.d("myTag", "backstackentryCount after= "+mFragmentManager.getBackStackEntryCount());
+
         } else if (id == R.id.nav_tokens && !menu.findItem(R.id.nav_tokens).isChecked()) {
             onSummary = false;
-            setTitle("Tokens:");
+            //setTitle("Tokens:");
             args.putString("type", "token");
             args.putString("sortBy", "TreasureID");
             TreasureFragment treasureFragment = new TreasureFragment();
@@ -426,9 +434,10 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.replace(R.id.main_fragment, treasureFragment);
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
+            //Log.d("myTag", "backstackentryCount after= "+mFragmentManager.getBackStackEntryCount());
         } else if (id == R.id.nav_jewelry && !menu.findItem(R.id.nav_jewelry).isChecked()) {
             onSummary = false;
-            setTitle("Jewelry:");
+            //setTitle("Jewelry:");
             args.putString("type", "jewelry");
             args.putString("sortBy", "TreasureID");
             TreasureFragment treasureFragment = new TreasureFragment();
@@ -438,7 +447,7 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.commit();
         } else if (id == R.id.nav_relics && !menu.findItem(R.id.nav_relics).isChecked()) {
             onSummary = false;
-            setTitle("Relics:");
+            //setTitle("Relics:");
             args.putString("type", "relic");
             args.putString("sortBy", "TreasureID");
             TreasureFragment treasureFragment = new TreasureFragment();
@@ -449,7 +458,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_clad && !menu.findItem(R.id.nav_clad).isChecked()) {
             onSummary = false;
-            setTitle("Clad:");
+            //setTitle("Clad:");
             args.putString("sortBy", "CladID");
             CladFragment cladFragment = new CladFragment();
             cladFragment.setArguments(args);
@@ -459,7 +468,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_collection && !menu.findItem(R.id.nav_collection).isChecked()) {
             onSummary = false;
-            setTitle("Collections:");
+            //setTitle("Collections:");
             args.putString("type", "collection");
             args.putString("sortBy", "TreasureID");
             TreasureFragment treasureFragment = new TreasureFragment();
@@ -488,6 +497,7 @@ public class MainActivity extends AppCompatActivity
         if (requestCode == 1) {
             treasureListNeedsUpdated = true;
         }
+        super.onActivityResult(resultCode, resultCode, data);
     }
 }
 

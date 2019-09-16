@@ -43,6 +43,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -72,14 +73,14 @@ public class AddCladInfoFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         inputManager = (InputMethodManager)
-                getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                Objects.requireNonNull(getActivity()).getSystemService(Context.INPUT_METHOD_SERVICE);
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().invalidateOptionsMenu();
+        Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
     }
 
     @Override
@@ -106,15 +107,23 @@ public class AddCladInfoFragment extends Fragment {
                     String oldValue = cladAmountEditText.getText().toString();
                     if(!oldValue.isEmpty())
                     {
-                        double num = Double.valueOf(oldValue);
-                        if(num < 0.01)
+                        if(!oldValue.equals("."))
                         {
-                            Snackbar.make(getActivity().findViewById(android.R.id.content), "Amount must be at least 0.01", Snackbar.LENGTH_SHORT).show();
+                            double num = Double.valueOf(oldValue);
+                            if(num < 0.01)
+                            {
+                                Snackbar.make(Objects.requireNonNull(getActivity()).findViewById(android.R.id.content), "Amount must be at least 0.01", Snackbar.LENGTH_SHORT).show();
+                            }
+                            else
+                            {
+                                String newValue = df.format(num);
+                                cladAmountEditText.setText(newValue);
+                            }
                         }
                         else
                         {
-                            String newValue = df.format(num);
-                            cladAmountEditText.setText(newValue);
+                            
+                            cladAmountEditText.setText("0.00");
                         }
                     }
                 }
@@ -136,12 +145,12 @@ public class AddCladInfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                DatePickerDialog dialog = new DatePickerDialog(getActivity(),
+                DatePickerDialog dialog = new DatePickerDialog(Objects.requireNonNull(getActivity()),
                         android.R.style.Theme_DeviceDefault_Light_Dialog,
                         mDateSetListener,
                         year, month, day);
                 dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+                Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.WHITE));
                 dialog.show();
             }
         });
@@ -168,10 +177,10 @@ public class AddCladInfoFragment extends Fragment {
 
                 cladLocationFoundEditText.requestFocus();
 
-                inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
+                inputManager.hideSoftInputFromWindow(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getCurrentFocus()).getWindowToken(),
                         InputMethodManager.HIDE_NOT_ALWAYS);
 
-                if (getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && getContext().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (Objects.requireNonNull(getContext()).checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && getContext().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
                     ActivityCompat.requestPermissions(getActivity(),
                             new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
@@ -209,7 +218,7 @@ public class AddCladInfoFragment extends Fragment {
         cladCurrencyPositionSelected = cladCurrencySpinner.getSelectedItemPosition();
         currencyList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.clad_currency_array)));
 
-        ArrayAdapter<String> currencySpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, currencyList);
+        ArrayAdapter<String> currencySpinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, currencyList);
         currencySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         cladCurrencySpinner.setAdapter(currencySpinnerAdapter);
         cladCurrencySpinner.setSelection(cladCurrencyPositionSelected);
@@ -227,7 +236,7 @@ public class AddCladInfoFragment extends Fragment {
                     {
                         final EditText taskEditText = new EditText(getContext());
                         taskEditText.setFilters(new InputFilter[] { new InputFilter.LengthFilter(5) });
-                        AlertDialog dialog = new AlertDialog.Builder(getActivity())
+                        AlertDialog dialog = new AlertDialog.Builder(Objects.requireNonNull(getActivity()))
                                 .setTitle("Custom Currency:")
                                 .setView(taskEditText)
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -246,7 +255,7 @@ public class AddCladInfoFragment extends Fragment {
                                         }
                                         currencyList.add(task);
                                         currencyList.add("Custom…");
-                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, currencyList);
+                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getContext()), android.R.layout.simple_spinner_item, currencyList);
                                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                         cladCurrencySpinner.setAdapter(spinnerAdapter);
                                         cladCurrencySpinner.setSelection(currencyList.size()-2);
@@ -263,7 +272,7 @@ public class AddCladInfoFragment extends Fragment {
                                 })
                                 .create();
                         dialog.show();
-                        dialog.getWindow().setSoftInputMode (WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                        Objects.requireNonNull(dialog.getWindow()).setSoftInputMode (WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialog) {
@@ -290,19 +299,19 @@ public class AddCladInfoFragment extends Fragment {
 
         if(cladAmountEditText.getText().toString().isEmpty())
         {
-            Snackbar.make(getActivity().findViewById(android.R.id.content), "Enter an amount first.", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(Objects.requireNonNull(getActivity()).findViewById(android.R.id.content), "Enter an amount first.", Snackbar.LENGTH_SHORT).show();
             cladAmountEditText.requestFocus();
         }
         else if(Double.valueOf(cladAmountEditText.getText().toString())<0.01)
         {
-            Snackbar.make(getActivity().findViewById(android.R.id.content), "Amount must be at least 0.01", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(Objects.requireNonNull(getActivity()).findViewById(android.R.id.content), "Amount must be at least 0.01", Snackbar.LENGTH_SHORT).show();
             cladAmountEditText.requestFocus();
         }
         else
         {
-            inputManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(),
+            inputManager.hideSoftInputFromWindow(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getCurrentFocus()).getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
-            new AlertDialog.Builder(getContext())
+            new AlertDialog.Builder(Objects.requireNonNull(getContext()))
                     .setTitle("Confirm?")
                     .setMessage("Add this clad now?")
                     .setNegativeButton(android.R.string.no, null)
@@ -323,7 +332,7 @@ public class AddCladInfoFragment extends Fragment {
                             else
                             {
                                 Toast.makeText(getContext(), "New clad added!", Toast.LENGTH_SHORT).show();
-                                getActivity().setResult(Activity.RESULT_OK,null);
+                                Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_OK,null);
                                 getActivity().finish();
                             }
                         }

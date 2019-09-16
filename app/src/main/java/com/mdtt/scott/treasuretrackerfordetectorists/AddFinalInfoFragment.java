@@ -36,6 +36,7 @@ import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -61,7 +62,7 @@ public class AddFinalInfoFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = getArguments();
-        getActivity().invalidateOptionsMenu();
+        Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
     }
 
     @Override
@@ -81,7 +82,7 @@ public class AddFinalInfoFragment extends Fragment {
         collectionNameEditText = view.findViewById(R.id.collectionNameEditText);
         TextView collectionNameTextView = view.findViewById(R.id.collectionNameLabel);
 
-        if(bundle.getString("type").equals("collection"))
+        if(Objects.requireNonNull(bundle.getString("type")).equals("collection"))
         {
             collectionNameTextView.setVisibility(View.VISIBLE);
             collectionNameEditText.setVisibility(View.VISIBLE);
@@ -103,12 +104,12 @@ public class AddFinalInfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                DatePickerDialog dialog = new DatePickerDialog(getActivity(),
+                DatePickerDialog dialog = new DatePickerDialog(Objects.requireNonNull(getActivity()),
                         android.R.style.Theme_DeviceDefault_Light_Dialog,
                         mDateSetListener,
                         year, month, day);
                 dialog.getDatePicker().setMaxDate(System.currentTimeMillis());
-                dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+                Objects.requireNonNull(dialog.getWindow()).setBackgroundDrawable(new ColorDrawable(Color.WHITE));
                 dialog.show();
             }
         });
@@ -133,9 +134,9 @@ public class AddFinalInfoFragment extends Fragment {
             @Override
             public void onClick(View view) {
 
-                if (getContext().checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && getContext().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                if (Objects.requireNonNull(getContext()).checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && getContext().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-                    ActivityCompat.requestPermissions(getActivity(),
+                    ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
                             new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                             MY_PERMISSIONS_REQUEST_FINE_LOCATION);
                 }
@@ -161,7 +162,7 @@ public class AddFinalInfoFragment extends Fragment {
                     }
                     else
                     {
-                        Snackbar.make(getActivity().findViewById(android.R.id.content), "Could not get current location.", Snackbar.LENGTH_SHORT).show();
+                        Snackbar.make(Objects.requireNonNull(getActivity()).findViewById(android.R.id.content), "Could not get current location.", Snackbar.LENGTH_SHORT).show();
 
                     }
                 }
@@ -177,7 +178,7 @@ public class AddFinalInfoFragment extends Fragment {
         treasureLocationFoundEditText.setText(bundle.getString("treasureLocationFound"));
         treasureInfoEditText.setText(bundle.getString("treasureInfo"));
 
-        if(bundle.getString("type").equals("collection"))
+        if(Objects.requireNonNull(bundle.getString("type")).equals("collection"))
         {
             collectionNameEditText.setText(bundle.getString("collectionName"));
         }
@@ -185,7 +186,7 @@ public class AddFinalInfoFragment extends Fragment {
 
     private void renameTempImages(final String timeAtAdd)
     {
-        ContextWrapper cw = new ContextWrapper(getActivity().getApplicationContext());
+        ContextWrapper cw = new ContextWrapper(Objects.requireNonNull(getActivity()).getApplicationContext());
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getFilesDir();
         File subDir = new File(directory, "imageDir");
@@ -220,7 +221,7 @@ public class AddFinalInfoFragment extends Fragment {
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // permission was granted, yay! Do the
                 // location-related task you need to do.
-                LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+                LocationManager lm = (LocationManager) Objects.requireNonNull(getContext()).getSystemService(Context.LOCATION_SERVICE);
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 double longitude = location.getLongitude();
                 double latitude = location.getLatitude();
@@ -243,7 +244,7 @@ public class AddFinalInfoFragment extends Fragment {
 
     public void saveTreasure() {
         final String type = bundle.getString("type");
-        new AlertDialog.Builder(getContext())
+        new AlertDialog.Builder(Objects.requireNonNull(getContext()))
                 .setTitle("Confirm?")
                 .setMessage("Add this "+type+" now?")
                 .setNegativeButton(android.R.string.no, null)
@@ -253,7 +254,7 @@ public class AddFinalInfoFragment extends Fragment {
 
                         String timeAtAdd = bundle.getString("timeAtAdd"); //treasurephotopath
                         String treasureName;
-                        if(type.equals("collection"))
+                        if(Objects.requireNonNull(type).equals("collection"))
                         {
                             treasureName = collectionNameEditText.getText().toString();
                         }
@@ -288,7 +289,7 @@ public class AddFinalInfoFragment extends Fragment {
                             renameTempImages(timeAtAdd);
                         }
 
-                        getActivity().setResult(Activity.RESULT_OK,null);
+                        Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_OK,null);
                         getActivity().finish();
 
                     }
@@ -300,7 +301,7 @@ public class AddFinalInfoFragment extends Fragment {
         bundle.putString("treasureLocationFound", treasureLocationFoundEditText.getText().toString());
         bundle.putString("treasureInfo", treasureInfoEditText.getText().toString().trim());
 
-        if(bundle.getString("type").equals("collection"))
+        if(Objects.requireNonNull(bundle.getString("type")).equals("collection"))
         {
             bundle.putString("collectionName", collectionNameEditText.getText().toString());
         }

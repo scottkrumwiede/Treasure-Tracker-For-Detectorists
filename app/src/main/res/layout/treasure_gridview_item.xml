@@ -6,7 +6,8 @@
     android:paddingTop="15dp"
     android:paddingBottom="35dp"
     android:orientation="vertical"
-    android:background="@drawable/shadow_13">
+    android:background="@drawable/shadow_13"
+    android:id="@+id/treasure_gridview_item_layout">
 
     <ImageView
         android:id="@+id/android_gridview_image"

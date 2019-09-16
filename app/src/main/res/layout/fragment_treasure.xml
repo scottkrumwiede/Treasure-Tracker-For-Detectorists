@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/fragment_treasure_layout">
 
 
 <LinearLayout
@@ -32,8 +32,6 @@
         android:layout_height="wrap_content"
         android:indeterminate="true" />
 
-
-
         <com.mdtt.scott.treasuretrackerfordetectorists.AutoGridView
             android:id="@+id/treasure_gridview"
             android:layout_width="match_parent"
@@ -45,9 +43,6 @@
             android:numColumns="@integer/grid_columns"
             />
 
-
-
-
     </LinearLayout>
 
     <com.google.android.gms.ads.AdView
@@ -58,7 +53,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/test_banner_ad_unit_id">
+        ads:adUnitId="@string/banner_ad_unit_id">
     </com.google.android.gms.ads.AdView>
 
 </RelativeLayout>
