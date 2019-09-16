@@ -25,6 +25,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 
 /**
@@ -94,6 +95,7 @@ public class SummaryFragment extends Fragment {
         detectorsTextView.setVisibility(View.INVISIBLE);
         locationsTextView.setVisibility(View.INVISIBLE);
         helpTextView.setVisibility(View.GONE);
+        Objects.requireNonNull(getActivity()).setTitle("Summary:");
         bt = new BackgroundTask();
         bt.execute();
         mAdView.loadAd(adRequest);
@@ -117,7 +119,7 @@ public class SummaryFragment extends Fragment {
         LinearLayout mLL1 = view.findViewById(R.id.fragment_summary_ll1);
         LinearLayout mLL2 = view.findViewById(R.id.fragment_summary_ll2);
         mLL3 = view.findViewById(R.id.fragment_summary_ll3);
-        navDrawer = getActivity().findViewById(R.id.drawer_layout);
+        navDrawer = Objects.requireNonNull(getActivity()).findViewById(R.id.drawer_layout);
         mAdView = view.findViewById(R.id.fragmentTreasureAdView);
 
         mAdView.setAdListener(new AdListener() {

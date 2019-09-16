@@ -7,7 +7,8 @@
         android:paddingTop="16dp"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:id="@+id/fragment_add_photo_layout">
 
         <Button
             android:id="@+id/addphoto_button"

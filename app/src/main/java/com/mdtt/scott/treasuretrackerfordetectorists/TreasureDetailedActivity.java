@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class TreasureDetailedActivity extends AppCompatActivity {
 
@@ -53,12 +54,12 @@ public class TreasureDetailedActivity extends AppCompatActivity {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        treasureId = getIntent().getExtras().getInt("treasureId");
+        treasureId = Objects.requireNonNull(getIntent().getExtras()).getInt("treasureId");
         String type = getIntent().getExtras().getString("type");
-        type = type.substring(0,1).toUpperCase()+ type.substring(1).toLowerCase();
+        type = Objects.requireNonNull(type).substring(0,1).toUpperCase()+ type.substring(1).toLowerCase();
         setTitle(type +":");
         setContentView(R.layout.activity_treasure_detailed);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        Objects.requireNonNull(getSupportActionBar()).setDisplayHomeAsUpEnabled(true);
         mProgressBar = findViewById(R.id.activity_treasure_detailed_progressBar);
         mLinearLayoutText = findViewById(R.id.activity_treasure_detailed_LL_text);
         mLinearLayoutImages = findViewById(R.id.activity_treasure_detailed_LL_images);
@@ -207,7 +208,7 @@ public class TreasureDetailedActivity extends AppCompatActivity {
                             fullsize.setImageBitmap(treasurePhotosFull.get(treasurePhotos.indexOf(photo)));
                             fullsize.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.shadow_14));
                             nagDialog.setContentView(fullsize);
-                            nagDialog.getWindow().setLayout(WindowManager.LayoutParams.MATCH_PARENT, screenHeight);
+                            Objects.requireNonNull(nagDialog.getWindow()).setLayout(WindowManager.LayoutParams.MATCH_PARENT, screenHeight);
                             nagDialog.show();
                         }
                     });

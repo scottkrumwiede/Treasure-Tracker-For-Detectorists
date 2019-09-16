@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 
 /**
@@ -63,7 +64,7 @@ public class AddTokenInfoFragment extends Fragment {
         tokenYearEditText = view.findViewById(R.id.tokenYearEditText);
 
         //Log.d("test", "on view created we're here");
-        ArrayAdapter<String> tokenMaterialSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, tokenMaterialList);
+        ArrayAdapter<String> tokenMaterialSpinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, tokenMaterialList);
 
         //If the user had previously filled out info here but then backed up to a previous fragment before returning
         if(bundle.containsKey("treasureName"))
@@ -112,7 +113,7 @@ public class AddTokenInfoFragment extends Fragment {
                                         }
                                         tokenMaterialList.add(task);
                                         tokenMaterialList.add("Custom…");
-                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, tokenMaterialList);
+                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, tokenMaterialList);
                                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                         tokenMaterialSpinner.setAdapter(spinnerAdapter);
                                         tokenMaterialSpinner.setSelection(tokenMaterialList.size()-2);
@@ -128,7 +129,7 @@ public class AddTokenInfoFragment extends Fragment {
                                 })
                                 .create();
                         dialog.show();
-                        dialog.getWindow().setSoftInputMode (WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                        Objects.requireNonNull(dialog.getWindow()).setSoftInputMode (WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialog) {
@@ -151,7 +152,7 @@ public class AddTokenInfoFragment extends Fragment {
 
     public void nextButtonClicked() {
         addToBundle();
-        ((AddActivity) getActivity()).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
+        ((AddActivity) Objects.requireNonNull(getActivity())).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
     }
 
     public void addToBundle() {

@@ -19,6 +19,7 @@ import androidx.fragment.app.Fragment;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 
 /**
@@ -51,7 +52,7 @@ public class AddJewelryInfoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().invalidateOptionsMenu();
+        Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
     }
 
     @Override
@@ -71,8 +72,8 @@ public class AddJewelryInfoFragment extends Fragment {
         jewelryYearEditText = view.findViewById(R.id.jewelryYearEditText);
         jewelryWeightEditText = view.findViewById(R.id.jewelryWeightEditText);
 
-        //Log.d("test", "on view created we're here");
-        ArrayAdapter<String> jewelryMaterialSpinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, jewelryMaterialList);
+        ////Log.d("test", "on view created we're here");
+        ArrayAdapter<String> jewelryMaterialSpinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, jewelryMaterialList);
 
         //If the user had previously filled out info here but then backed up to a previous fragment before returning
         if(bundle.containsKey("treasureName"))
@@ -121,7 +122,7 @@ public class AddJewelryInfoFragment extends Fragment {
                                         }
                                         jewelryMaterialList.add(task);
                                         jewelryMaterialList.add("Custom…");
-                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, jewelryMaterialList);
+                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, jewelryMaterialList);
                                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                                         jewelryMaterialSpinner.setAdapter(spinnerAdapter);
                                         jewelryMaterialSpinner.setSelection(jewelryMaterialList.size()-2);
@@ -137,7 +138,7 @@ public class AddJewelryInfoFragment extends Fragment {
                                 })
                                 .create();
                         dialog.show();
-                        dialog.getWindow().setSoftInputMode (WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                        Objects.requireNonNull(dialog.getWindow()).setSoftInputMode (WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
                         dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
                             @Override
                             public void onCancel(DialogInterface dialog) {
@@ -160,7 +161,7 @@ public class AddJewelryInfoFragment extends Fragment {
 
     public void nextButtonClicked() {
         addToBundle();
-        ((AddActivity) getActivity()).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
+        ((AddActivity) Objects.requireNonNull(getActivity())).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
     }
 
     private void repopulateInfo() {

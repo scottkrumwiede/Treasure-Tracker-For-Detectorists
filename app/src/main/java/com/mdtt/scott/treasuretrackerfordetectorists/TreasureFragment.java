@@ -6,7 +6,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,6 +28,7 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 
 /**
@@ -57,6 +57,7 @@ public class TreasureFragment extends Fragment {
     private Animation myAnim;
 
     private AdRequest adRequest;
+    private boolean shouldCheckForUpdates;
 
     public TreasureFragment() {
         // Required empty public constructor
@@ -65,34 +66,57 @@ public class TreasureFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        shouldCheckForUpdates = true;
         if (getArguments() != null) {
             type = getArguments().getString("type");
             sortType = getArguments().getString("sortBy");
         }
         adRequest = new AdRequest.Builder().build();
         myAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.bounceonce);
-        bt = new BackgroundTask();
-        bt.execute();
+        //Log.d("myTag", "We came through onCreate of TreasureFragment type: "+type);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+        //Log.d("myTag", "We came through onCreateView of TreasureFragment!");
         return inflater.inflate(R.layout.fragment_treasure, container, false);
 
     }
 
     @Override
     public void onResume() {
+        //Log.d("myTag", "We came through onResume of TreasureFragment!");
         super.onResume();
+        String title = type;
+        if(type.equals("jewelry"))
+        {
+            title = title.substring(0,1).toUpperCase() + title.substring(1) + ":";
+        }
+        else
+        {
+            title = title.substring(0,1).toUpperCase() + title.substring(1) + "s:";
+        }
+        Objects.requireNonNull(getActivity()).setTitle(title);
         mAdView.loadAd(adRequest);
+        if(shouldCheckForUpdates)
+        {
+            bt = new BackgroundTask();
+            bt.execute();
+            shouldCheckForUpdates = false;
+        }
+
     }
 
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        //Log.d("myTag", "We came through onViewCreated of TreasureFragment!");
+
 
         gridView = view.findViewById(R.id.treasure_gridview);
         mProgressBar = view.findViewById(R.id.progressBar);
@@ -123,12 +147,18 @@ public class TreasureFragment extends Fragment {
     @Override
     public void onPause() {
         super.onPause();
+        //Log.d("myTag", "We came through onPause of TreasureFragment!");
         bt.cancel(true);
+        if(mAdView != null)
+        {
+            mAdView.pause();
+        }
     }
 
     private class BackgroundTask extends AsyncTask<String, Void, String> {
 
         protected String doInBackground(String...params) {
+            //Log.d("myTag", "We came through BackgroundTask of TreasureFragment!");
             final MySQliteHelper helper = new MySQliteHelper(getContext());
             if(params.length == 0) {
                 //Log.d("myTag", type);
@@ -161,7 +191,7 @@ public class TreasureFragment extends Fragment {
                 treasurePhotos.clear();
 
                 // path to /data/data/yourapp/app_data/files
-                File directory = getActivity().getFilesDir();
+                File directory = Objects.requireNonNull(getActivity()).getFilesDir();
                 File subDir = new File(directory, "imageDir");
                 if( !subDir.exists() )
                     subDir.mkdir();
@@ -178,14 +208,14 @@ public class TreasureFragment extends Fragment {
 
                     //Use photo acquired photopath to retrieve actual photo now and add it to treasurePhotos
                     final String prefix = g.getTreasurePhotoPath();
-                    Log.d("myTag", "Prefix is: "+prefix);
+                    //Log.d("myTag", "Prefix is: "+prefix);
                     Bitmap photo;
                     if (prefix != null) {
 
                         File[] files = subDir.listFiles(new FilenameFilter() {
                             @Override
                             public boolean accept(File directory, String name) {
-                                Log.d("myTag", "Name of photo found is: "+name);
+                                //Log.d("myTag", "Name of photo found is: "+name);
                                 return name.startsWith(prefix);
                             }
                         });
@@ -194,7 +224,7 @@ public class TreasureFragment extends Fragment {
                         // so that photo order remains the same as when added.
                         Arrays.sort(files);
 
-                        Log.d("myTag", "Sizes of photos found is: "+files.length);
+                        //Log.d("myTag", "Sizes of photos found is: "+files.length);
 
                         if (files.length > 0) {
                             String filepath = files[0].getPath();
@@ -211,11 +241,11 @@ public class TreasureFragment extends Fragment {
                             photo = BitmapFactory.decodeFile(filepath, options);
 
                         } else {
-                            photo = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.defaultphoto);
+                            photo = BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto);
                         }
 
                     } else {
-                        photo = BitmapFactory.decodeResource(getContext().getResources(), R.drawable.defaultphoto);
+                        photo = BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto);
                     }
                     treasurePhotos.add(photo);
 
@@ -285,7 +315,7 @@ public class TreasureFragment extends Fragment {
                         public boolean onItemLongClick(AdapterView<?> parent, View view,
                                                        final int i, long id) {
                             final CharSequence[] items = {"Yes", "Cancel"};
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
                             builder.setTitle("Are you sure you want to PERMANENTLY DELETE this treasure?");
                             builder.setItems(items, new DialogInterface.OnClickListener() {
                                 @Override
@@ -366,7 +396,7 @@ public class TreasureFragment extends Fragment {
             //deleted a treasure
             else
             {
-                File directory = getActivity().getFilesDir();
+                File directory = Objects.requireNonNull(getActivity()).getFilesDir();
                 File subDir = new File(directory, "imageDir");
                 if( !subDir.exists() )
                     subDir.mkdir();

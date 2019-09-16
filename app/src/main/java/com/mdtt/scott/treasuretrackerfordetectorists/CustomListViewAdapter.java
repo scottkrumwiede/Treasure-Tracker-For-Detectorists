@@ -9,6 +9,7 @@ import android.widget.TextView;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Objects;
 
 @SuppressWarnings("WeakerAccess")
 public class CustomListViewAdapter extends ArrayAdapter<Clad> implements View.OnClickListener{
@@ -54,7 +55,7 @@ public class CustomListViewAdapter extends ArrayAdapter<Clad> implements View.On
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        double oldCladAmount = (clad.getCladAmount());
+        double oldCladAmount = (Objects.requireNonNull(clad).getCladAmount());
         String newCladAmount = df.format(oldCladAmount);
 
         viewHolder.txtCurrency.setText(clad.getCladCurrency());

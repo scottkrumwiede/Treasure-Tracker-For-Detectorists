@@ -5,6 +5,7 @@ import android.content.ContextWrapper;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -29,6 +30,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 /**
@@ -44,7 +46,7 @@ public class AddPhotoFragment extends Fragment {
     private String timeAtAdd;
     private final ArrayList<Integer> photoIds = new ArrayList<>();
     private final ArrayList<String> photoNames = new ArrayList<>();
-    private final ArrayList<String> photoPaths = new ArrayList<>();
+    private final ArrayList<String> photoFilename = new ArrayList<>();
     private final ArrayList<String> photoYears = new ArrayList<>();
     private final ArrayList<String> photoFoundYears = new ArrayList<>();
     private final ArrayList<Bitmap> photoBitmaps = new ArrayList<>();
@@ -63,18 +65,24 @@ public class AddPhotoFragment extends Fragment {
         if (getArguments() != null) {
             type = getArguments().getString("type");
             bundle = getArguments();
+            if(savedInstanceState == null)
+            {
+                timeAtAdd = Long.toString(System.currentTimeMillis());
+                //Log.d("myTag", "added to bundle: "+timeAtAdd);
+                bundle.putString("timeAtAdd", timeAtAdd);
+            }
+            else
+            {
+                timeAtAdd = savedInstanceState.getString("timeAtAdd");
+                //Log.d("myTag", "received from savedInstanceState: "+timeAtAdd);
+            }
         }
-        else
-        {
-            bundle = new Bundle();
-        }
-        timeAtAdd = Long.toString(System.currentTimeMillis());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        getActivity().invalidateOptionsMenu();
+        Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
     }
 
     @Override
@@ -90,7 +98,52 @@ public class AddPhotoFragment extends Fragment {
         gridView = view.findViewById(R.id.addtreasure_gridview);
         addPhotoButton = view.findViewById(R.id.addphoto_button);
 
+        if(savedInstanceState != null)
+        {
+            //Log.d("myTag", "We are entering savedInstanceState!");
+            //we need to see if there were any photos added previously using timeAtAdd
+            ContextWrapper cw = new ContextWrapper(Objects.requireNonNull(getActivity()).getApplicationContext());
+            // path to /data/data/yourapp/app_data/imageDir
+            File directory = cw.getFilesDir();
+            File subDir = new File(directory, "imageDir");
+            if( !subDir.exists() )
+                subDir.mkdir();
+            final String prefix = "temp_" + timeAtAdd;
+
+            File [] files = subDir.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File directory, String name) {
+                    return name.startsWith(prefix);
+                }
+            });
+            //Log.d("myTag", "The number of temp_images found was: "+files.length);
+
+            for (File file : files) {
+
+                counter++;
+                photoNames.add("Photo " + counter);
+                photoYears.add("");
+                photoFoundYears.add("");
+                photoIds.add(counter);
+                photoFilename.add(file.getName());
+
+                // First decode with inJustDecodeBounds=true to check dimensions
+                BitmapFactory.Options options = new BitmapFactory.Options();
+                options.inJustDecodeBounds = true;
+
+                // Calculate inSampleSize
+                options.inSampleSize = calculateInSampleSize(options, 100, 100);
+
+                // Decode bitmap with inSampleSize set
+                options.inJustDecodeBounds = false;
+
+                //add bitmap to photoBitmaps
+                photoBitmaps.add(BitmapFactory.decodeFile(file.getPath(), options));
+            }
+        }
+
         if (counter > 0) {
+            addPhotoButton.setText("ADD ANOTHER PHOTO");
             CustomGridViewAdapter adapterViewAndroid = new CustomGridViewAdapter(getActivity(), photoIds, photoNames, photoYears, photoBitmaps);
             gridView.setAdapter(adapterViewAndroid);
             gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -112,18 +165,25 @@ public class AddPhotoFragment extends Fragment {
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("timeAtAdd", timeAtAdd);
+    }
+
+
     private void startCropper() {
         // start picker to get image for cropping and then use the image in cropping activity
         CropImage.activity()
                 .setGuidelines(CropImageView.Guidelines.ON)
                 //.setCropShape(CropImageView.CropShape.OVAL)
                 //.setFixAspectRatio(true)
-                .start(getContext(), this);
+                .start(Objects.requireNonNull(getContext()), this);
     }
 
     private void showRemovePictureDialog(final int i) {
         final CharSequence[] items = {"Yes", "Cancel"};
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
         builder.setTitle("Remove Photo?");
         builder.setItems(items, new DialogInterface.OnClickListener() {
             @Override
@@ -140,9 +200,9 @@ public class AddPhotoFragment extends Fragment {
 
                     //Log.d("TEST", "The photopath of file to be removed is: "+photoPaths.get(i));
 
-                    final String photoPath = photoPaths.get(i);
+                    final String photoName = photoFilename.get(i);
 
-                    ContextWrapper cw = new ContextWrapper(getActivity().getApplicationContext());
+                    ContextWrapper cw = new ContextWrapper(Objects.requireNonNull(getActivity()).getApplicationContext());
                     // path to /data/data/yourapp/app_data/imageDir
                     File directory = cw.getFilesDir();
                     File subDir = new File(directory, "imageDir");
@@ -152,7 +212,7 @@ public class AddPhotoFragment extends Fragment {
                     File [] files = subDir.listFiles(new FilenameFilter() {
                         @Override
                         public boolean accept(File directory, String name) {
-                            return name.equals(photoPath);
+                            return name.equals(photoName);
                         }
                     });
 
@@ -161,7 +221,7 @@ public class AddPhotoFragment extends Fragment {
                         //Log.d("TEST", "file to be removed is: "+file.getPath());
                         //delete file that was saved in saveImage method
                         file.delete();
-                        photoPaths.remove(i);
+                        photoFilename.remove(i);
                     }
 
                     counter--;
@@ -199,9 +259,9 @@ public class AddPhotoFragment extends Fragment {
                 Uri resultUri = result.getUri();
 
                 try {
-                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(getActivity().getContentResolver(), resultUri);
-                    String photoPath = saveImage(bitmap);
-                    if (photoPath.equals("fail")) {
+                    Bitmap bitmap = MediaStore.Images.Media.getBitmap(Objects.requireNonNull(getActivity()).getContentResolver(), resultUri);
+                    String filename = saveImage(bitmap);
+                    if (filename.equals("fail")) {
                         Toast.makeText(getActivity(), "Photo failed to save...", Toast.LENGTH_SHORT).show();
                     } else {
                         counter++;
@@ -212,9 +272,29 @@ public class AddPhotoFragment extends Fragment {
                         photoYears.add("");
                         photoFoundYears.add("");
                         photoIds.add(counter);
-                        photoPaths.add(photoPath);
-                        photoBitmaps.add(bitmap);
-                        //imageview.setImageBitmap(bitmap);
+                        photoFilename.add(filename);
+
+                        // First decode with inJustDecodeBounds=true to check dimensions
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inJustDecodeBounds = true;
+
+                        // Calculate inSampleSize
+                        options.inSampleSize = calculateInSampleSize(options, 100, 100);
+
+                        // Decode bitmap with inSampleSize set
+                        options.inJustDecodeBounds = false;
+
+                        //get photo full path
+                        ContextWrapper cw = new ContextWrapper(getActivity().getApplicationContext());
+                        // path to /data/data/yourapp/app_data/imageDir
+                        File directory = cw.getFilesDir();
+                        File subDir = new File(directory, "imageDir");
+                        String photoPath = subDir.getPath() + "/" + filename;
+
+                        //add bitmap to photoBitmaps
+                        photoBitmaps.add(BitmapFactory.decodeFile(photoPath, options));
+
+                        //reload UI
                         CustomGridViewAdapter adapterViewAndroid = new CustomGridViewAdapter(getActivity(), photoIds, photoNames, photoYears, photoBitmaps);
                         gridView.setAdapter(adapterViewAndroid);
                         gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -225,8 +305,6 @@ public class AddPhotoFragment extends Fragment {
                                 showRemovePictureDialog(i);
                             }
                         });
-
-                        //Log.d("TEST","File exists at this photoPath: "+photoPath+"\n"+result);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -237,7 +315,7 @@ public class AddPhotoFragment extends Fragment {
     }
 
     private String saveImage(Bitmap myBitmap) {
-        ContextWrapper cw = new ContextWrapper(getActivity().getApplicationContext());
+        ContextWrapper cw = new ContextWrapper(Objects.requireNonNull(getActivity()).getApplicationContext());
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getFilesDir();
         File subDir = new File(directory, "imageDir");
@@ -259,7 +337,7 @@ public class AddPhotoFragment extends Fragment {
             return "fail";
         } finally {
             try {
-                out.close();
+                Objects.requireNonNull(out).close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -268,23 +346,44 @@ public class AddPhotoFragment extends Fragment {
     }
 
     public void nextButtonClicked() {
-        bundle.putString("timeAtAdd", timeAtAdd);
         switch (type) {
             case "coin":
-                ((AddActivity) getActivity()).replaceFragments(AddCoinInfoFragment.class, bundle, "addInfo");
+                ((AddActivity) Objects.requireNonNull(getActivity())).replaceFragments(AddCoinInfoFragment.class, bundle, "addInfo");
                 break;
             case "token":
-                ((AddActivity) getActivity()).replaceFragments(AddTokenInfoFragment.class, bundle, "addInfo");
+                ((AddActivity) Objects.requireNonNull(getActivity())).replaceFragments(AddTokenInfoFragment.class, bundle, "addInfo");
                 break;
             case "jewelry":
-                ((AddActivity) getActivity()).replaceFragments(AddJewelryInfoFragment.class, bundle, "addInfo");
+                ((AddActivity) Objects.requireNonNull(getActivity())).replaceFragments(AddJewelryInfoFragment.class, bundle, "addInfo");
                 break;
             case "relic":
-                ((AddActivity) getActivity()).replaceFragments(AddRelicInfoFragment.class, bundle, "addInfo");
+                ((AddActivity) Objects.requireNonNull(getActivity())).replaceFragments(AddRelicInfoFragment.class, bundle, "addInfo");
                 break;
             case "collection":
-                ((AddActivity) getActivity()).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
+                ((AddActivity) Objects.requireNonNull(getActivity())).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
                 break;
         }
+    }
+
+    private static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+        return inSampleSize;
     }
 }

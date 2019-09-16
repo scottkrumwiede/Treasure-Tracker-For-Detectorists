@@ -24,6 +24,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 /**
@@ -53,7 +54,8 @@ public class CladFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        sortType = getArguments().getString("sortBy");
+        //Log.d("myTag", "We came through onCreate of CladFragment");
+        sortType = Objects.requireNonNull(getArguments()).getString("sortBy");
         adRequest = new AdRequest.Builder().build();
         myAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.bounceonce);
     }
@@ -69,6 +71,7 @@ public class CladFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        Objects.requireNonNull(getActivity()).setTitle("Clad:");
         listView.setAdapter(null);
         mProgressBar.setVisibility(View.VISIBLE);
         bt = new BackgroundTask();
@@ -143,7 +146,7 @@ public class CladFragment extends Fragment {
                         public boolean onItemLongClick(AdapterView<?> parent, View view,
                                                        final int i, long id) {
                             final CharSequence[] items = {"Yes", "Cancel"};
-                            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                            AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
                             builder.setTitle("Are you sure you want to PERMANENTLY DELETE this clad?");
                             builder.setItems(items, new DialogInterface.OnClickListener() {
                                 @Override
@@ -200,7 +203,7 @@ public class CladFragment extends Fragment {
             //just deleted a clad
             else
             {
-                Snackbar.make(getActivity().findViewById(android.R.id.content), "Your clad was deleted!", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(Objects.requireNonNull(getActivity()).findViewById(android.R.id.content), "Your clad was deleted!", Snackbar.LENGTH_SHORT).show();
                 BackgroundTask bt = new BackgroundTask();
                 bt.execute();
             }

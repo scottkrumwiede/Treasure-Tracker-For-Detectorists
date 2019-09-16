@@ -11,6 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import java.util.Objects;
+
 public class AddActivity extends AppCompatActivity {
 
     private final FragmentManager fm = getSupportFragmentManager();
@@ -20,7 +22,7 @@ public class AddActivity extends AppCompatActivity {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        type = getIntent().getExtras().getString("type");
+        type = Objects.requireNonNull(getIntent().getExtras()).getString("type");
         if (type != null) {
             if(type.endsWith("s:"))
             {
@@ -41,19 +43,22 @@ public class AddActivity extends AppCompatActivity {
         setContentView(R.layout.content_main);
 
         Bundle bundle = new Bundle();
-        if(type != null) {
-            bundle.putString("type", type);
-            if(type.equals("clad"))
-            {
-                AddCladInfoFragment addCladInfoFragment = new AddCladInfoFragment();
-                addCladInfoFragment.setArguments(bundle);
-                fm.beginTransaction().replace(R.id.main_fragment, addCladInfoFragment, "addFinal").commit();
-            }
-            else
-            {
-                AddPhotoFragment addPhotoFragment = new AddPhotoFragment();
-                addPhotoFragment.setArguments(bundle);
-                fm.beginTransaction().replace(R.id.main_fragment, addPhotoFragment, "addPhoto").commit();
+        if(savedInstanceState == null)
+        {
+            if(type != null) {
+                bundle.putString("type", type);
+                if(type.equals("clad"))
+                {
+                    AddCladInfoFragment addCladInfoFragment = new AddCladInfoFragment();
+                    addCladInfoFragment.setArguments(bundle);
+                    fm.beginTransaction().replace(R.id.main_fragment, addCladInfoFragment, "addFinal").commit();
+                }
+                else
+                {
+                    AddPhotoFragment addPhotoFragment = new AddPhotoFragment();
+                    addPhotoFragment.setArguments(bundle);
+                    fm.beginTransaction().replace(R.id.main_fragment, addPhotoFragment, "addPhoto").commit();
+                }
             }
         }
     }
@@ -69,7 +74,7 @@ public class AddActivity extends AppCompatActivity {
     public boolean onPrepareOptionsMenu(Menu menu) {
 
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment);
-        String fragmentTag = fragment.getTag();
+        String fragmentTag = Objects.requireNonNull(fragment).getTag();
         if(fragmentTag != null)
         {
             if(fragmentTag.equals("addFinal"))
@@ -93,52 +98,47 @@ public class AddActivity extends AppCompatActivity {
 
         if (id == R.id.action_add_next) {
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment);
-            String fragmentTag = fragment.getTag();
+            String fragmentTag = Objects.requireNonNull(fragment).getTag();
             if(fragmentTag != null)
             {
-                if(fragmentTag.equals("addPhoto"))
-                {
-                    AddPhotoFragment frag = (AddPhotoFragment) fragment;
-                    frag.nextButtonClicked();
-                }
-
-                else if(fragmentTag.equals("addInfo"))
-                {
-                    switch (type) {
-                        case "coin": {
-                            AddCoinInfoFragment frag = (AddCoinInfoFragment) fragment;
-                            frag.nextButtonClicked();
-                            break;
+                switch (fragmentTag) {
+                    case "addPhoto":
+                        AddPhotoFragment frag2 = (AddPhotoFragment) fragment;
+                        frag2.nextButtonClicked();
+                        break;
+                    case "addInfo":
+                        switch (type) {
+                            case "coin": {
+                                AddCoinInfoFragment frag = (AddCoinInfoFragment) fragment;
+                                frag.nextButtonClicked();
+                                break;
+                            }
+                            case "token": {
+                                AddTokenInfoFragment frag = (AddTokenInfoFragment) fragment;
+                                frag.nextButtonClicked();
+                                break;
+                            }
+                            case "relic": {
+                                AddRelicInfoFragment frag = (AddRelicInfoFragment) fragment;
+                                frag.nextButtonClicked();
+                                break;
+                            }
+                            case "jewelry": {
+                                AddJewelryInfoFragment frag = (AddJewelryInfoFragment) fragment;
+                                frag.nextButtonClicked();
+                                break;
+                            }
                         }
-                        case "token": {
-                            AddTokenInfoFragment frag = (AddTokenInfoFragment) fragment;
-                            frag.nextButtonClicked();
-                            break;
+                        break;
+                    case "addFinal":
+                        if (type.equals("clad")) {
+                            AddCladInfoFragment frag = (AddCladInfoFragment) fragment;
+                            frag.saveClad();
+                        } else {
+                            AddFinalInfoFragment frag = (AddFinalInfoFragment) fragment;
+                            frag.saveTreasure();
                         }
-                        case "relic": {
-                            AddRelicInfoFragment frag = (AddRelicInfoFragment) fragment;
-                            frag.nextButtonClicked();
-                            break;
-                        }
-                        case "jewelry": {
-                            AddJewelryInfoFragment frag = (AddJewelryInfoFragment) fragment;
-                            frag.nextButtonClicked();
-                            break;
-                        }
-                    }
-                }
-                else if(fragmentTag.equals("addFinal"))
-                {
-                    if(type.equals("clad"))
-                    {
-                        AddCladInfoFragment frag = (AddCladInfoFragment) fragment;
-                        frag.saveClad();
-                    }
-                    else
-                    {
-                        AddFinalInfoFragment frag = (AddFinalInfoFragment) fragment;
-                        frag.saveTreasure();
-                    }
+                        break;
                 }
             }
         }
@@ -156,7 +156,7 @@ public class AddActivity extends AppCompatActivity {
         // Insert the fragment by replacing any existing fragment
         FragmentTransaction fragmentTransaction = fm.beginTransaction();
         fragmentTransaction.setCustomAnimations(R.anim.enterfromtop, R.anim.exittobottom, R.anim.enterfrombottom, R.anim.exittotop);
-        fragmentTransaction.replace(R.id.main_fragment, fragment, tag);
+        fragmentTransaction.replace(R.id.main_fragment, Objects.requireNonNull(fragment), tag);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
@@ -166,7 +166,7 @@ public class AddActivity extends AppCompatActivity {
     {
             Log.d("myTag", "we're in back pressed!");
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment);
-            String fragmentTag = fragment.getTag();
+            String fragmentTag = Objects.requireNonNull(fragment).getTag();
             if(fragmentTag != null)
             {
                 if(fragmentTag.equals("addInfo"))
