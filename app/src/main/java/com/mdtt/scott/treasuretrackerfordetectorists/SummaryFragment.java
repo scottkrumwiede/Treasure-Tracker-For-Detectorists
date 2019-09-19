@@ -125,14 +125,16 @@ public class SummaryFragment extends Fragment {
         mAdView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-                super.onAdLoaded();
                 mAdView.setVisibility(View.VISIBLE);
+                super.onAdLoaded();
+
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-                super.onAdFailedToLoad(errorCode);
                 mAdView.setVisibility(View.GONE);
+                super.onAdFailedToLoad(errorCode);
+
             }
         });
 

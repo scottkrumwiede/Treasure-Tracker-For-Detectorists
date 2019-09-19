@@ -129,7 +129,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
-        MobileAds.initialize(this, "@string/admob_app_id");
+        MobileAds.initialize(this, getString(R.string.admob_app_id));
         cleanup();
         treasureListNeedsUpdated = false;
         setTheme(R.style.AppTheme_NoActionBar);
