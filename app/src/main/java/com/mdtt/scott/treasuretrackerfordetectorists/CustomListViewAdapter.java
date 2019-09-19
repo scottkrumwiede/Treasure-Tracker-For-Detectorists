@@ -62,10 +62,16 @@ public class CustomListViewAdapter extends ArrayAdapter<Clad> implements View.On
 
         viewHolder.txtAmount.setText(newCladAmount);
 
-        viewHolder.txtDateFound.setText(clad.getCladDateFound());
         if(clad.getCladDateFound().equals(""))
         {
             viewHolder.txtDateFound.setText("\u2014");
+        }
+        else
+        {
+            String oldDate = clad.getCladDateFound();
+            String[] splitDate = oldDate.split("/");
+            String cladFoundDate = splitDate[1]+"/"+splitDate[2]+"/"+splitDate[0];
+            viewHolder.txtDateFound.setText(cladFoundDate);
         }
         viewHolder.txtLocationFound.setText(clad.getCladLocationFound());
         if(clad.getCladLocationFound().equals(""))

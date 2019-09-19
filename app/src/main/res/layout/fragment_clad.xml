@@ -34,6 +34,7 @@
         android:id="@+id/clad_listview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingBottom="50dp"
         />
     </LinearLayout>
 
@@ -46,7 +47,7 @@
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id">
+        ads:adUnitId="@string/test_banner_ad_unit_id">
     </com.google.android.gms.ads.AdView>
 
 </RelativeLayout>

@@ -91,7 +91,21 @@ public class AddFinalInfoFragment extends Fragment {
 
         }
 
-        String date = month + 1 + "/" + day + "/" + year;
+        month++;
+
+        String date = month + "/" + day + "/" + year;
+
+        String splitDate[] = date.split("/");
+        if(splitDate[0].length() == 1)
+        {
+            splitDate[0] = "0"+splitDate[0];
+        }
+        if(splitDate[1].length() == 1)
+        {
+            splitDate[1] = "0"+splitDate[1];
+        }
+
+        date = splitDate[0]+"/"+splitDate[1]+"/"+splitDate[2];
         treasureDateFoundTextView.setText(date);
 
         //If the user had previously filled out info here but then backed up to a previous fragment before returning
@@ -124,7 +138,22 @@ public class AddFinalInfoFragment extends Fragment {
                 month = newMonth;
                 day = newDay;
 
-                String date = newMonth + 1 + "/" + newDay + "/" + newYear;
+                newMonth++;
+
+                String date = newMonth + "/" + newDay + "/" + newYear;
+
+                String splitDate[] = date.split("/");
+                if(splitDate[0].length() == 1)
+                {
+                    splitDate[0] = "0"+splitDate[0];
+                }
+                if(splitDate[1].length() == 1)
+                {
+                    splitDate[1] = "0"+splitDate[1];
+                }
+
+                date = splitDate[0]+"/"+splitDate[1]+"/"+splitDate[2];
+
                 treasureDateFoundTextView.setText(date);
             }
         };
@@ -269,12 +298,16 @@ public class AddFinalInfoFragment extends Fragment {
                         String coinMint = bundle.getString("coinMint");
                         String treasureMaterial = bundle.getString("treasureMaterial");
                         String treasureWeight = bundle.getString("treasureWeight");
-                        String treasureFoundYear = treasureDateFoundTextView.getText().toString();
+
+                        String oldDate = treasureDateFoundTextView.getText().toString();
+                        String[] splitDate = oldDate.split("/");
+                        String treasureFoundDate = splitDate[2]+"/"+splitDate[0]+"/"+splitDate[1];
+
                         String treasureLocationFound = treasureLocationFoundEditText.getText().toString();
                         String treasureInfo = treasureInfoEditText.getText().toString().trim();
                         //Log.d("TEST", type + " " + timeAtAdd + " " + coinCountry + " " + coinType + " " + treasureSeries + " " + treasureYear + " " + coinMint + " " + treasureMaterial);
 
-                        Treasure treasure = new Treasure(0, type, coinCountry, coinType, treasureSeries, treasureName, treasureYear, coinMint, treasureMaterial, treasureWeight, treasureLocationFound, treasureFoundYear, treasureInfo, timeAtAdd);
+                        Treasure treasure = new Treasure(0, type, coinCountry, coinType, treasureSeries, treasureName, treasureYear, coinMint, treasureMaterial, treasureWeight, treasureLocationFound, treasureFoundDate, treasureInfo, timeAtAdd);
 
                         MySQliteHelper helper = new MySQliteHelper(getContext());
                         long result = helper.addTreasure(treasure);

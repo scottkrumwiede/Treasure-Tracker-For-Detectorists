@@ -450,4 +450,116 @@ public class MySQliteHelper extends SQLiteOpenHelper {
         db.delete(TABLE_CLAD, colCladID+"=?",new String[]{cladID});
         db.close();
     }
+
+    public void updateOldDates() {
+
+        //get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        //get all rows that are still using old date formats
+        String selectQuery = "SELECT "+colTreasureID+","+colTreasureDateFound+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureDateFound+" LIKE '%/%/____'";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(cursor.getColumnIndex(colTreasureID));
+                String oldDate = cursor.getString(cursor.getColumnIndex(colTreasureDateFound));
+                String[] splitDate = oldDate.split("/");
+
+                String newDate = splitDate[2]+"/"+splitDate[0]+"/"+splitDate[1];
+
+                //now update the date to proper yyyy/mm/dd format so it can be sorted correctly
+                ContentValues cv = new ContentValues();
+                cv.put(colTreasureDateFound,newDate);
+
+                db.update(TABLE_TREASURE, cv, colTreasureID+"="+id, null);
+
+            } while(cursor.moveToNext());
+        }
+
+        //get all rows that are still using old date formats
+        selectQuery = "SELECT "+colCladID+","+colCladDateFound+" FROM "+TABLE_CLAD+" WHERE "+colCladDateFound+" LIKE '%/%/____'";
+        cursor = db.rawQuery(selectQuery, null);
+
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(cursor.getColumnIndex(colCladID));
+                String oldDate = cursor.getString(cursor.getColumnIndex(colCladDateFound));
+                String[] splitDate = oldDate.split("/");
+
+                String newDate = splitDate[2]+"/"+splitDate[0]+"/"+splitDate[1];
+
+                //now update the date to proper yyyy/mm/dd format so it can be sorted correctly
+                ContentValues cv = new ContentValues();
+                cv.put(colCladDateFound,newDate);
+
+                db.update(TABLE_CLAD, cv, colCladID+"="+id, null);
+
+            } while(cursor.moveToNext());
+        }
+
+        //find out if user has any old treasure or clad rows using treasureDateFound with missing zero in front of month or day. i.e. 2019/1/9.
+        // Update to 2019/01/09 to allow for proper sorting
+        selectQuery = "SELECT "+colTreasureID+","+colTreasureDateFound+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureDateFound+" LIKE '____/_/%' OR "+colTreasureDateFound+" LIKE '____/%/_'";
+
+        cursor = db.rawQuery(selectQuery, null);
+
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(cursor.getColumnIndex(colTreasureID));
+                String oldDate = cursor.getString(cursor.getColumnIndex(colTreasureDateFound));
+                String[] splitDate = oldDate.split("/");
+
+                for(int i=0; i<=2; i++)
+                {
+                    if(splitDate[i].length() == 1)
+                    {
+                        splitDate[i] = "0"+splitDate[i];
+                    }
+                }
+
+                String newDate = splitDate[0]+"/"+splitDate[1]+"/"+splitDate[2];
+
+                //now update the date to proper yyyy/mm/dd format so it can be sorted correctly
+                ContentValues cv = new ContentValues();
+                cv.put(colTreasureDateFound,newDate);
+
+                db.update(TABLE_TREASURE, cv, colTreasureID+"="+id, null);
+
+            } while(cursor.moveToNext());
+        }
+
+        selectQuery = "SELECT "+colCladID+","+colCladDateFound+" FROM "+TABLE_CLAD+" WHERE "+colCladDateFound+" LIKE '____/_/%' OR "+colCladDateFound+" LIKE '____/%/_'";
+
+        cursor = db.rawQuery(selectQuery, null);
+
+        if(cursor.moveToFirst()){
+            do{
+                int id = cursor.getInt(cursor.getColumnIndex(colCladID));
+                String oldDate = cursor.getString(cursor.getColumnIndex(colCladDateFound));
+                String[] splitDate = oldDate.split("/");
+
+                for(int i=0; i<=2; i++)
+                {
+                    if(splitDate[i].length() == 1)
+                    {
+                        splitDate[i] = "0"+splitDate[i];
+                    }
+                }
+
+                String newDate = splitDate[0]+"/"+splitDate[1]+"/"+splitDate[2];
+
+                //now update the date to proper yyyy/mm/dd format so it can be sorted correctly
+                ContentValues cv = new ContentValues();
+                cv.put(colCladDateFound,newDate);
+
+                db.update(TABLE_CLAD, cv, colCladID+"="+id, null);
+
+            } while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+    }
 }

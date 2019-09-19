@@ -2,6 +2,7 @@ package com.mdtt.scott.treasuretrackerfordetectorists;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,6 +19,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.ads.MobileAds;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
@@ -38,6 +40,8 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<String> sortTypes;
     private boolean treasureListNeedsUpdated;
     private Menu menu;
+    private BackgroundTask bt;
+    private Bundle bundle;
 
     @Override
     public void onResume(){
@@ -46,11 +50,28 @@ public class MainActivity extends AppCompatActivity
         {
             FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
             Bundle args = new Bundle();
+
+            if(bundle.containsKey("sortBy"))
+            {
+                args.putString("sortBy",bundle.getString("sortBy"));
+            }
+            else
+            {
+
+                if(menu.findItem(R.id.nav_clad).isChecked())
+                {
+                    args.putString("sortBy", "CladID");
+                }
+                else
+                {
+                    args.putString("sortBy", "TreasureID");
+                }
+            }
+
             if(menu.findItem(R.id.nav_coins).isChecked())
             {
                 TreasureFragment treasureFragment = new TreasureFragment();
                 args.putString("type", "coin");
-                args.putString("sortBy", "TreasureID");
                 treasureFragment.setArguments(args);
                 fragmentTransaction.replace(R.id.main_fragment, treasureFragment);
                 fragmentTransaction.addToBackStack(null);
@@ -60,7 +81,6 @@ public class MainActivity extends AppCompatActivity
             {
                 TreasureFragment treasureFragment = new TreasureFragment();
                 args.putString("type", "token");
-                args.putString("sortBy", "TreasureID");
                 treasureFragment.setArguments(args);
                 fragmentTransaction.replace(R.id.main_fragment, treasureFragment);
                 fragmentTransaction.addToBackStack(null);
@@ -70,7 +90,6 @@ public class MainActivity extends AppCompatActivity
             {
                 TreasureFragment treasureFragment = new TreasureFragment();
                 args.putString("type", "relic");
-                args.putString("sortBy", "TreasureID");
                 treasureFragment.setArguments(args);
                 fragmentTransaction.replace(R.id.main_fragment, treasureFragment);
                 fragmentTransaction.addToBackStack(null);
@@ -80,7 +99,6 @@ public class MainActivity extends AppCompatActivity
             {
                 TreasureFragment treasureFragment = new TreasureFragment();
                 args.putString("type", "jewelry");
-                args.putString("sortBy", "TreasureID");
                 treasureFragment.setArguments(args);
                 fragmentTransaction.replace(R.id.main_fragment, treasureFragment);
                 fragmentTransaction.addToBackStack(null);
@@ -90,7 +108,6 @@ public class MainActivity extends AppCompatActivity
             {
                 CladFragment cladFragment = new CladFragment();
                 args.putString("type", "clad");
-                args.putString("sortBy", "CladID");
                 cladFragment.setArguments(args);
                 fragmentTransaction.replace(R.id.main_fragment, cladFragment);
                 fragmentTransaction.addToBackStack(null);
@@ -100,7 +117,6 @@ public class MainActivity extends AppCompatActivity
             {
                 TreasureFragment treasureFragment = new TreasureFragment();
                 args.putString("type", "collection");
-                args.putString("sortBy", "TreasureID");
                 treasureFragment.setArguments(args);
                 fragmentTransaction.replace(R.id.main_fragment, treasureFragment);
                 fragmentTransaction.addToBackStack(null);
@@ -113,8 +129,10 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
+        MobileAds.initialize(this, "@string/admob_app_id");
         cleanup();
         treasureListNeedsUpdated = false;
+        setTheme(R.style.AppTheme_NoActionBar);
         //Log.d("myTag", "Oncreate mainactivity!!!!");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -122,6 +140,7 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
         FloatingActionButton fab = findViewById(R.id.fab);
         final Animation myAnim = AnimationUtils.loadAnimation(this, R.anim.bounce);
+        bundle = new Bundle();
 
         // Use bounce interpolator with amplitude 0.2 and frequency 20
         MyBounceInterpolator interpolator = new MyBounceInterpolator(0.2, 20);
@@ -174,7 +193,7 @@ public class MainActivity extends AppCompatActivity
 
     private void cleanup() {
         //On startup, delete any temp prefix images saved by the user from previous add treasure attempts that never completed.
-        // path to /data/data/yourapp/app_data/files
+        //path to subDir: /data/user/0/com.mdtt.scott.treasuretrackerfordetectorists/files/imageDir
         File directory = this.getFilesDir();
         File subDir = new File(directory, "imageDir");
         if( !subDir.exists() )
@@ -193,6 +212,16 @@ public class MainActivity extends AppCompatActivity
             //deleting all temp images
             file.delete();
         }
+
+        //On startup, find out if user has any old treasure or clad rows using treasureDateFound format of mm/dd/yyyy
+        //if found, update rows to use format yyyy/mm/dd to allow for proper sql sorting by date
+
+        //On startup, also find out if user has any old treasure or clad rows using treasureDateFound with missing zero in front of month or day. i.e. 2019/1/9.
+        // Update to 2019/01/09 to allow for proper sorting
+        bt = new BackgroundTask();
+        bt.execute();
+
+
     }
 
     @Override
@@ -355,12 +384,11 @@ public class MainActivity extends AppCompatActivity
                     //sorttype has changed. refresh the treasureFragment to indicate this
                     if(!oldType.equals(sortType))
                     {
-                        Bundle args = new Bundle();
-                        args.putString("sortBy", sortType);
+                        bundle.putString("sortBy", sortType);
                         if(menu.findItem(R.id.nav_clad).isChecked())
                         {
                             CladFragment cladFragment = new CladFragment();
-                            cladFragment.setArguments(args);
+                            cladFragment.setArguments(bundle);
                             FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
                             fragmentTransaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout, R.anim.enterfromleft, R.anim.exittoright);
                             fragmentTransaction.replace(R.id.main_fragment, cladFragment);
@@ -370,16 +398,16 @@ public class MainActivity extends AppCompatActivity
                         else
                         {
                             if(Objects.requireNonNull(navigationView.getCheckedItem()).toString().toLowerCase().equals("jewelry")) {
-                                args.putString("type", navigationView.getCheckedItem().toString().toLowerCase());
+                                bundle.putString("type", navigationView.getCheckedItem().toString().toLowerCase());
                             }
                             else
                             {
                                 String type = navigationView.getCheckedItem().toString().toLowerCase();
                                 type = type.substring(0, type.length()-1);
-                                args.putString("type", type);
+                                bundle.putString("type", type);
                             }
                             TreasureFragment treasureFragment = new TreasureFragment();
-                            treasureFragment.setArguments(args);
+                            treasureFragment.setArguments(bundle);
                             FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
                             fragmentTransaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout, R.anim.enterfromleft, R.anim.exittoright);
                             fragmentTransaction.replace(R.id.main_fragment, treasureFragment);
@@ -417,6 +445,8 @@ public class MainActivity extends AppCompatActivity
             //setTitle("Coins:");
             args.putString("type", "coin");
             args.putString("sortBy", "TreasureID");
+            sortType = "TreasureID";
+            bundle.putString("sortBy", sortType);
             TreasureFragment treasureFragment = new TreasureFragment();
             treasureFragment.setArguments(args);
             fragmentTransaction.replace(R.id.main_fragment, treasureFragment);
@@ -429,6 +459,8 @@ public class MainActivity extends AppCompatActivity
             //setTitle("Tokens:");
             args.putString("type", "token");
             args.putString("sortBy", "TreasureID");
+            sortType = "TreasureID";
+            bundle.putString("sortBy", sortType);
             TreasureFragment treasureFragment = new TreasureFragment();
             treasureFragment.setArguments(args);
             fragmentTransaction.replace(R.id.main_fragment, treasureFragment);
@@ -440,6 +472,8 @@ public class MainActivity extends AppCompatActivity
             //setTitle("Jewelry:");
             args.putString("type", "jewelry");
             args.putString("sortBy", "TreasureID");
+            sortType = "TreasureID";
+            bundle.putString("sortBy", sortType);
             TreasureFragment treasureFragment = new TreasureFragment();
             treasureFragment.setArguments(args);
             fragmentTransaction.replace(R.id.main_fragment, treasureFragment);
@@ -450,6 +484,8 @@ public class MainActivity extends AppCompatActivity
             //setTitle("Relics:");
             args.putString("type", "relic");
             args.putString("sortBy", "TreasureID");
+            sortType = "TreasureID";
+            bundle.putString("sortBy", sortType);
             TreasureFragment treasureFragment = new TreasureFragment();
             treasureFragment.setArguments(args);
             fragmentTransaction.replace(R.id.main_fragment, treasureFragment);
@@ -460,6 +496,8 @@ public class MainActivity extends AppCompatActivity
             onSummary = false;
             //setTitle("Clad:");
             args.putString("sortBy", "CladID");
+            sortType = "CladID";
+            bundle.putString("sortBy", sortType);
             CladFragment cladFragment = new CladFragment();
             cladFragment.setArguments(args);
             fragmentTransaction.replace(R.id.main_fragment, cladFragment);
@@ -471,6 +509,8 @@ public class MainActivity extends AppCompatActivity
             //setTitle("Collections:");
             args.putString("type", "collection");
             args.putString("sortBy", "TreasureID");
+            sortType = "TreasureID";
+            bundle.putString("sortBy", sortType);
             TreasureFragment treasureFragment = new TreasureFragment();
             treasureFragment.setArguments(args);
             fragmentTransaction.replace(R.id.main_fragment, treasureFragment);
@@ -499,19 +539,31 @@ public class MainActivity extends AppCompatActivity
         }
         super.onActivityResult(resultCode, resultCode, data);
     }
-}
 
-class MyBounceInterpolator implements android.view.animation.Interpolator {
-    private double mAmplitude = 1;
-    private double mFrequency = 10;
+    private class BackgroundTask extends AsyncTask<String, Void, String> {
 
-    MyBounceInterpolator(double amplitude, double frequency) {
-        mAmplitude = amplitude;
-        mFrequency = frequency;
+        protected String doInBackground(String...params) {
+            final MySQliteHelper helper = new MySQliteHelper(getApplicationContext());
+            //look for and replace any old date formats
+            helper.updateOldDates();
+            return null;
+        }
     }
 
-    public float getInterpolation(float time) {
-        return (float) (-1 * Math.pow(Math.E, -time/ mAmplitude) *
-                Math.cos(mFrequency * time) + 1);
+    private class MyBounceInterpolator implements android.view.animation.Interpolator {
+        private double mAmplitude = 1;
+        private double mFrequency = 10;
+
+        MyBounceInterpolator(double amplitude, double frequency) {
+            mAmplitude = amplitude;
+            mFrequency = frequency;
+        }
+
+        public float getInterpolation(float time) {
+            return (float) (-1 * Math.pow(Math.E, -time/ mAmplitude) *
+                    Math.cos(mFrequency * time) + 1);
+        }
     }
 }
+
+

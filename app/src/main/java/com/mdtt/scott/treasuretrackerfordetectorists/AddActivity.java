@@ -1,7 +1,6 @@
 package com.mdtt.scott.treasuretrackerfordetectorists;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -164,14 +163,14 @@ public class AddActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-            Log.d("myTag", "we're in back pressed!");
+            //Log.d("myTag", "we're in back pressed!");
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment);
             String fragmentTag = Objects.requireNonNull(fragment).getTag();
             if(fragmentTag != null)
             {
                 if(fragmentTag.equals("addInfo"))
                 {
-                    Log.d("myTag", "we're in addinfo of back pressed!");
+                    //Log.d("myTag", "we're in addinfo of back pressed!");
                     switch (type)
                     {
                         case "coin": {
@@ -205,7 +204,7 @@ public class AddActivity extends AppCompatActivity {
                      }
                  }
             }
-            Log.d("myTag", "we're leaving back pressed!");
+            //Log.d("myTag", "we're leaving back pressed!");
             super.onBackPressed();
     }
 }

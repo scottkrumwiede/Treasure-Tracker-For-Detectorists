@@ -91,7 +91,7 @@ public class TreasureDetailedActivity extends AppCompatActivity {
 
             treasurePhotos.clear();
             treasure = helper.getDetailedTreasure(treasureId);
-            // path to /data/data/yourapp/app_data/files
+            //path to subDir: /data/user/0/com.mdtt.scott.treasuretrackerfordetectorists/files/imageDir
             File directory = getApplication().getFilesDir();
             File subDir = new File(directory, "imageDir");
             if( !subDir.exists() )
@@ -233,6 +233,12 @@ public class TreasureDetailedActivity extends AppCompatActivity {
                     }
                     else
                     {
+                        if(key.equals("Date Found: "))
+                        {
+                            String[] splitDate = value.split("/");
+                            String treasureFoundDate = splitDate[1]+"/"+splitDate[2]+"/"+splitDate[0];
+                            value = treasureFoundDate;
+                        }
                         TextView tv = new TextView(getApplicationContext());
                         tv.setLayoutParams(lparamsText);
                         tv.setText(key+value);
@@ -291,6 +297,7 @@ public class TreasureDetailedActivity extends AppCompatActivity {
         {
             ArrayList<Uri> imageUris = new ArrayList<>();
 
+            //path to subDir: /data/user/0/com.mdtt.scott.treasuretrackerfordetectorists/files/imageDir
             File directory = getApplication().getFilesDir();
             File subDir = new File(directory, "imageDir");
             if( !subDir.exists() )
