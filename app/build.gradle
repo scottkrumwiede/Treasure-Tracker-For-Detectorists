@@ -20,8 +20,8 @@ android {
         applicationId "com.mdtt.scott.treasuretrackerfordetectorists"
         minSdkVersion 23
         targetSdkVersion 28
-        versionCode 11
-        versionName "1.0.13"
+        versionCode 15
+        versionName "1.100"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
     }
@@ -48,6 +48,7 @@ dependencies {
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'com.google.android.gms:play-services-ads:18.2.0'
     api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+    implementation 'androidx.preference:preference:1.1.0-alpha05'
 }
 
 apply plugin: 'com.google.gms.google-services'

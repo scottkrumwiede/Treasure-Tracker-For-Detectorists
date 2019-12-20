@@ -239,6 +239,7 @@ public class TreasureFragment extends Fragment {
                             // First decode with inJustDecodeBounds=true to check dimensions
                             BitmapFactory.Options options = new BitmapFactory.Options();
                             options.inJustDecodeBounds = true;
+                            BitmapFactory.decodeFile(filepath, options);
 
                             // Calculate inSampleSize
                             options.inSampleSize = calculateInSampleSize(options, 100, 100);
@@ -248,11 +249,32 @@ public class TreasureFragment extends Fragment {
                             photo = BitmapFactory.decodeFile(filepath, options);
 
                         } else {
-                            photo = BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto);
+
+                            // First decode with inJustDecodeBounds=true to check dimensions
+                            BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inJustDecodeBounds = true;
+                            BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto, options);
+
+                            // Calculate inSampleSize
+                            options.inSampleSize = calculateInSampleSize(options, 100, 100);
+
+                            // Decode bitmap with inSampleSize set
+                            options.inJustDecodeBounds = false;
+                            photo = BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto, options);
                         }
 
                     } else {
-                        photo = BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto);
+                        // First decode with inJustDecodeBounds=true to check dimensions
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inJustDecodeBounds = true;
+                        BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto, options);
+
+                        // Calculate inSampleSize
+                        options.inSampleSize = calculateInSampleSize(options, 100, 100);
+
+                        // Decode bitmap with inSampleSize set
+                        options.inJustDecodeBounds = false;
+                        photo = BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto, options);
                     }
                     treasurePhotos.add(photo);
 

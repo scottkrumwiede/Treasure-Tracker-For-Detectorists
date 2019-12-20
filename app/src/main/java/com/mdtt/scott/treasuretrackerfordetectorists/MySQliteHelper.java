@@ -18,6 +18,7 @@ import java.util.LinkedHashMap;
 public class MySQliteHelper extends SQLiteOpenHelper {
 
     // Database Version
+    //58 is live version so don't change this without migration in place
     private static final int DATABASE_VERSION = 58;
     // Database Name
     private static final String DATABASE_NAME = "findsDB";
@@ -411,6 +412,35 @@ public class MySQliteHelper extends SQLiteOpenHelper {
         return result;
     }
 
+    public long editTreasure(Treasure treasure)
+    {
+        //get reference to writable DB
+        SQLiteDatabase db = this.getWritableDatabase();
+        String whereClause = colTreasureID + " = ?";
+
+        //create ContentValues to add key "column"/value
+        ContentValues values = new ContentValues();
+        values.put(colTreasureCountry, treasure.getTreasureCountry()); // get country
+        values.put(colTreasureName, treasure.getTreasureName()); // get name
+        values.put(colTreasureType, treasure.getTreasureType()); // get type
+        values.put(colTreasureDenomination, treasure.getTreasureDenomination()); // get denomination
+        values.put(colTreasureSeries, treasure.getTreasureSeries()); // get series
+        values.put(colTreasureYear, treasure.getTreasureYear()); // get year
+        values.put(colTreasureMint, treasure.getTreasureMint()); // get mint
+        values.put(colTreasureMaterial, treasure.getTreasureMaterial()); // get material
+        values.put(colTreasureWeight, treasure.getTreasureWeight()); // get weight
+        values.put(colTreasureDateFound, treasure.getTreasureDateFound()); // get datefound
+        values.put(colTreasureLocationFound, treasure.getTreasureLocationFound()); // get locationfound
+        values.put(colTreasureInfo, treasure.getTreasureInfo()); // get info
+
+        //result will contain the row ID of the newly inserted row, or -1 if an error occurred.
+        long result = db.update(TABLE_TREASURE, values, whereClause, new String[]{Integer.toString(treasure.getTreasureId())});
+
+        //close
+        db.close();
+        return result;
+    }
+
     public long addClad(Clad clad)
     {
         //get reference to writable DB
@@ -449,6 +479,14 @@ public class MySQliteHelper extends SQLiteOpenHelper {
 
         db.delete(TABLE_CLAD, colCladID+"=?",new String[]{cladID});
         db.close();
+    }
+
+    //function used for fetching data for exporting database
+    public Cursor raw() {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res = db.rawQuery("SELECT "+colTreasureType+","+colTreasureDenomination+","+colTreasureSeries+","+colTreasureName+","+colTreasureYear+","+colTreasureMint+","+colTreasureMaterial+","+colTreasureWeight+","+colTreasureLocationFound+","+colTreasureDateFound+","+colTreasureInfo+" FROM " + TABLE_TREASURE , new String[]{});
+        return res;
     }
 
     public void updateOldDates() {

@@ -1,6 +1,8 @@
 package com.mdtt.scott.treasuretrackerfordetectorists;
 
+import android.content.ContextWrapper;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -10,26 +12,34 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import java.io.File;
+import java.io.FilenameFilter;
 import java.util.Objects;
 
 public class AddActivity extends AppCompatActivity {
 
     private final FragmentManager fm = getSupportFragmentManager();
-    private String type;
+    private String type, timeAtAdd;
+    private int bigtime;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         type = Objects.requireNonNull(getIntent().getExtras()).getString("type");
-        if (type != null) {
+        bigtime = getIntent().getExtras().getInt("id");
+        timeAtAdd = Objects.requireNonNull(getIntent().getExtras()).getString("timeAtAdd");
+        Log.d("myTag", ""+type+", "+bigtime);
+        //editing an already existing treasure
+        if (bigtime != 0)
+        {
+            setTitle("Edit your "+type+":");
+        }
+        //adding a new treasure
+        else if (type != null) {
             if(type.endsWith("s:"))
             {
                 type = type.substring(0, type.length()-2);
-                if(type.equals("Collections:"))
-                {
-                    type = "collection";
-                }
             }
             else
             {
@@ -44,6 +54,25 @@ public class AddActivity extends AppCompatActivity {
         Bundle bundle = new Bundle();
         if(savedInstanceState == null)
         {
+            //editing a treasure
+            if (bigtime != 0)
+            {
+                bundle.putInt("id", bigtime);
+                bundle.putString("timeAtAdd", timeAtAdd);
+                bundle.putString("coinCountry", Objects.requireNonNull(getIntent().getExtras()).getString("coinCountry"));
+                bundle.putString("coinType", Objects.requireNonNull(getIntent().getExtras()).getString("coinType"));
+                bundle.putString("treasureSeries", Objects.requireNonNull(getIntent().getExtras()).getString("treasureSeries"));
+                bundle.putString("treasureName", Objects.requireNonNull(getIntent().getExtras()).getString("treasureName"));
+                bundle.putString("treasureYear", Objects.requireNonNull(getIntent().getExtras()).getString("treasureYear"));
+                bundle.putString("coinMint", Objects.requireNonNull(getIntent().getExtras()).getString("coinMint"));
+                bundle.putString("treasureMaterial", Objects.requireNonNull(getIntent().getExtras()).getString("treasureMaterial"));
+                bundle.putString("treasureWeight", Objects.requireNonNull(getIntent().getExtras()).getString("treasureWeight"));
+                bundle.putString("treasureLocationFound", Objects.requireNonNull(getIntent().getExtras()).getString("treasureLocationFound"));
+                bundle.putString("treasureDateFound", Objects.requireNonNull(getIntent().getExtras()).getString("treasureDateFound"));
+                bundle.putString("treasureInfo", Objects.requireNonNull(getIntent().getExtras()).getString("treasureInfo"));
+
+
+            }
             if(type != null) {
                 bundle.putString("type", type);
                 if(type.equals("clad"))
@@ -135,7 +164,16 @@ public class AddActivity extends AppCompatActivity {
                             frag.saveClad();
                         } else {
                             AddFinalInfoFragment frag = (AddFinalInfoFragment) fragment;
-                            frag.saveTreasure();
+                            if(bigtime != 0)
+                            {
+                                Log.d("myTag",""+id);
+                                frag.editTreasure();
+                            }
+                            else
+                            {
+                                frag.saveTreasure();
+                            }
+
                         }
                         break;
                 }
@@ -163,7 +201,6 @@ public class AddActivity extends AppCompatActivity {
     @Override
     public void onBackPressed()
     {
-            //Log.d("myTag", "we're in back pressed!");
             Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.main_fragment);
             String fragmentTag = Objects.requireNonNull(fragment).getTag();
             if(fragmentTag != null)
@@ -196,13 +233,43 @@ public class AddActivity extends AppCompatActivity {
                     }
                 }
                 else if(fragmentTag.equals("addFinal"))
-                 {
+                {
                     if(!type.equals("clad"))
                     {
+                        //Log.d("myTag", "we're in addfinal of back pressed!");
                         AddFinalInfoFragment frag = (AddFinalInfoFragment) fragment;
-                         frag.addToBundle();
-                     }
-                 }
+                        frag.addToBundle();
+                    }
+                }
+                else if(fragmentTag.equals("addPhoto"))
+                {
+                    //user is backing out of editing a treasure. make sure any photos flagged for deletion (prefix edit_) are restored
+                    if (bigtime != 0)
+                    {
+                        final String prefix = "edit_" + timeAtAdd;
+                        ContextWrapper cw = new ContextWrapper(Objects.requireNonNull(getApplicationContext()));
+                        // path to /data/data/yourapp/app_data/imageDir
+                        File directory = cw.getFilesDir();
+                        File subDir = new File(directory, "imageDir");
+                        if( !subDir.exists() )
+                            subDir.mkdir();
+
+                        File [] files = subDir.listFiles(new FilenameFilter() {
+                            @Override
+                            public boolean accept(File directory, String name) {
+                                return name.startsWith(prefix);
+                            }
+                        });
+
+                        for (File file : files) {
+                                //remove edit_ chars from prefix string
+                                String newName = file.getName().substring(5);
+                                File newFile = new File(subDir, newName);
+                                //rename file from temp to permanent
+                                file.renameTo(newFile);
+                        }
+                    }
+                }
             }
             //Log.d("myTag", "we're leaving back pressed!");
             super.onBackPressed();

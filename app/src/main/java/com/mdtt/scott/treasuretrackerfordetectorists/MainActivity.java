@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity
     private ArrayList<String> sortTypes;
     private boolean treasureListNeedsUpdated;
     private Menu menu;
-    private BackgroundTask bt;
     private Bundle bundle;
 
     @Override
@@ -192,13 +191,14 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void cleanup() {
-        //On startup, delete any temp prefix images saved by the user from previous add treasure attempts that never completed.
+        //On startup, delete any temp prefix images saved by the user from previous add or edit treasure attempts that never completed.
         //path to subDir: /data/user/0/com.mdtt.scott.treasuretrackerfordetectorists/files/imageDir
         File directory = this.getFilesDir();
         File subDir = new File(directory, "imageDir");
         if( !subDir.exists() )
             subDir.mkdir();
         final String prefix = "temp_";
+        final String prefix2 = "edit_";
 
         File [] files = subDir.listFiles(new FilenameFilter() {
             @Override
@@ -208,9 +208,26 @@ public class MainActivity extends AppCompatActivity
         });
         //Log.d("TEST", "The number of temp images to be deleted is: "+files.length+"\n");
 
+        //checking for photos flagged for deletion from an edit that was cancelled (prefix edit_)
         for (File file : files) {
             //deleting all temp images
             file.delete();
+        }
+
+        files = subDir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File directory, String name) {
+                return name.startsWith(prefix2);
+            }
+        });
+        //Log.d("TEST", "The number of edit images to be deleted is: "+files.length+"\n");
+
+        for (File file : files) {
+            //remove edit_ chars from prefix string to restore photos previously flagged for deletion
+            String newName = file.getName().substring(5);
+            File newFile = new File(subDir, newName);
+            //rename file from temp to permanent
+            file.renameTo(newFile);
         }
 
         //On startup, find out if user has any old treasure or clad rows using treasureDateFound format of mm/dd/yyyy
@@ -218,7 +235,7 @@ public class MainActivity extends AppCompatActivity
 
         //On startup, also find out if user has any old treasure or clad rows using treasureDateFound with missing zero in front of month or day. i.e. 2019/1/9.
         // Update to 2019/01/09 to allow for proper sorting
-        bt = new BackgroundTask();
+        BackgroundTask bt = new BackgroundTask();
         bt.execute();
 
 
@@ -275,6 +292,9 @@ public class MainActivity extends AppCompatActivity
 
         if (id == R.id.action_settings) {
             Snackbar.make(findViewById(android.R.id.content), "Feature coming soon", Snackbar.LENGTH_SHORT).show();
+
+                    Intent myIntent = new Intent(this, SettingsActivity.class);
+                    startActivity(myIntent);
         }
         else if(id == R.id.action_sorting)
         {

@@ -90,6 +90,7 @@ public class TreasureDetailedActivity extends AppCompatActivity {
             final MySQliteHelper helper = new MySQliteHelper(getApplicationContext());
 
             treasurePhotos.clear();
+            treasurePhotosFull.clear();
             treasure = helper.getDetailedTreasure(treasureId);
             //path to subDir: /data/user/0/com.mdtt.scott.treasuretrackerfordetectorists/files/imageDir
             File directory = getApplication().getFilesDir();
@@ -291,7 +292,23 @@ public class TreasureDetailedActivity extends AppCompatActivity {
         }
         else if(id == R.id.action_edit)
         {
-            Snackbar.make(findViewById(android.R.id.content), "Edit feature coming in v1.1.", Snackbar.LENGTH_SHORT).show();
+            //Treasure treasure = new Treasure(0, type, coinCountry, coinType, treasureSeries, treasureName, treasureYear, coinMint, treasureMaterial, treasureWeight, treasureLocationFound, treasureFoundDate, treasureInfo, timeAtAdd);
+            Intent myIntent = new Intent(getApplicationContext(), AddActivity.class);
+            myIntent.putExtra("id", treasure.getTreasureId());
+            myIntent.putExtra("type", treasure.getTreasureType());
+            myIntent.putExtra("coinCountry", treasure.getTreasureCountry());
+            myIntent.putExtra("coinType", treasure.getTreasureDenomination());
+            myIntent.putExtra("treasureSeries", treasure.getTreasureSeries());
+            myIntent.putExtra("treasureName", treasure.getTreasureName());
+            myIntent.putExtra("treasureYear", treasure.getTreasureYear());
+            myIntent.putExtra("coinMint", treasure.getTreasureMint());
+            myIntent.putExtra("treasureMaterial", treasure.getTreasureMaterial());
+            myIntent.putExtra("treasureWeight", treasure.getTreasureWeight());
+            myIntent.putExtra("treasureLocationFound", treasure.getTreasureLocationFound());
+            myIntent.putExtra("treasureDateFound", treasure.getTreasureDateFound());
+            myIntent.putExtra("treasureInfo", treasure.getTreasureInfo());
+            myIntent.putExtra("timeAtAdd", treasure.getTreasurePhotoPath());
+            startActivity(myIntent);
         }
         else if(id == R.id.action_share)
         {
