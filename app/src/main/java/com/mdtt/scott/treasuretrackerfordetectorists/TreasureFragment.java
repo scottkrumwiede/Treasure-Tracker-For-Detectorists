@@ -132,14 +132,15 @@ public class TreasureFragment extends Fragment {
         mAdView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-                super.onAdLoaded();
                 mAdView.setVisibility(View.VISIBLE);
+                super.onAdLoaded();
+
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-                super.onAdFailedToLoad(errorCode);
                 mAdView.setVisibility(View.GONE);
+                super.onAdFailedToLoad(errorCode);
             }
         });
     }
@@ -190,9 +191,10 @@ public class TreasureFragment extends Fragment {
                 treasurePhotoPaths.clear();
                 treasurePhotos.clear();
 
-                // path to /data/data/yourapp/app_data/files
+                //path to subDir: /data/user/0/com.mdtt.scott.treasuretrackerfordetectorists/files/imageDir
                 File directory = Objects.requireNonNull(getActivity()).getFilesDir();
                 File subDir = new File(directory, "imageDir");
+                //Log.d("myTag", subDir.getPath());
                 if( !subDir.exists() )
                     subDir.mkdir();
 
@@ -203,7 +205,12 @@ public class TreasureFragment extends Fragment {
                     treasureSeries.add(g.getTreasureSeries());
                     treasureMaterials.add(g.getTreasureMaterial());
                     treasureYears.add(g.getTreasureYear());
-                    treasureDatesFound.add(g.getTreasureDateFound());
+
+                    String oldDate = g.getTreasureDateFound();
+                    String[] splitDate = oldDate.split("/");
+                    String treasureFoundDate = splitDate[1]+"/"+splitDate[2]+"/"+splitDate[0];
+                    treasureDatesFound.add(treasureFoundDate);
+
                     treasurePhotoPaths.add(g.getTreasurePhotoPath());
 
                     //Use photo acquired photopath to retrieve actual photo now and add it to treasurePhotos
@@ -232,6 +239,7 @@ public class TreasureFragment extends Fragment {
                             // First decode with inJustDecodeBounds=true to check dimensions
                             BitmapFactory.Options options = new BitmapFactory.Options();
                             options.inJustDecodeBounds = true;
+                            BitmapFactory.decodeFile(filepath, options);
 
                             // Calculate inSampleSize
                             options.inSampleSize = calculateInSampleSize(options, 100, 100);
@@ -241,11 +249,32 @@ public class TreasureFragment extends Fragment {
                             photo = BitmapFactory.decodeFile(filepath, options);
 
                         } else {
-                            photo = BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto);
+
+                            // First decode with inJustDecodeBounds=true to check dimensions
+                            BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inJustDecodeBounds = true;
+                            BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto, options);
+
+                            // Calculate inSampleSize
+                            options.inSampleSize = calculateInSampleSize(options, 100, 100);
+
+                            // Decode bitmap with inSampleSize set
+                            options.inJustDecodeBounds = false;
+                            photo = BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto, options);
                         }
 
                     } else {
-                        photo = BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto);
+                        // First decode with inJustDecodeBounds=true to check dimensions
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inJustDecodeBounds = true;
+                        BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto, options);
+
+                        // Calculate inSampleSize
+                        options.inSampleSize = calculateInSampleSize(options, 100, 100);
+
+                        // Decode bitmap with inSampleSize set
+                        options.inJustDecodeBounds = false;
+                        photo = BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto, options);
                     }
                     treasurePhotos.add(photo);
 
@@ -396,6 +425,7 @@ public class TreasureFragment extends Fragment {
             //deleted a treasure
             else
             {
+                //path to subDir: /data/user/0/com.mdtt.scott.treasuretrackerfordetectorists/files/imageDir
                 File directory = Objects.requireNonNull(getActivity()).getFilesDir();
                 File subDir = new File(directory, "imageDir");
                 if( !subDir.exists() )
@@ -442,7 +472,24 @@ public class TreasureFragment extends Fragment {
         }
         return inSampleSize;
     }
+
+    private class MyBounceInterpolator implements android.view.animation.Interpolator {
+        private double mAmplitude = 1;
+        private double mFrequency = 10;
+
+        MyBounceInterpolator(double amplitude, double frequency) {
+            mAmplitude = amplitude;
+            mFrequency = frequency;
+        }
+
+        public float getInterpolation(float time) {
+            return (float) (-1 * Math.pow(Math.E, -time/ mAmplitude) *
+                    Math.cos(mFrequency * time) + 1);
+        }
+    }
 }
+
+
 
 
 

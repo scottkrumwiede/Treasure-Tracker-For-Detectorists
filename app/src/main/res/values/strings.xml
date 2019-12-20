@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Treasure Tracker</string>
+    <string name="app_name">Treasure Tracker for Detectorists</string>
     <string name="admob_app_id">ca-app-pub-9595024238231934~8798865468</string>
     <string name="banner_ad_unit_id">ca-app-pub-9595024238231934/7567698365</string>
     <string name="test_banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
@@ -51,11 +51,11 @@
     </string-array>
 
     <string-array name="uscoin_nickel_series_array">
-         <item>Jefferson</item>
-         <item>Buffalo</item>
-         <item>V</item>
-         <item>Shield</item>
-         <item>Custom…</item>
+        <item>Jefferson</item>
+        <item>Buffalo</item>
+        <item>V</item>
+        <item>Shield</item>
+        <item>Custom…</item>
     </string-array>
 
     <string-array name="uscoin_dime_series_array">
@@ -153,8 +153,6 @@
     </string-array>
 
 
-
-
     <string name="mint_prompt">Choose a mint mark</string>
 
     <string-array name="uscoin_mint_array">
@@ -195,5 +193,33 @@
     </string-array>
 
     <integer name="grid_columns">3</integer>
+    <string name="title_activity_settings">Settings</string>
+
+    <!-- Preference Titles -->
+    <string name="backup_header">Backup / Restore</string>
+    <string name="clear_header">Fast Clear</string>
+
+    <!-- Import / Export Preferences -->
+    <string name="backup_title">Backup Treasures</string>
+    <string name="restore_title">Restore Treasures</string>
+
+    <!-- Clear Preferences -->
+    <string name="clear_coins_title">Delete All Coins</string>
+    <string name="clear_tokens_title">Delete All Tokens</string>
+    <string name="clear_jewelry_title">Delete All Jewelry</string>
+    <string name="clear_relics_title">Delete All Relics</string>
+    <string name="clear_clad_title">Delete All Clad</string>
+    <string name="clear_collections_title">Delete All Collections</string>
+
+    <string name="backup_summary">Creates a backup file to transfer to a new device</string>
+    <string name="restore_summary">Accepts a backup file from another device</string>
+    <string name="csv_export_summary">Export to readable/printable format (.csv)</string>
+    <string name="clear_coins_summary">Permanently delete all added coins</string>
+    <string name="clear_tokens_summary">Permanently delete all added tokens</string>
+    <string name="clear_jewelry_summary">Permanently delete all added jewelry</string>
+    <string name="clear_relics_summary">Permanently delete all added relics</string>
+    <string name="clear_clad_summary">Permanently delete all added clad</string>
+    <string name="clear_collections_summary">Permanently delete all added collections</string>
+    <string name="csv_export_title">Export Treasures</string>
 
 </resources>

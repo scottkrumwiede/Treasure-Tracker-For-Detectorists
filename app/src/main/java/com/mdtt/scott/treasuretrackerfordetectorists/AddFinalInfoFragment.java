@@ -15,6 +15,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +28,7 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -53,6 +55,7 @@ public class AddFinalInfoFragment extends Fragment {
     private int year;
     private int month;
     private int day;
+    private int id;
 
     public AddFinalInfoFragment() {
         // Required empty public constructor
@@ -62,6 +65,7 @@ public class AddFinalInfoFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = getArguments();
+        id = bundle.getInt("id");
         Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
     }
 
@@ -82,8 +86,7 @@ public class AddFinalInfoFragment extends Fragment {
         collectionNameEditText = view.findViewById(R.id.collectionNameEditText);
         TextView collectionNameTextView = view.findViewById(R.id.collectionNameLabel);
 
-        if(Objects.requireNonNull(bundle.getString("type")).equals("collection"))
-        {
+        if (Objects.requireNonNull(bundle.getString("type")).equals("collection")) {
             collectionNameTextView.setVisibility(View.VISIBLE);
             collectionNameEditText.setVisibility(View.VISIBLE);
             treasureLocationFoundEditText.setHint("Include a location for your collection");
@@ -91,12 +94,32 @@ public class AddFinalInfoFragment extends Fragment {
 
         }
 
-        String date = month + 1 + "/" + day + "/" + year;
+        month++;
+
+        String date = month + "/" + day + "/" + year;
+
+        String[] splitDate = date.split("/");
+        if (splitDate[0].length() == 1) {
+            splitDate[0] = "0" + splitDate[0];
+        }
+        if (splitDate[1].length() == 1) {
+            splitDate[1] = "0" + splitDate[1];
+        }
+
+        date = splitDate[0] + "/" + splitDate[1] + "/" + splitDate[2];
         treasureDateFoundTextView.setText(date);
 
+        if (id != 0) {
+            String[] split = bundle.getString("treasureDateFound").split("/");
+            //if year is first, we will format to mm/dd/yyyy instead
+            if (split[0].length() == 4) {
+                date = split[1] + "/" + split[2] + "/" + split[0];
+                bundle.putString("treasureDateFound", date);
+            }
+        }
+
         //If the user had previously filled out info here but then backed up to a previous fragment before returning
-        if(bundle.containsKey("treasureDateFound"))
-        {
+        if (bundle.containsKey("treasureDateFound")) {
             repopulateInfo();
         }
 
@@ -124,7 +147,20 @@ public class AddFinalInfoFragment extends Fragment {
                 month = newMonth;
                 day = newDay;
 
-                String date = newMonth + 1 + "/" + newDay + "/" + newYear;
+                newMonth++;
+
+                String date = newMonth + "/" + newDay + "/" + newYear;
+
+                String[] splitDate = date.split("/");
+                if (splitDate[0].length() == 1) {
+                    splitDate[0] = "0" + splitDate[0];
+                }
+                if (splitDate[1].length() == 1) {
+                    splitDate[1] = "0" + splitDate[1];
+                }
+
+                date = splitDate[0] + "/" + splitDate[1] + "/" + splitDate[2];
+
                 treasureDateFoundTextView.setText(date);
             }
         };
@@ -136,16 +172,16 @@ public class AddFinalInfoFragment extends Fragment {
 
                 if (Objects.requireNonNull(getContext()).checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && getContext().checkSelfPermission(Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
 
-                    ActivityCompat.requestPermissions(Objects.requireNonNull(getActivity()),
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                            MY_PERMISSIONS_REQUEST_FINE_LOCATION);
-                }
-                else
-                {
+                    Log.d("mytag", "We are attempting to request permission now!");
+                        requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                                MY_PERMISSIONS_REQUEST_FINE_LOCATION);
+                } else {
                     LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
-                    Location location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
-                    if(location != null)
-                    {
+                    Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+                    if(location == null) {
+                        location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                    }
+                    if (location != null) {
                         double longitude = location.getLongitude();
                         double latitude = location.getLatitude();
 
@@ -159,9 +195,11 @@ public class AddFinalInfoFragment extends Fragment {
                         if (addresses != null && addresses.size() > 0) {
                             treasureLocationFoundEditText.setText(addresses.get(0).getAddressLine(0));
                         }
-                    }
-                    else
-                    {
+                        else
+                        {
+                            Snackbar.make(Objects.requireNonNull(getActivity()).findViewById(android.R.id.content), "Could not get current location.", Snackbar.LENGTH_SHORT).show();
+                        }
+                    } else {
                         Snackbar.make(Objects.requireNonNull(getActivity()).findViewById(android.R.id.content), "Could not get current location.", Snackbar.LENGTH_SHORT).show();
 
                     }
@@ -178,23 +216,21 @@ public class AddFinalInfoFragment extends Fragment {
         treasureLocationFoundEditText.setText(bundle.getString("treasureLocationFound"));
         treasureInfoEditText.setText(bundle.getString("treasureInfo"));
 
-        if(Objects.requireNonNull(bundle.getString("type")).equals("collection"))
-        {
-            collectionNameEditText.setText(bundle.getString("collectionName"));
+        if (Objects.requireNonNull(bundle.getString("type")).equals("collection")) {
+            collectionNameEditText.setText(bundle.getString("treasureName"));
         }
     }
 
-    private void renameTempImages(final String timeAtAdd)
-    {
+    private void renameTempImages(final String timeAtAdd) {
         ContextWrapper cw = new ContextWrapper(Objects.requireNonNull(getActivity()).getApplicationContext());
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getFilesDir();
         File subDir = new File(directory, "imageDir");
-        if( !subDir.exists() )
+        if (!subDir.exists())
             subDir.mkdir();
         final String prefix = "temp_" + timeAtAdd;
 
-        File [] files = subDir.listFiles(new FilenameFilter() {
+        File[] files = subDir.listFiles(new FilenameFilter() {
             @Override
             public boolean accept(File directory, String name) {
                 return name.startsWith(prefix);
@@ -211,33 +247,57 @@ public class AddFinalInfoFragment extends Fragment {
             //rename file from temp to permanent
             file.renameTo(newFile);
         }
+
+        final String prefix2 = "edit_" + timeAtAdd;
+
+        File[] files2 = subDir.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File directory, String name) {
+                return name.startsWith(prefix2);
+            }
+        });
+        for (File file : files2) {
+
+            //delete file that was saved in saveImage method
+            file.delete();
+        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
                                            String[] permissions, int[] grantResults) {
-        if (requestCode == MY_PERMISSIONS_REQUEST_FINE_LOCATION) {// If request is cancelled, the result arrays are empty.
+        if (requestCode == MY_PERMISSIONS_REQUEST_FINE_LOCATION) {
+            // If request is cancelled, the result arrays are empty.
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // permission was granted, yay! Do the
                 // location-related task you need to do.
-                LocationManager lm = (LocationManager) Objects.requireNonNull(getContext()).getSystemService(Context.LOCATION_SERVICE);
+                LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-                double longitude = location.getLongitude();
-                double latitude = location.getLatitude();
+                if(location == null) {
+                    location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+                }
+                if (location != null) {
+                    double longitude = location.getLongitude();
+                    double latitude = location.getLatitude();
 
-                Geocoder gCoder = new Geocoder(getContext());
-                List<Address> addresses = null;
-                try {
-                    addresses = gCoder.getFromLocation(latitude, longitude, 1);
-                } catch (IOException e) {
-                    e.printStackTrace();
+                    Geocoder gCoder = new Geocoder(getContext());
+                    List<Address> addresses = null;
+                    try {
+                        addresses = gCoder.getFromLocation(latitude, longitude, 1);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    if (addresses != null && addresses.size() > 0) {
+                        treasureLocationFoundEditText.setText(addresses.get(0).getAddressLine(0));
+                    }
+                    else
+                    {
+                        Snackbar.make(Objects.requireNonNull(getActivity()).findViewById(android.R.id.content), "Could not get current location.", Snackbar.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Snackbar.make(Objects.requireNonNull(getActivity()).findViewById(android.R.id.content), "Could not get current location.", Snackbar.LENGTH_SHORT).show();
                 }
-                if (addresses != null && addresses.size() > 0) {
-                    treasureLocationFoundEditText.setText(addresses.get(0).getAddressLine(0));
-                }
-            } else {
-                Toast.makeText(getActivity(), "Cannot request location without permissions!", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -269,12 +329,16 @@ public class AddFinalInfoFragment extends Fragment {
                         String coinMint = bundle.getString("coinMint");
                         String treasureMaterial = bundle.getString("treasureMaterial");
                         String treasureWeight = bundle.getString("treasureWeight");
-                        String treasureFoundYear = treasureDateFoundTextView.getText().toString();
+
+                        String oldDate = treasureDateFoundTextView.getText().toString();
+                        String[] splitDate = oldDate.split("/");
+                        String treasureFoundDate = splitDate[2]+"/"+splitDate[0]+"/"+splitDate[1];
+
                         String treasureLocationFound = treasureLocationFoundEditText.getText().toString();
                         String treasureInfo = treasureInfoEditText.getText().toString().trim();
                         //Log.d("TEST", type + " " + timeAtAdd + " " + coinCountry + " " + coinType + " " + treasureSeries + " " + treasureYear + " " + coinMint + " " + treasureMaterial);
 
-                        Treasure treasure = new Treasure(0, type, coinCountry, coinType, treasureSeries, treasureName, treasureYear, coinMint, treasureMaterial, treasureWeight, treasureLocationFound, treasureFoundYear, treasureInfo, timeAtAdd);
+                        Treasure treasure = new Treasure(0, type, coinCountry, coinType, treasureSeries, treasureName, treasureYear, coinMint, treasureMaterial, treasureWeight, treasureLocationFound, treasureFoundDate, treasureInfo, timeAtAdd);
 
                         MySQliteHelper helper = new MySQliteHelper(getContext());
                         long result = helper.addTreasure(treasure);
@@ -303,7 +367,66 @@ public class AddFinalInfoFragment extends Fragment {
 
         if(Objects.requireNonNull(bundle.getString("type")).equals("collection"))
         {
-            bundle.putString("collectionName", collectionNameEditText.getText().toString());
+            bundle.putString("treasureName", collectionNameEditText.getText().toString());
         }
+    }
+
+    public void editTreasure() {
+        final String type = bundle.getString("type");
+        new AlertDialog.Builder(Objects.requireNonNull(getContext()))
+                .setTitle("Confirm?")
+                .setMessage("Edit this "+type+" now?")
+                .setNegativeButton(android.R.string.no, null)
+                .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                    public void onClick(DialogInterface arg0, int arg1) {
+
+                        int treasureId = bundle.getInt("id");
+                        String timeAtAdd = bundle.getString("timeAtAdd"); //treasurephotopath
+                        String treasureName;
+                        if(Objects.requireNonNull(type).equals("collection"))
+                        {
+                            treasureName = collectionNameEditText.getText().toString();
+                        }
+                        else
+                        {
+                            treasureName = bundle.getString("treasureName");
+                        }
+                        String coinCountry = bundle.getString("coinCountry");
+                        String coinType = bundle.getString("coinType");
+                        String treasureSeries = bundle.getString("treasureSeries");
+                        String treasureYear = bundle.getString("treasureYear");
+                        String coinMint = bundle.getString("coinMint");
+                        String treasureMaterial = bundle.getString("treasureMaterial");
+                        String treasureWeight = bundle.getString("treasureWeight");
+
+                        String oldDate = treasureDateFoundTextView.getText().toString();
+                        String[] splitDate = oldDate.split("/");
+                        String treasureFoundDate = splitDate[2]+"/"+splitDate[0]+"/"+splitDate[1];
+
+                        String treasureLocationFound = treasureLocationFoundEditText.getText().toString();
+                        String treasureInfo = treasureInfoEditText.getText().toString().trim();
+                        //Log.d("TEST", type + " " + timeAtAdd + " " + coinCountry + " " + coinType + " " + treasureSeries + " " + treasureYear + " " + coinMint + " " + treasureMaterial);
+
+                        Treasure treasure = new Treasure(treasureId, type, coinCountry, coinType, treasureSeries, treasureName, treasureYear, coinMint, treasureMaterial, treasureWeight, treasureLocationFound, treasureFoundDate, treasureInfo, timeAtAdd);
+
+                        MySQliteHelper helper = new MySQliteHelper(getContext());
+                        long result = helper.editTreasure(treasure);
+                        if(result == -1)
+                        {
+                            Toast.makeText(getActivity(), "Failed to edit database!", Toast.LENGTH_SHORT).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getActivity(), type+" successfully edited!", Toast.LENGTH_SHORT).show();
+
+                            renameTempImages(timeAtAdd);
+                        }
+
+                        Objects.requireNonNull(getActivity()).setResult(Activity.RESULT_OK,null);
+                        getActivity().finish();
+
+                    }
+                }).create().show();
     }
 }

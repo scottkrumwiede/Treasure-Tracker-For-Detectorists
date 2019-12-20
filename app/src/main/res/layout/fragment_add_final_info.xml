@@ -78,6 +78,7 @@
             android:background="@drawable/shadow_13"
             android:autoSizeTextType="uniform"
             android:paddingStart="30dp"
+            android:paddingEnd="30dp"
             android:autoSizeMinTextSize="12sp"
             android:autoSizeMaxTextSize="20sp"
             android:autoSizeStepGranularity="2sp"

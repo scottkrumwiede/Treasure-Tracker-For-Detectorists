@@ -42,6 +42,7 @@ public class AddCoinInfoFragment extends Fragment {
     private int coinCountrySelected, coinTypeSelected, coinSeriesSelected, coinMintSelected, coinMaterialSelected;
     private ArrayList<String> countriesList, coinTypeList, coinSeriesList, coinMintList, coinMaterialList;
     private int coinSeriesListSize;
+    private int id;
 
     public AddCoinInfoFragment() {
         // Required empty public constructor
@@ -52,6 +53,7 @@ public class AddCoinInfoFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = getArguments();
+        id = bundle.getInt("id");
 
         countriesList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.countries_array)));
         coinTypeList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.uscoin_type_array)));
@@ -88,6 +90,26 @@ public class AddCoinInfoFragment extends Fragment {
         customTypeEditText = view.findViewById(R.id.customTypeEditText);
         customDesignEditText = view.findViewById(R.id.customDesignEditText);
         customMintEditText = view.findViewById(R.id.customMintEditText);
+
+        //editing treasure
+        if(id != 0)
+        {
+            //custom country
+            if(!bundle.getString("coinCountry").equals("United States"))
+            {
+                bundle.putString("addCoinInfoType", "1");
+            }
+            //united states, but custom type
+            else if(!coinTypeList.contains(bundle.getString("coinType")))
+            {
+                bundle.putString("addCoinInfoType", "2");
+            }
+            //country and type both non-custom
+            else
+            {
+                bundle.putString("addCoinInfoType", "3");
+            }
+        }
 
         //If the user had previously filled out info here but then backed up to a previous fragment before returning
         if(bundle.containsKey("addCoinInfoType"))

@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 
@@ -125,30 +126,32 @@ public class SummaryFragment extends Fragment {
         mAdView.setAdListener(new AdListener() {
             @Override
             public void onAdLoaded() {
-                super.onAdLoaded();
                 mAdView.setVisibility(View.VISIBLE);
+                super.onAdLoaded();
+
             }
 
             @Override
             public void onAdFailedToLoad(int errorCode) {
-                super.onAdFailedToLoad(errorCode);
                 mAdView.setVisibility(View.GONE);
+                super.onAdFailedToLoad(errorCode);
+
             }
         });
 
         mLL1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!navDrawer.isDrawerOpen(Gravity.LEFT)) navDrawer.openDrawer(Gravity.LEFT);
-                else navDrawer.closeDrawer(Gravity.RIGHT);
+                if(!navDrawer.isDrawerOpen(GravityCompat.START)) navDrawer.openDrawer(GravityCompat.START);
+                else navDrawer.closeDrawer(GravityCompat.END);
             }
         });
 
         mLL2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!navDrawer.isDrawerOpen(Gravity.LEFT)) navDrawer.openDrawer(Gravity.LEFT);
-                else navDrawer.closeDrawer(Gravity.RIGHT);
+                if(!navDrawer.isDrawerOpen(GravityCompat.START)) navDrawer.openDrawer(GravityCompat.START);
+                else navDrawer.closeDrawer(GravityCompat.END);
 
             }
         });

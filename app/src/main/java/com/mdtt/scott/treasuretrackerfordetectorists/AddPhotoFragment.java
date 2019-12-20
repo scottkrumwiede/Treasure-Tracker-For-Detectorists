@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +31,7 @@ import java.io.FileOutputStream;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Objects;
 
 
@@ -52,6 +54,7 @@ public class AddPhotoFragment extends Fragment {
     private final ArrayList<Bitmap> photoBitmaps = new ArrayList<>();
     private int counter = 0;
     private String type;
+    private int id;
     private Bundle bundle;
 
     public AddPhotoFragment() {
@@ -63,13 +66,25 @@ public class AddPhotoFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            type = getArguments().getString("type");
             bundle = getArguments();
+            type = bundle.getString("type");
+            id = bundle.getInt("id");
+
             if(savedInstanceState == null)
             {
-                timeAtAdd = Long.toString(System.currentTimeMillis());
-                //Log.d("myTag", "added to bundle: "+timeAtAdd);
-                bundle.putString("timeAtAdd", timeAtAdd);
+                //contains timeAtAdd because editing the treasure
+                if(bundle.containsKey("timeAtAdd"))
+                {
+                    timeAtAdd = bundle.getString("timeAtAdd");
+                }
+                //adding a new treasure, generate a timeAtAdd now
+                else
+                {
+                    timeAtAdd = Long.toString(System.currentTimeMillis());
+                    //Log.d("myTag", "added to bundle: "+timeAtAdd);
+                    bundle.putString("timeAtAdd", timeAtAdd);
+                }
+
             }
             else
             {
@@ -98,47 +113,126 @@ public class AddPhotoFragment extends Fragment {
         gridView = view.findViewById(R.id.addtreasure_gridview);
         addPhotoButton = view.findViewById(R.id.addphoto_button);
 
-        if(savedInstanceState != null)
+        //see if there were any photos added previously using timeAtAdd
+        if(savedInstanceState != null || id != 0)
         {
-            //Log.d("myTag", "We are entering savedInstanceState!");
-            //we need to see if there were any photos added previously using timeAtAdd
             ContextWrapper cw = new ContextWrapper(Objects.requireNonNull(getActivity()).getApplicationContext());
             // path to /data/data/yourapp/app_data/imageDir
             File directory = cw.getFilesDir();
             File subDir = new File(directory, "imageDir");
             if( !subDir.exists() )
                 subDir.mkdir();
-            final String prefix = "temp_" + timeAtAdd;
+            //restoring from savedInstanceState
+            if(savedInstanceState != null)
+            {
+                final String prefix = timeAtAdd;
+                final String prefix2 = "temp_" + timeAtAdd;
 
-            File [] files = subDir.listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(File directory, String name) {
-                    return name.startsWith(prefix);
+                File[] files = subDir.listFiles(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File directory, String name) {
+                        return name.startsWith(prefix);
+                    }
+                });
+
+                //listFiles returns in reverse alphabetical order, so we need to sort to get alphabetical
+                // so that photo order remains the same as when added.
+                Arrays.sort(files);
+
+                for (File file : files) {
+
+                    counter++;
+                    photoNames.add("Photo " + counter);
+                    photoYears.add("");
+                    photoFoundYears.add("");
+                    photoIds.add(counter);
+                    photoFilename.add(file.getName());
+
+                    // First decode with inJustDecodeBounds=true to check dimensions
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = true;
+
+                    // Calculate inSampleSize
+                    options.inSampleSize = calculateInSampleSize(options, 100, 100);
+
+                    // Decode bitmap with inSampleSize set
+                    options.inJustDecodeBounds = false;
+
+                    //add bitmap to photoBitmaps
+                    photoBitmaps.add(BitmapFactory.decodeFile(file.getPath(), options));
                 }
-            });
-            //Log.d("myTag", "The number of temp_images found was: "+files.length);
 
-            for (File file : files) {
+                File[] files2 = subDir.listFiles(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File directory, String name) {
+                        return name.startsWith(prefix2);
+                    }
+                });
 
-                counter++;
-                photoNames.add("Photo " + counter);
-                photoYears.add("");
-                photoFoundYears.add("");
-                photoIds.add(counter);
-                photoFilename.add(file.getName());
+                for (File file : files2) {
 
-                // First decode with inJustDecodeBounds=true to check dimensions
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
+                    counter++;
+                    photoNames.add("Photo " + counter);
+                    photoYears.add("");
+                    photoFoundYears.add("");
+                    photoIds.add(counter);
+                    photoFilename.add(file.getName());
 
-                // Calculate inSampleSize
-                options.inSampleSize = calculateInSampleSize(options, 100, 100);
+                    // First decode with inJustDecodeBounds=true to check dimensions
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = true;
 
-                // Decode bitmap with inSampleSize set
-                options.inJustDecodeBounds = false;
+                    // Calculate inSampleSize
+                    options.inSampleSize = calculateInSampleSize(options, 100, 100);
 
-                //add bitmap to photoBitmaps
-                photoBitmaps.add(BitmapFactory.decodeFile(file.getPath(), options));
+                    // Decode bitmap with inSampleSize set
+                    options.inJustDecodeBounds = false;
+
+                    //add bitmap to photoBitmaps
+                    photoBitmaps.add(BitmapFactory.decodeFile(file.getPath(), options));
+                }
+            }
+            //editing a treasure so load in any stored photos from that treasure
+            else
+            {
+                if(counter == 0)
+                {
+                    final String prefix = timeAtAdd;
+
+                    File[] files = subDir.listFiles(new FilenameFilter() {
+                        @Override
+                        public boolean accept(File directory, String name) {
+                            return name.startsWith(prefix);
+                        }
+                    });
+
+                    //listFiles returns in reverse alphabetical order, so we need to sort to get alphabetical
+                    // so that photo order remains the same as when added.
+                    Arrays.sort(files);
+
+                    for (File file : files) {
+
+                        counter++;
+                        photoNames.add("Photo " + counter);
+                        photoYears.add("");
+                        photoFoundYears.add("");
+                        photoIds.add(counter);
+                        photoFilename.add(file.getName());
+
+                        // First decode with inJustDecodeBounds=true to check dimensions
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inJustDecodeBounds = true;
+
+                        // Calculate inSampleSize
+                        options.inSampleSize = calculateInSampleSize(options, 100, 100);
+
+                        // Decode bitmap with inSampleSize set
+                        options.inJustDecodeBounds = false;
+
+                        //add bitmap to photoBitmaps
+                        photoBitmaps.add(BitmapFactory.decodeFile(file.getPath(), options));
+                    }
+                }
             }
         }
 
@@ -217,10 +311,23 @@ public class AddPhotoFragment extends Fragment {
                     });
 
                     for (File file : files) {
-
-                        //Log.d("TEST", "file to be removed is: "+file.getPath());
-                        //delete file that was saved in saveImage method
-                        file.delete();
+                        //in process of editing treasure: rename photo to flag for deletion, but do not actually delete until edit is complete in case user cancels edit
+                        if(!file.getName().startsWith("temp_"))
+                        {
+                            Log.d("TEST", "photo was not temp. file will be renamed instead: "+file.getPath());
+                            //add edit_ chars to prefix string
+                            String newName = "edit_"+file.getName();
+                            File newFile = new File(subDir, newName);
+                            //rename file from temp to permanent
+                            file.renameTo(newFile);
+                        }
+                        //simply delete the temp image
+                        else
+                        {
+                            Log.d("TEST", "file to be removed is: "+file.getPath());
+                            //delete file that was saved in saveImage method
+                            file.delete();
+                        }
                         photoFilename.remove(i);
                     }
 

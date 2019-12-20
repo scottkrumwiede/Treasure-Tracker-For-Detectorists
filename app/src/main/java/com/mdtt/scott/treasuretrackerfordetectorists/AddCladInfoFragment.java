@@ -137,7 +137,22 @@ public class AddCladInfoFragment extends Fragment {
         year = cal.get(Calendar.YEAR);
         month = cal.get(Calendar.MONTH);
         day = cal.get(Calendar.DAY_OF_MONTH);
-        String date = month + 1 + "/" + day + "/" + year;
+
+        month++;
+
+        String date = month + "/" + day + "/" + year;
+
+        String splitDate[] = date.split("/");
+        if(splitDate[0].length() == 1)
+        {
+            splitDate[0] = "0"+splitDate[0];
+        }
+        if(splitDate[1].length() == 1)
+        {
+            splitDate[1] = "0"+splitDate[1];
+        }
+
+        date = splitDate[0]+"/"+splitDate[1]+"/"+splitDate[2];
 
         cladDateFoundTextView = view.findViewById(R.id.cladFoundTextView);
         cladDateFoundTextView.setText(date);
@@ -165,7 +180,22 @@ public class AddCladInfoFragment extends Fragment {
                 month = newMonth;
                 day = newDay;
 
-                String date = newMonth + 1 + "/" + newDay + "/" + newYear;
+                newMonth++;
+
+                String date = newMonth + "/" + newDay + "/" + newYear;
+
+                String[] splitDate = date.split("/");
+                if(splitDate[0].length() == 1)
+                {
+                    splitDate[0] = "0"+splitDate[0];
+                }
+                if(splitDate[1].length() == 1)
+                {
+                    splitDate[1] = "0"+splitDate[1];
+                }
+
+                date = splitDate[0]+"/"+splitDate[1]+"/"+splitDate[2];
+
                 cladDateFoundTextView.setText(date);
             }
         };
@@ -321,7 +351,11 @@ public class AddCladInfoFragment extends Fragment {
 
                             double cladAmount = Double.valueOf(cladAmountEditText.getText().toString());
 
-                            Clad clad = new Clad(0, cladCurrencySpinner.getSelectedItem().toString(), cladAmount, cladLocationFoundEditText.getText().toString(),cladDateFoundTextView.getText().toString());
+                            String oldDate = cladDateFoundTextView.getText().toString();
+                            String[] splitDate = oldDate.split("/");
+                            String cladFoundDate = splitDate[2]+"/"+splitDate[0]+"/"+splitDate[1];
+
+                            Clad clad = new Clad(0, cladCurrencySpinner.getSelectedItem().toString(), cladAmount, cladLocationFoundEditText.getText().toString(),cladFoundDate);
 
                             MySQliteHelper helper = new MySQliteHelper(getContext());
                             long result = helper.addClad(clad);
