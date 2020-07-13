@@ -205,70 +205,69 @@ public class AddActivity extends AppCompatActivity {
             String fragmentTag = Objects.requireNonNull(fragment).getTag();
             if(fragmentTag != null)
             {
-                if(fragmentTag.equals("addInfo"))
-                {
-                    //Log.d("myTag", "we're in addinfo of back pressed!");
-                    switch (type)
-                    {
-                        case "coin": {
-                            AddCoinInfoFragment frag = (AddCoinInfoFragment) fragment;
-                         frag.addToBundle();
-                          break;
-                        }
-                         case "token": {
-                         AddTokenInfoFragment frag = (AddTokenInfoFragment) fragment;
-                          frag.addToBundle();
-                           break;
-                        }
-                        case "relic": {
-                        AddRelicInfoFragment frag = (AddRelicInfoFragment) fragment;
-                        frag.addToBundle();
-                        break;
-                        }
-                          case "jewelry": {
-                          AddJewelryInfoFragment frag = (AddJewelryInfoFragment) fragment;
-                          frag.addToBundle();
-                        break;
-                      }
-                    }
-                }
-                else if(fragmentTag.equals("addFinal"))
-                {
-                    if(!type.equals("clad"))
-                    {
-                        //Log.d("myTag", "we're in addfinal of back pressed!");
-                        AddFinalInfoFragment frag = (AddFinalInfoFragment) fragment;
-                        frag.addToBundle();
-                    }
-                }
-                else if(fragmentTag.equals("addPhoto"))
-                {
-                    //user is backing out of editing a treasure. make sure any photos flagged for deletion (prefix edit_) are restored
-                    if (bigtime != 0)
-                    {
-                        final String prefix = "edit_" + timeAtAdd;
-                        ContextWrapper cw = new ContextWrapper(Objects.requireNonNull(getApplicationContext()));
-                        // path to /data/data/yourapp/app_data/imageDir
-                        File directory = cw.getFilesDir();
-                        File subDir = new File(directory, "imageDir");
-                        if( !subDir.exists() )
-                            subDir.mkdir();
-
-                        File [] files = subDir.listFiles(new FilenameFilter() {
-                            @Override
-                            public boolean accept(File directory, String name) {
-                                return name.startsWith(prefix);
+                switch (fragmentTag) {
+                    case "addInfo":
+                        //Log.d("myTag", "we're in addinfo of back pressed!");
+                        switch (type) {
+                            case "coin": {
+                                AddCoinInfoFragment frag = (AddCoinInfoFragment) fragment;
+                                frag.addToBundle();
+                                break;
                             }
-                        });
-
-                        for (File file : files) {
-                                //remove edit_ chars from prefix string
-                                String newName = file.getName().substring(5);
-                                File newFile = new File(subDir, newName);
-                                //rename file from temp to permanent
-                                file.renameTo(newFile);
+                            case "token": {
+                                AddTokenInfoFragment frag = (AddTokenInfoFragment) fragment;
+                                frag.addToBundle();
+                                break;
+                            }
+                            case "relic": {
+                                AddRelicInfoFragment frag = (AddRelicInfoFragment) fragment;
+                                frag.addToBundle();
+                                break;
+                            }
+                            case "jewelry": {
+                                AddJewelryInfoFragment frag = (AddJewelryInfoFragment) fragment;
+                                frag.addToBundle();
+                                break;
+                            }
                         }
-                    }
+                        break;
+                    case "addFinal":
+                        if (!type.equals("clad")) {
+                            //Log.d("myTag", "we're in addfinal of back pressed!");
+                            AddFinalInfoFragment frag = (AddFinalInfoFragment) fragment;
+                            frag.addToBundle();
+                        }
+                        break;
+                    case "addPhoto":
+                        //user is backing out of editing a treasure. make sure any photos flagged for deletion (prefix edit_) are restored
+                        if (bigtime != 0) {
+                            final String prefix = "edit_" + timeAtAdd;
+                            ContextWrapper cw = new ContextWrapper(Objects.requireNonNull(getApplicationContext()));
+                            // path to /data/data/yourapp/app_data/imageDir
+                            File directory = cw.getFilesDir();
+                            File subDir = new File(directory, "imageDir");
+                            boolean isSubDirCreated = subDir.exists();
+                            if (!isSubDirCreated)
+                                isSubDirCreated = subDir.mkdir();
+                            if(isSubDirCreated)
+                            {
+                                File[] files = subDir.listFiles(new FilenameFilter() {
+                                    @Override
+                                    public boolean accept(File directory, String name) {
+                                        return name.startsWith(prefix);
+                                    }
+                                });
+
+                                for (File file : files) {
+                                    //remove edit_ chars from prefix string
+                                    String newName = file.getName().substring(5);
+                                    File newFile = new File(subDir, newName);
+                                    //rename file from temp to permanent
+                                    boolean result = file.renameTo(newFile);
+                                }
+                            }
+                        }
+                        break;
                 }
             }
             //Log.d("myTag", "we're leaving back pressed!");

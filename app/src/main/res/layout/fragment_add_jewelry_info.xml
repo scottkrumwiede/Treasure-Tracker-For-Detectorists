@@ -14,7 +14,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Item:" />
+        android:text="@string/item" />
 
     <EditText
         android:id="@+id/jewelryNameEditText"
@@ -28,14 +28,14 @@
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
-        android:hint="Item"
+        android:hint="@string/item_hint"
         android:importantForAutofill="no"
         tools:targetApi="o" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Design/Series:" />
+        android:text="@string/design_series" />
     <EditText
         android:id="@+id/jewelrySeriesEditText"
         android:layout_width="match_parent"
@@ -48,14 +48,14 @@
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
-        android:hint="Design/Series"
+        android:hint="@string/design_series_hint"
         android:importantForAutofill="no"
         tools:targetApi="o" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Year:" />
+        android:text="@string/year" />
     <EditText
         android:id="@+id/jewelryYearEditText"
         android:layout_width="match_parent"
@@ -70,14 +70,14 @@
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
-        android:hint="Year"
+        android:hint="@string/year_hint"
         android:importantForAutofill="no"
         tools:targetApi="o" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Material:" />
+        android:text="@string/material" />
 
     <Spinner
         android:id="@+id/jewelryMaterialSpinner"
@@ -97,7 +97,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Weight (Grams):" />
+        android:text="@string/weight_grams" />
     <EditText
         android:id="@+id/jewelryWeightEditText"
         android:layout_width="match_parent"
@@ -111,7 +111,7 @@
         android:autoSizeMinTextSize="12sp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
-        android:hint="Weight"
+        android:hint="@string/weight"
         android:importantForAutofill="no"
         tools:targetApi="o" />
 

@@ -120,84 +120,16 @@ public class AddPhotoFragment extends Fragment {
             // path to /data/data/yourapp/app_data/imageDir
             File directory = cw.getFilesDir();
             File subDir = new File(directory, "imageDir");
-            if( !subDir.exists() )
-                subDir.mkdir();
-            //restoring from savedInstanceState
-            if(savedInstanceState != null)
+            boolean isSubDirCreated = subDir.exists();
+            if (!isSubDirCreated)
+                isSubDirCreated = subDir.mkdir();
+            if(isSubDirCreated)
             {
-                final String prefix = timeAtAdd;
-                final String prefix2 = "temp_" + timeAtAdd;
-
-                File[] files = subDir.listFiles(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File directory, String name) {
-                        return name.startsWith(prefix);
-                    }
-                });
-
-                //listFiles returns in reverse alphabetical order, so we need to sort to get alphabetical
-                // so that photo order remains the same as when added.
-                Arrays.sort(files);
-
-                for (File file : files) {
-
-                    counter++;
-                    photoNames.add("Photo " + counter);
-                    photoYears.add("");
-                    photoFoundYears.add("");
-                    photoIds.add(counter);
-                    photoFilename.add(file.getName());
-
-                    // First decode with inJustDecodeBounds=true to check dimensions
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inJustDecodeBounds = true;
-
-                    // Calculate inSampleSize
-                    options.inSampleSize = calculateInSampleSize(options, 100, 100);
-
-                    // Decode bitmap with inSampleSize set
-                    options.inJustDecodeBounds = false;
-
-                    //add bitmap to photoBitmaps
-                    photoBitmaps.add(BitmapFactory.decodeFile(file.getPath(), options));
-                }
-
-                File[] files2 = subDir.listFiles(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File directory, String name) {
-                        return name.startsWith(prefix2);
-                    }
-                });
-
-                for (File file : files2) {
-
-                    counter++;
-                    photoNames.add("Photo " + counter);
-                    photoYears.add("");
-                    photoFoundYears.add("");
-                    photoIds.add(counter);
-                    photoFilename.add(file.getName());
-
-                    // First decode with inJustDecodeBounds=true to check dimensions
-                    BitmapFactory.Options options = new BitmapFactory.Options();
-                    options.inJustDecodeBounds = true;
-
-                    // Calculate inSampleSize
-                    options.inSampleSize = calculateInSampleSize(options, 100, 100);
-
-                    // Decode bitmap with inSampleSize set
-                    options.inJustDecodeBounds = false;
-
-                    //add bitmap to photoBitmaps
-                    photoBitmaps.add(BitmapFactory.decodeFile(file.getPath(), options));
-                }
-            }
-            //editing a treasure so load in any stored photos from that treasure
-            else
-            {
-                if(counter == 0)
+                //restoring from savedInstanceState
+                if(savedInstanceState != null)
                 {
                     final String prefix = timeAtAdd;
+                    final String prefix2 = "temp_" + timeAtAdd;
 
                     File[] files = subDir.listFiles(new FilenameFilter() {
                         @Override
@@ -231,6 +163,78 @@ public class AddPhotoFragment extends Fragment {
 
                         //add bitmap to photoBitmaps
                         photoBitmaps.add(BitmapFactory.decodeFile(file.getPath(), options));
+                    }
+
+                    File[] files2 = subDir.listFiles(new FilenameFilter() {
+                        @Override
+                        public boolean accept(File directory, String name) {
+                            return name.startsWith(prefix2);
+                        }
+                    });
+
+                    for (File file : files2) {
+
+                        counter++;
+                        photoNames.add("Photo " + counter);
+                        photoYears.add("");
+                        photoFoundYears.add("");
+                        photoIds.add(counter);
+                        photoFilename.add(file.getName());
+
+                        // First decode with inJustDecodeBounds=true to check dimensions
+                        BitmapFactory.Options options = new BitmapFactory.Options();
+                        options.inJustDecodeBounds = true;
+
+                        // Calculate inSampleSize
+                        options.inSampleSize = calculateInSampleSize(options, 100, 100);
+
+                        // Decode bitmap with inSampleSize set
+                        options.inJustDecodeBounds = false;
+
+                        //add bitmap to photoBitmaps
+                        photoBitmaps.add(BitmapFactory.decodeFile(file.getPath(), options));
+                    }
+                }
+                //editing a treasure so load in any stored photos from that treasure
+                else
+                {
+                    if(counter == 0)
+                    {
+                        final String prefix = timeAtAdd;
+
+                        File[] files = subDir.listFiles(new FilenameFilter() {
+                            @Override
+                            public boolean accept(File directory, String name) {
+                                return name.startsWith(prefix);
+                            }
+                        });
+
+                        //listFiles returns in reverse alphabetical order, so we need to sort to get alphabetical
+                        // so that photo order remains the same as when added.
+                        Arrays.sort(files);
+
+                        for (File file : files) {
+
+                            counter++;
+                            photoNames.add("Photo " + counter);
+                            photoYears.add("");
+                            photoFoundYears.add("");
+                            photoIds.add(counter);
+                            photoFilename.add(file.getName());
+
+                            // First decode with inJustDecodeBounds=true to check dimensions
+                            BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inJustDecodeBounds = true;
+
+                            // Calculate inSampleSize
+                            options.inSampleSize = calculateInSampleSize(options, 100, 100);
+
+                            // Decode bitmap with inSampleSize set
+                            options.inJustDecodeBounds = false;
+
+                            //add bitmap to photoBitmaps
+                            photoBitmaps.add(BitmapFactory.decodeFile(file.getPath(), options));
+                        }
                     }
                 }
             }
@@ -300,54 +304,57 @@ public class AddPhotoFragment extends Fragment {
                     // path to /data/data/yourapp/app_data/imageDir
                     File directory = cw.getFilesDir();
                     File subDir = new File(directory, "imageDir");
-                    if( !subDir.exists() )
-                        subDir.mkdir();
-
-                    File [] files = subDir.listFiles(new FilenameFilter() {
-                        @Override
-                        public boolean accept(File directory, String name) {
-                            return name.equals(photoName);
-                        }
-                    });
-
-                    for (File file : files) {
-                        //in process of editing treasure: rename photo to flag for deletion, but do not actually delete until edit is complete in case user cancels edit
-                        if(!file.getName().startsWith("temp_"))
-                        {
-                            Log.d("TEST", "photo was not temp. file will be renamed instead: "+file.getPath());
-                            //add edit_ chars to prefix string
-                            String newName = "edit_"+file.getName();
-                            File newFile = new File(subDir, newName);
-                            //rename file from temp to permanent
-                            file.renameTo(newFile);
-                        }
-                        //simply delete the temp image
-                        else
-                        {
-                            Log.d("TEST", "file to be removed is: "+file.getPath());
-                            //delete file that was saved in saveImage method
-                            file.delete();
-                        }
-                        photoFilename.remove(i);
-                    }
-
-                    counter--;
-                    if (counter == 0) {
-                        addPhotoButton.setText("ADD PHOTO");
-                        gridView.setAdapter(null);
-                    }
-                    else
+                    boolean isSubDirCreated = subDir.exists();
+                    if (!isSubDirCreated)
+                        isSubDirCreated = subDir.mkdir();
+                    if(isSubDirCreated)
                     {
-                        CustomGridViewAdapter adapterViewAndroid = new CustomGridViewAdapter(getActivity(), photoIds, photoNames, photoYears, photoBitmaps);
-                        gridView.setAdapter(adapterViewAndroid);
-                        gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
+                        File [] files = subDir.listFiles(new FilenameFilter() {
                             @Override
-                            public void onItemClick(AdapterView<?> parent, View view,
-                                                    int i, long id) {
-                                showRemovePictureDialog(i);
+                            public boolean accept(File directory, String name) {
+                                return name.equals(photoName);
                             }
                         });
+
+                        for (File file : files) {
+                            //in process of editing treasure: rename photo to flag for deletion, but do not actually delete until edit is complete in case user cancels edit
+                            if(!file.getName().startsWith("temp_"))
+                            {
+                                Log.d("TEST", "photo was not temp. file will be renamed instead: "+file.getPath());
+                                //add edit_ chars to prefix string
+                                String newName = "edit_"+file.getName();
+                                File newFile = new File(subDir, newName);
+                                //rename file from temp to permanent
+                                boolean result = file.renameTo(newFile);
+                            }
+                            //simply delete the temp image
+                            else
+                            {
+                                Log.d("TEST", "file to be removed is: "+file.getPath());
+                                //delete file that was saved in saveImage method
+                                boolean result = file.delete();
+                            }
+                            photoFilename.remove(i);
+                        }
+
+                        counter--;
+                        if (counter == 0) {
+                            addPhotoButton.setText("ADD PHOTO");
+                            gridView.setAdapter(null);
+                        }
+                        else
+                        {
+                            CustomGridViewAdapter adapterViewAndroid = new CustomGridViewAdapter(getActivity(), photoIds, photoNames, photoYears, photoBitmaps);
+                            gridView.setAdapter(adapterViewAndroid);
+                            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+                                @Override
+                                public void onItemClick(AdapterView<?> parent, View view,
+                                                        int i, long id) {
+                                    showRemovePictureDialog(i);
+                                }
+                            });
+                        }
                     }
                 } else if (items[item].equals("Cancel")) {
                     dialog.dismiss();
@@ -426,30 +433,39 @@ public class AddPhotoFragment extends Fragment {
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getFilesDir();
         File subDir = new File(directory, "imageDir");
-        if( !subDir.exists() )
-            subDir.mkdir();
-        // Create imageDir
-        // File saved as unique temp image name 'temp_timeAtAdd_timeAtPhotoAdd.png'
-        //temp prefix will be removed once treasure is officially added to database
-        String filename = "temp_" + timeAtAdd + "_" + System.currentTimeMillis() +".jpeg";
-        File path=new File(subDir,filename);
+        boolean isSubDirCreated = subDir.exists();
+        if (!isSubDirCreated)
+            isSubDirCreated = subDir.mkdir();
+        if(isSubDirCreated)
+        {
+            // Create imageDir
+            // File saved as unique temp image name 'temp_timeAtAdd_timeAtPhotoAdd.png'
+            //temp prefix will be removed once treasure is officially added to database
+            String filename = "temp_" + timeAtAdd + "_" + System.currentTimeMillis() +".jpeg";
+            File path=new File(subDir,filename);
 
-        //Log.d("TEST","Path to save image at is:"+path.getPath());
+            //Log.d("TEST","Path to save image at is:"+path.getPath());
 
-        FileOutputStream out = null;
-        try {
-            out = new FileOutputStream(path);
-            myBitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
-        } catch (FileNotFoundException e) {
-            return "fail";
-        } finally {
+            FileOutputStream out = null;
             try {
-                Objects.requireNonNull(out).close();
-            } catch (IOException e) {
-                e.printStackTrace();
+                out = new FileOutputStream(path);
+                myBitmap.compress(Bitmap.CompressFormat.JPEG, 50, out);
+            } catch (FileNotFoundException e) {
+                return "fail";
+            } finally {
+                try {
+                    Objects.requireNonNull(out).close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
+            return filename;
         }
-        return filename;
+        else
+        {
+            return "fail";
+        }
+
     }
 
     public void nextButtonClicked() {
@@ -472,6 +488,7 @@ public class AddPhotoFragment extends Fragment {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image

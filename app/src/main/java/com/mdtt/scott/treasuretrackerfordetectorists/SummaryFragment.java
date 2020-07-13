@@ -233,12 +233,18 @@ public class SummaryFragment extends Fragment {
                 cladTextView.setText("Clad:   \u2014");
             }
 
-            totalTextView.setText("Total: "+treasureTotal);
-            coinTextView.setText("Coins: "+coinTotal);
-            jewelryTextView.setText("Jewelry: "+jewelryTotal);
-            tokenTextView.setText("Tokens: "+tokenTotal);
-            relicTextView.setText("Relics: "+relicTotal);
-            collectionTextView.setText("Collections: "+collectionTotal);
+            String totalTextViewText = "Total: "+treasureTotal;
+            totalTextView.setText(totalTextViewText);
+            String coinTextViewText = "Coins: "+coinTotal;
+            coinTextView.setText(coinTextViewText);
+            String jewelryTextViewText = "Jewelry: "+jewelryTotal;
+            jewelryTextView.setText(jewelryTextViewText);
+            String tokenTextViewText = "Tokens: "+tokenTotal;
+            tokenTextView.setText(tokenTextViewText);
+            String relicTextViewText = "Relics: "+relicTotal;
+            relicTextView.setText(relicTextViewText);
+            String collectionTextViewText = "Collections: "+collectionTotal;
+            collectionTextView.setText(collectionTextViewText);
 
             for (Map.Entry<String, Double> entry : summaryCladList.entrySet()) {
                 String key = entry.getKey();
@@ -249,7 +255,8 @@ public class SummaryFragment extends Fragment {
                 //Log.d("myTag", "Key: "+key+", value="+value);
 
                 TextView tv1=new TextView(getContext());
-                tv1.setText(newCladAmount+" "+key+"\n");
+                String tv1Text = newCladAmount+" "+key+"\n";
+                tv1.setText(tv1Text);
                 if (Build.VERSION.SDK_INT > 25) {
                     tv1.setAutoSizeTextTypeUniformWithConfiguration(17, 100, 2, TypedValue.COMPLEX_UNIT_SP);
                 }

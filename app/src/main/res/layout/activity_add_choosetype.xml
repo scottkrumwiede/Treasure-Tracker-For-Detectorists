@@ -18,47 +18,47 @@
         android:ems="10"
         android:gravity="center"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:text="What type of treasure do you want to add?" />
+        android:text="@string/what_type_of_treasure_do_you_want_to_add" />
 
     <Button
         android:id="@+id/chooseAddCoin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shadow_13"
-        android:text="Coin" />
+        android:text="@string/coin" />
 
     <Button
         android:id="@+id/chooseAddToken"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shadow_13"
-        android:text="Token" />
+        android:text="@string/token" />
 
     <Button
         android:id="@+id/chooseAddJewelry"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shadow_13"
-        android:text="Jewelry" />
+        android:text="@string/jewelry" />
 
     <Button
         android:id="@+id/chooseAddRelic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shadow_13"
-        android:text="Relic" />
+        android:text="@string/relic" />
 
     <Button
         android:id="@+id/chooseAddClad"
         android:layout_width="match_parent"
         android:background="@drawable/shadow_13"
         android:layout_height="wrap_content"
-        android:text="Clad" />
+        android:text="@string/clad" />
     <Button
         android:id="@+id/chooseAddCollection"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@drawable/shadow_13"
-        android:text="Collection" />
+        android:text="@string/collection" />
 </LinearLayout>
 </ScrollView>

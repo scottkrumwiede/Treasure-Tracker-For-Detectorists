@@ -15,7 +15,7 @@
             android:id="@+id/clad_amount_textview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Amount:" />
+            android:text="@string/amount" />
 
         <EditText
             android:id="@+id/clad_amount_edittext"
@@ -29,7 +29,7 @@
             android:autoSizeMaxTextSize="100sp"
             android:autoSizeStepGranularity="2sp"
             android:maxLength="6"
-            android:hint="Amount:"
+            android:hint="@string/amount"
             android:inputType="numberDecimal"
             android:importantForAutofill="no"
             tools:targetApi="o" />
@@ -51,7 +51,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Location Found:" />
+            android:text="@string/location_found" />
         <EditText
             android:id="@+id/cladLocationFoundEditText"
             android:layout_width="match_parent"
@@ -65,20 +65,20 @@
             android:layout_height="wrap_content"
             android:visibility="visible"
             android:importantForAutofill="no"
-            android:hint="Include the location of your find"
+            android:hint="@string/include_the_location_of_your_find"
             tools:targetApi="o" />
 
         <Button
             android:id="@+id/placePickerButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Use Current Location"
+            android:text="@string/use_current_location"
             android:background="@drawable/shadow_13"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date Found:" />
+            android:text="@string/date_found" />
 
 
         <TextView
@@ -93,7 +93,7 @@
             android:autoSizeStepGranularity="2sp"
             android:gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:hint="Include the date of your find"
+            android:hint="@string/include_the_date_of_your_find"
             tools:targetApi="o" />
 
     </LinearLayout>

@@ -27,8 +27,6 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
@@ -65,7 +63,7 @@ public class AddFinalInfoFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         bundle = getArguments();
-        id = bundle.getInt("id");
+        id = Objects.requireNonNull(bundle).getInt("id");
         Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
     }
 
@@ -110,7 +108,7 @@ public class AddFinalInfoFragment extends Fragment {
         treasureDateFoundTextView.setText(date);
 
         if (id != 0) {
-            String[] split = bundle.getString("treasureDateFound").split("/");
+            String[] split = Objects.requireNonNull(bundle.getString("treasureDateFound")).split("/");
             //if year is first, we will format to mm/dd/yyyy instead
             if (split[0].length() == 4) {
                 date = split[1] + "/" + split[2] + "/" + split[0];
@@ -226,40 +224,44 @@ public class AddFinalInfoFragment extends Fragment {
         // path to /data/data/yourapp/app_data/imageDir
         File directory = cw.getFilesDir();
         File subDir = new File(directory, "imageDir");
-        if (!subDir.exists())
-            subDir.mkdir();
-        final String prefix = "temp_" + timeAtAdd;
+        boolean isSubDirCreated = subDir.exists();
+        if (!isSubDirCreated)
+            isSubDirCreated = subDir.mkdir();
+        if(isSubDirCreated)
+        {
+            final String prefix = "temp_" + timeAtAdd;
 
-        File[] files = subDir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File directory, String name) {
-                return name.startsWith(prefix);
+            File[] files = subDir.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File directory, String name) {
+                    return name.startsWith(prefix);
+                }
+            });
+            //Log.d("TEST", "The number of temp_images found was: "+files.length);
+
+            //Log.d("TEST", "Removing temp prefix from images at path: "+subDir.getPath());
+            for (File file : files) {
+
+                //remove temp_ chars from prefix string
+                String newName = file.getName().substring(5);
+                File newFile = new File(subDir, newName);
+                //rename file from temp to permanent
+                boolean result = file.renameTo(newFile);
             }
-        });
-        //Log.d("TEST", "The number of temp_images found was: "+files.length);
 
-        //Log.d("TEST", "Removing temp prefix from images at path: "+subDir.getPath());
-        for (File file : files) {
+            final String prefix2 = "edit_" + timeAtAdd;
 
-            //remove temp_ chars from prefix string
-            String newName = file.getName().substring(5);
-            File newFile = new File(subDir, newName);
-            //rename file from temp to permanent
-            file.renameTo(newFile);
-        }
+            File[] files2 = subDir.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File directory, String name) {
+                    return name.startsWith(prefix2);
+                }
+            });
+            for (File file : files2) {
 
-        final String prefix2 = "edit_" + timeAtAdd;
-
-        File[] files2 = subDir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File directory, String name) {
-                return name.startsWith(prefix2);
+                //delete file that was saved in saveImage method
+                boolean result = file.delete();
             }
-        });
-        for (File file : files2) {
-
-            //delete file that was saved in saveImage method
-            file.delete();
         }
     }
 
@@ -272,7 +274,7 @@ public class AddFinalInfoFragment extends Fragment {
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 // permission was granted, yay! Do the
                 // location-related task you need to do.
-                LocationManager lm = (LocationManager) getContext().getSystemService(Context.LOCATION_SERVICE);
+                LocationManager lm = (LocationManager) Objects.requireNonNull(getContext()).getSystemService(Context.LOCATION_SERVICE);
                 Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
                 if(location == null) {
                     location = lm.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
