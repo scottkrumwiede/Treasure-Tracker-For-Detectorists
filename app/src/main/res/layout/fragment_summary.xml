@@ -22,7 +22,7 @@
                 android:layout_height="100dp"
                 android:layout_margin="15dp"
                 android:src="@drawable/mainlogo_tp_200x200"
-                android:contentDescription="main logo" />
+                android:contentDescription="@string/main_logo" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -50,7 +50,7 @@
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
                 android:paddingBottom="5dp"
-                android:text="Add your first treasure now by clicking the blue circle below."
+                android:text="@string/add_your_first_treasure_now_by_clicking_the_blue_circle_below"
                 tools:targetApi="o" />
 
             <TextView
@@ -63,7 +63,7 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:text="Coins: "
+                android:text="@string/coins_summary"
                 tools:targetApi="o" />
 
             <TextView
@@ -76,7 +76,7 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:text="Tokens: "
+                android:text="@string/tokens_summary"
                 tools:targetApi="o" />
 
             <TextView
@@ -89,7 +89,7 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:text="Jewelry: "
+                android:text="@string/jewelry_summary"
                 tools:targetApi="o" />
 
             <TextView
@@ -102,7 +102,7 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:text="Relics: "
+                android:text="@string/relics_summary"
                 tools:targetApi="o" />
 
             <TextView
@@ -114,7 +114,7 @@
                 android:autoSizeStepGranularity="2sp"
                 android:autoSizeTextType="uniform"
                 android:gravity="center_horizontal"
-                android:text="Total: "
+                android:text="@string/total_summary"
                 tools:targetApi="o" />
 
             <TextView
@@ -128,7 +128,7 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:text="Clad Totals: "
+                android:text="@string/clad_totals"
                 tools:targetApi="o" />
             <LinearLayout
                 android:layout_width="match_parent"
@@ -160,7 +160,7 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:text="Collections: "
+                android:text="@string/collections_summary"
                 tools:targetApi="o" />
 
             <TextView
@@ -173,7 +173,7 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:text="Locations: "
+                android:text="@string/locations_summary"
                 tools:targetApi="o" />
 
             <TextView
@@ -186,7 +186,7 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:text="Metal Detectors: "
+                android:text="@string/metal_detectors_summary"
                 tools:targetApi="o" />
 
 

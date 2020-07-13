@@ -1,6 +1,5 @@
 package com.mdtt.scott.treasuretrackerfordetectorists;
 
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 
@@ -10,11 +9,11 @@ import java.io.Writer;
 
 public class CSVWriter {
 
-    private PrintWriter pw;
-    private char separator;
-    private char escapechar;
-    private String lineEnd;
-    private char quotechar;
+    private final PrintWriter pw;
+    private final char separator;
+    private final char escapechar;
+    private final String lineEnd;
+    private final char quotechar;
 
     public static final char DEFAULT_SEPARATOR = ',';
     public static final char NO_QUOTE_CHARACTER = '\u0000';
@@ -41,7 +40,7 @@ public class CSVWriter {
         if (nextLine == null)
             return;
 
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         for (int i = 0; i < nextLine.length; i++) {
 
             if (i != 0) {
@@ -72,15 +71,9 @@ public class CSVWriter {
 
     }
 
-    public void close() throws IOException {
+    public void close() {
         pw.flush();
         pw.close();
-    }
-
-    public void flush() throws IOException {
-
-        pw.flush();
-
     }
 
 }

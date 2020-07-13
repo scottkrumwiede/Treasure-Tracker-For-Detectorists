@@ -13,7 +13,7 @@
         android:id="@+id/android_gridview_image"
         android:layout_width="100dp"
         android:layout_height="100dp"
-        android:contentDescription="treasure photo" />
+        android:contentDescription="@string/treasure_photo" />
 
     <TextView
         android:id="@+id/android_gridview_firstline"

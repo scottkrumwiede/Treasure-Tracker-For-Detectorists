@@ -171,9 +171,8 @@ public class CladFragment extends Fragment {
                     mProgressBar.setVisibility(View.GONE);
 
                     //Log.d("myTag", "ONPOSTEXECUTE2");
-
-                    cladCountLabel.setText("You've added " + cladList.size() + " clad so far!");
-
+                    String cladCountLabelText = "You've added " + cladList.size() + " clad so far!";
+                    cladCountLabel.setText(cladCountLabelText);
 
                     switch (sortType) {
                         case "CladID":
@@ -213,9 +212,10 @@ public class CladFragment extends Fragment {
     }
 
     private class MyBounceInterpolator implements android.view.animation.Interpolator {
-        private double mAmplitude = 1;
-        private double mFrequency = 10;
+        private double mAmplitude;
+        private double mFrequency;
 
+        @SuppressWarnings("SameParameterValue")
         MyBounceInterpolator(double amplitude, double frequency) {
             mAmplitude = amplitude;
             mFrequency = frequency;

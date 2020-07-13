@@ -32,9 +32,6 @@ public class CustomGridViewAdapter extends BaseAdapter {
         mContext = context;
     }
 
-    private static class ViewHolder {
-    }
-
     @Override
     public View getView(int position, View convertView, ViewGroup parent){
 

@@ -2,54 +2,54 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     tools:showIn="navigation_view">
-    <item android:title="Treasures">
+    <item android:title="@string/treasures">
     <menu>
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_summary"
             android:icon="@drawable/ic_menu_camera"
-            android:title="Summary" />
+            android:title="@string/summary" />
         <item
             android:id="@+id/nav_coins"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Coins" />
+            android:title="@string/coins" />
         <item
             android:id="@+id/nav_tokens"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Tokens" />
+            android:title="@string/tokens" />
         <item
             android:id="@+id/nav_jewelry"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Jewelry" />
+            android:title="@string/jewelry" />
         <item
             android:id="@+id/nav_relics"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Relics" />
+            android:title="@string/relics" />
         <item
             android:id="@+id/nav_clad"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="Clad" />
+            android:title="@string/clad" />
     </group>
     </menu>
     </item>
-    <item android:title="Other">
+    <item android:title="@string/other">
         <menu>
             <group android:checkableBehavior="single">
             <item
                 android:id="@+id/nav_collection"
                 android:icon="@drawable/ic_menu_gallery"
-                android:title="Collections" />
+                android:title="@string/collections" />
             </group>
 
             <item
                 android:id="@+id/nav_locations"
                 android:icon="@drawable/ic_menu_gallery"
-                android:title="Locations" />
+                android:title="@string/locations" />
 
             <item
                 android:id="@+id/nav_detectors"
                 android:icon="@drawable/ic_menu_gallery"
-                android:title="Detectors" />
+                android:title="@string/detectors" />
         </menu>
     </item>
 

@@ -485,8 +485,7 @@ public class MySQliteHelper extends SQLiteOpenHelper {
     public Cursor raw() {
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res = db.rawQuery("SELECT "+colTreasureType+","+colTreasureDenomination+","+colTreasureSeries+","+colTreasureName+","+colTreasureYear+","+colTreasureMint+","+colTreasureMaterial+","+colTreasureWeight+","+colTreasureLocationFound+","+colTreasureDateFound+","+colTreasureInfo+" FROM " + TABLE_TREASURE , new String[]{});
-        return res;
+        return db.rawQuery("SELECT "+colTreasureType+","+colTreasureDenomination+","+colTreasureSeries+","+colTreasureName+","+colTreasureYear+","+colTreasureMint+","+colTreasureMaterial+","+colTreasureWeight+","+colTreasureLocationFound+","+colTreasureDateFound+","+colTreasureInfo+" FROM " + TABLE_TREASURE , new String[]{});
     }
 
     public void updateOldDates() {

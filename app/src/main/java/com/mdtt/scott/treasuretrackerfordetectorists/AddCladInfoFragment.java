@@ -142,7 +142,7 @@ public class AddCladInfoFragment extends Fragment {
 
         String date = month + "/" + day + "/" + year;
 
-        String splitDate[] = date.split("/");
+        String[] splitDate = date.split("/");
         if(splitDate[0].length() == 1)
         {
             splitDate[0] = "0"+splitDate[0];

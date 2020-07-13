@@ -17,7 +17,7 @@
             android:layout_weight=".1"
             android:minLines="1"
             android:background="@drawable/shadow_13"
-            android:text="Add Photo" />
+            android:text="@string/add_photo" />
 
         <GridView
             android:id="@+id/addtreasure_gridview"

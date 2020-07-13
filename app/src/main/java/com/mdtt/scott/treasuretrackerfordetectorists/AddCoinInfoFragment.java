@@ -95,7 +95,7 @@ public class AddCoinInfoFragment extends Fragment {
         if(id != 0)
         {
             //custom country
-            if(!bundle.getString("coinCountry").equals("United States"))
+            if(!Objects.requireNonNull(bundle.getString("coinCountry")).equals("United States"))
             {
                 bundle.putString("addCoinInfoType", "1");
             }
