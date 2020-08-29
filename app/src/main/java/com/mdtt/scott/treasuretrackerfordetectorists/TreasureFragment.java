@@ -195,61 +195,149 @@ public class TreasureFragment extends Fragment {
                 File directory = Objects.requireNonNull(getActivity()).getFilesDir();
                 File subDir = new File(directory, "imageDir");
                 //Log.d("myTag", subDir.getPath());
-                if( !subDir.exists() )
-                    subDir.mkdir();
+                boolean isSubDirCreated = subDir.exists();
+                if (!isSubDirCreated)
+                    isSubDirCreated = subDir.mkdir();
+                if(isSubDirCreated)
+                {
+                    for (Treasure g : treasureList) {
 
-                for (Treasure g : treasureList) {
-
-                    treasureIds.add(g.getTreasureId());
-                    treasureNames.add(g.getTreasureName());
-                    treasureSeries.add(g.getTreasureSeries());
-                    treasureMaterials.add(g.getTreasureMaterial());
-                    treasureYears.add(g.getTreasureYear());
-
-                    String oldDate = g.getTreasureDateFound();
-                    String[] splitDate = oldDate.split("/");
-                    String treasureFoundDate = splitDate[1]+"/"+splitDate[2]+"/"+splitDate[0];
-                    treasureDatesFound.add(treasureFoundDate);
-
-                    treasurePhotoPaths.add(g.getTreasurePhotoPath());
-
-                    //Use photo acquired photopath to retrieve actual photo now and add it to treasurePhotos
-                    final String prefix = g.getTreasurePhotoPath();
-                    //Log.d("myTag", "Prefix is: "+prefix);
-                    Bitmap photo;
-                    if (prefix != null) {
-
-                        File[] files = subDir.listFiles(new FilenameFilter() {
-                            @Override
-                            public boolean accept(File directory, String name) {
-                                //Log.d("myTag", "Name of photo found is: "+name);
-                                return name.startsWith(prefix);
+                        /*if (sortType.equals("TreasureCountry"))
+                        {
+                            //reached a new header
+                            if(!g.getTreasureCountry().equals(currentHeader))
+                            {
+                                createHeader();
+                                currentHeader = g.getTreasureCountry();
                             }
-                        });
+                        }
+                        else if (sortType.equals("TreasureYear"))
+                        {
+                            if(!g.getTreasureYear().equals(currentHeader))
+                            {
+                                createHeader();
+                                currentHeader = g.getTreasureYear();
+                            }
 
-                        //listFiles returns in reverse alphabetical order, so we need to sort to get alphabetical
-                        // so that photo order remains the same as when added.
-                        Arrays.sort(files);
+                        }
+                        else if (sortType.equals("TreasureDateFound"))
+                        {
+                            if(!g.getTreasureDateFound().equals(currentHeader))
+                            {
+                                createHeader();
+                                currentHeader = g.getTreasureDateFound();
+                            }
+                        }
+                        else if (sortType.equals("TreasureLocationFound"))
+                        {
+                            if(!g.getTreasureLocationFound().equals(currentHeader))
+                            {
+                                createHeader();
+                                currentHeader = g.getTreasureLocationFound();
+                            }
+                        }
+                        else if (sortType.equals("TreasureName"))
+                        {
+                            if(!g.getTreasureName().equals(currentHeader))
+                            {
+                                createHeader();
+                                currentHeader = g.getTreasureName();
+                            }
+                        }
+                        else if (sortType.equals("TreasureMaterial"))
+                        {
+                            if(!g.getTreasureMaterial().equals(currentHeader))
+                            {
+                                createHeader();
+                                currentHeader = g.getTreasureMaterial();
+                            }
+                        }
+                        else if (sortType.equals("TreasureWeight"))
+                        {
+                            if(!g.getTreasureWeight().equals(currentHeader))
+                            {
+                                createHeader();
+                                currentHeader = g.getTreasureWeight();
+                            }
+                        }
+                        //most recently added, sorttype = "TreasureID"
+                        else
+                        {
+                            ///if(!String.valueOf(g.getTreasureId()).equals(currentHeader))
+                          //  {
+                             //   createHeader();
+                             //   currentHeader = g.getTreasureCountry();
+                          //  }
+                        }
 
-                        //Log.d("myTag", "Sizes of photos found is: "+files.length);
+                         */
 
-                        if (files.length > 0) {
-                            String filepath = files[0].getPath();
+                        treasureIds.add(g.getTreasureId());
+                        treasureNames.add(g.getTreasureName());
+                        treasureSeries.add(g.getTreasureSeries());
+                        treasureMaterials.add(g.getTreasureMaterial());
+                        treasureYears.add(g.getTreasureYear());
 
-                            // First decode with inJustDecodeBounds=true to check dimensions
-                            BitmapFactory.Options options = new BitmapFactory.Options();
-                            options.inJustDecodeBounds = true;
-                            BitmapFactory.decodeFile(filepath, options);
+                        String oldDate = g.getTreasureDateFound();
+                        String[] splitDate = oldDate.split("/");
+                        String treasureFoundDate = splitDate[1]+"/"+splitDate[2]+"/"+splitDate[0];
+                        treasureDatesFound.add(treasureFoundDate);
 
-                            // Calculate inSampleSize
-                            options.inSampleSize = calculateInSampleSize(options, 100, 100);
+                        treasurePhotoPaths.add(g.getTreasurePhotoPath());
 
-                            // Decode bitmap with inSampleSize set
-                            options.inJustDecodeBounds = false;
-                            photo = BitmapFactory.decodeFile(filepath, options);
+                        //Use photo acquired photopath to retrieve actual photo now and add it to treasurePhotos
+                        final String prefix = g.getTreasurePhotoPath();
+                        //Log.d("myTag", "Prefix is: "+prefix);
+                        Bitmap photo;
+                        if (prefix != null)
+                        {
 
-                        } else {
+                            File[] files = subDir.listFiles(new FilenameFilter() {
+                                @Override
+                                public boolean accept(File directory, String name) {
+                                    //Log.d("myTag", "Name of photo found is: "+name);
+                                    return name.startsWith(prefix);
+                                }
+                            });
 
+                            //listFiles returns in reverse alphabetical order, so we need to sort to get alphabetical
+                            // so that photo order remains the same as when added.
+                            Arrays.sort(files);
+
+                            //Log.d("myTag", "Sizes of photos found is: "+files.length);
+
+                            if (files.length > 0) {
+                                String filepath = files[0].getPath();
+
+                                // First decode with inJustDecodeBounds=true to check dimensions
+                                BitmapFactory.Options options = new BitmapFactory.Options();
+                                options.inJustDecodeBounds = true;
+                                BitmapFactory.decodeFile(filepath, options);
+
+                                // Calculate inSampleSize
+                                options.inSampleSize = calculateInSampleSize(options, 100, 100);
+
+                                // Decode bitmap with inSampleSize set
+                                options.inJustDecodeBounds = false;
+                                photo = BitmapFactory.decodeFile(filepath, options);
+
+                            } else {
+
+                                // First decode with inJustDecodeBounds=true to check dimensions
+                                BitmapFactory.Options options = new BitmapFactory.Options();
+                                options.inJustDecodeBounds = true;
+                                BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto, options);
+
+                                // Calculate inSampleSize
+                                options.inSampleSize = calculateInSampleSize(options, 100, 100);
+
+                                // Decode bitmap with inSampleSize set
+                                options.inJustDecodeBounds = false;
+                                photo = BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto, options);
+                            }
+
+                        }
+                        else {
                             // First decode with inJustDecodeBounds=true to check dimensions
                             BitmapFactory.Options options = new BitmapFactory.Options();
                             options.inJustDecodeBounds = true;
@@ -262,22 +350,8 @@ public class TreasureFragment extends Fragment {
                             options.inJustDecodeBounds = false;
                             photo = BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto, options);
                         }
-
-                    } else {
-                        // First decode with inJustDecodeBounds=true to check dimensions
-                        BitmapFactory.Options options = new BitmapFactory.Options();
-                        options.inJustDecodeBounds = true;
-                        BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto, options);
-
-                        // Calculate inSampleSize
-                        options.inSampleSize = calculateInSampleSize(options, 100, 100);
-
-                        // Decode bitmap with inSampleSize set
-                        options.inJustDecodeBounds = false;
-                        photo = BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto, options);
+                        treasurePhotos.add(photo);
                     }
-                    treasurePhotos.add(photo);
-
                 }
             }
             else if(params[0].equals("deleteTreasure"))
@@ -305,15 +379,12 @@ public class TreasureFragment extends Fragment {
                             gridView.setAdapter(adapterViewAndroid);
                             break;
                         case "token":
+                        case "relic":
                             adapterViewAndroid = new CustomGridViewAdapter(getActivity(), treasureIds, treasureNames, treasureYears, treasurePhotos);
                             gridView.setAdapter(adapterViewAndroid);
                             break;
                         case "jewelry":
                             adapterViewAndroid = new CustomGridViewAdapter(getActivity(), treasureIds, treasureNames, treasureMaterials, treasurePhotos);
-                            gridView.setAdapter(adapterViewAndroid);
-                            break;
-                        case "relic":
-                            adapterViewAndroid = new CustomGridViewAdapter(getActivity(), treasureIds, treasureNames, treasureYears, treasurePhotos);
                             gridView.setAdapter(adapterViewAndroid);
                             break;
                         case "collection":
@@ -331,10 +402,10 @@ public class TreasureFragment extends Fragment {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view,
                                                 int i, long id) {
-                            Intent myIntent = new Intent(getActivity(), TreasureDetailedActivity.class);
-                            myIntent.putExtra("treasureId", treasureIds.get(i));
-                            myIntent.putExtra("type", type);
-                            startActivity(myIntent);
+                                Intent myIntent = new Intent(getActivity(), TreasureDetailedActivity.class);
+                                myIntent.putExtra("treasureId", treasureIds.get(i));
+                                myIntent.putExtra("type", type);
+                                startActivity(myIntent);
                         }
                     });
 
@@ -343,24 +414,24 @@ public class TreasureFragment extends Fragment {
                         @Override
                         public boolean onItemLongClick(AdapterView<?> parent, View view,
                                                        final int i, long id) {
-                            final CharSequence[] items = {"Yes", "Cancel"};
-                            AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
-                            builder.setTitle("Are you sure you want to PERMANENTLY DELETE this treasure?");
-                            builder.setItems(items, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int item) {
-                                    if (items[item].equals("Yes")) {
+                                final CharSequence[] items = {"Yes", "Cancel"};
+                                AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+                                builder.setTitle("Are you sure you want to PERMANENTLY DELETE this treasure?");
+                                builder.setItems(items, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int item) {
+                                        if (items[item].equals("Yes")) {
 
-                                        //Log.d("TEST", "The value of i is: "+i);
-                                        BackgroundTask bt = new BackgroundTask();
-                                        bt.execute("deleteTreasure", Integer.toString(i));
+                                            //Log.d("TEST", "The value of i is: "+i);
+                                            BackgroundTask bt = new BackgroundTask();
+                                            bt.execute("deleteTreasure", Integer.toString(i));
 
-                                    } else if (items[item].equals("Cancel")) {
-                                        dialog.dismiss();
+                                        } else if (items[item].equals("Cancel")) {
+                                            dialog.dismiss();
+                                        }
                                     }
-                                }
-                            });
-                            builder.show();
+                                });
+                                builder.show();
                             return true;
                         }
                     });
@@ -369,11 +440,13 @@ public class TreasureFragment extends Fragment {
 
                     if(type.equals("jewelry"))
                     {
-                        treasureCountLabel.setText("You're tracking "+treasureList.size()+" pieces of "+type+" so far!");
+                        String treasureCountLabelText = "You're tracking "+treasureList.size()+" pieces of "+type+" so far!";
+                        treasureCountLabel.setText(treasureCountLabelText);
                     }
                     else
                     {
-                        treasureCountLabel.setText("You're tracking "+treasureList.size()+" "+type+"s so far!");
+                        String treasureCountLabelText = "You're tracking "+treasureList.size()+" "+type+"s so far!";
+                        treasureCountLabel.setText(treasureCountLabelText);
                     }
 
                     switch (sortType) {
@@ -413,11 +486,13 @@ public class TreasureFragment extends Fragment {
                     //Log.d("myTag", "empty treasure list...");
                     if(type.equals("jewelry"))
                     {
-                        treasureCountLabel.setText("You haven't added any "+type+" yet...");
+                        String treasureCountLabelText = "You haven't added any "+type+" yet...";
+                        treasureCountLabel.setText(treasureCountLabelText);
                     }
                     else
                     {
-                        treasureCountLabel.setText("You haven't added any "+type+"s yet...");
+                        String treasureCountLabelText = "You haven't added any "+type+"s yet...";
+                        treasureCountLabel.setText(treasureCountLabelText);
                     }
                     sortByLabel.setText("Click the blue circle below to add one now!");
                 }
@@ -428,29 +503,34 @@ public class TreasureFragment extends Fragment {
                 //path to subDir: /data/user/0/com.mdtt.scott.treasuretrackerfordetectorists/files/imageDir
                 File directory = Objects.requireNonNull(getActivity()).getFilesDir();
                 File subDir = new File(directory, "imageDir");
-                if( !subDir.exists() )
-                    subDir.mkdir();
-                final String prefix = result;
+                boolean isSubDirCreated = subDir.exists();
+                if (!isSubDirCreated)
+                    isSubDirCreated = subDir.mkdir();
+                if(isSubDirCreated)
+                {
+                    final String prefix = result;
 
-                File [] files = subDir.listFiles(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File directory, String name) {
-                        return name.startsWith(prefix);
+                    File [] files = subDir.listFiles(new FilenameFilter() {
+                        @Override
+                        public boolean accept(File directory, String name) {
+                            return name.startsWith(prefix);
+                        }
+                    });
+
+                    for (File file : files) {
+                        //Log.d("TEST", "Deleting file at path: "+file.getPath());
+                        boolean isFileDeleted = file.delete();
                     }
-                });
+                    Snackbar.make(getActivity().findViewById(android.R.id.content), "Your treasure was deleted!", Snackbar.LENGTH_SHORT).show();
 
-                for (File file : files) {
-                    //Log.d("TEST", "Deleting file at path: "+file.getPath());
-                    file.delete();
+                    BackgroundTask bt = new BackgroundTask();
+                    bt.execute();
                 }
-                Snackbar.make(getActivity().findViewById(android.R.id.content), "Your treasure was deleted!", Snackbar.LENGTH_SHORT).show();
-
-                BackgroundTask bt = new BackgroundTask();
-                bt.execute();
             }
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static int calculateInSampleSize(
             BitmapFactory.Options options, int reqWidth, int reqHeight) {
         // Raw height and width of image
@@ -474,9 +554,10 @@ public class TreasureFragment extends Fragment {
     }
 
     private class MyBounceInterpolator implements android.view.animation.Interpolator {
-        private double mAmplitude = 1;
-        private double mFrequency = 10;
+        private double mAmplitude;
+        private double mFrequency;
 
+        @SuppressWarnings("SameParameterValue")
         MyBounceInterpolator(double amplitude, double frequency) {
             mAmplitude = amplitude;
             mFrequency = frequency;

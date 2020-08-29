@@ -31,8 +31,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
-import com.google.android.material.snackbar.Snackbar;
-
 import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
@@ -95,69 +93,74 @@ public class TreasureDetailedActivity extends AppCompatActivity {
             //path to subDir: /data/user/0/com.mdtt.scott.treasuretrackerfordetectorists/files/imageDir
             File directory = getApplication().getFilesDir();
             File subDir = new File(directory, "imageDir");
-            if( !subDir.exists() )
-                subDir.mkdir();
-            final String prefix = treasure.getTreasurePhotoPath();
-            Bitmap photo;
-
-            File [] files = subDir.listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(File directory, String name) {
-                    return name.startsWith(prefix);
-                }
-            });
-
-            //listFiles returns in reverse alphabetical order, so we need to sort to get alphabetical
-            // so that photo order remains the same as when added.
-            Arrays.sort(files);
-
-            for (File file : files) {
-                String filepath = file.getPath();
-
-                // First decode with inJustDecodeBounds=true to check dimensions
-                BitmapFactory.Options options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(filepath, options);
-
-                //Log.d("myTag", "outheight: "+options.outHeight);
-                //Log.d("myTag", "outwidth: "+options.outWidth);
-                //Log.d("myTag", "bitmap: "+options.inBitmap);
-
-                // Calculate inSampleSize
-                options.inSampleSize = calculateInSampleSize(options, 100, 100);
-
-                // Decode bitmap with inSampleSize set
-                options.inJustDecodeBounds = false;
-                photo = BitmapFactory.decodeFile(filepath, options);
-                treasurePhotos.add(photo);
-                //Log.d("myTag", "Path of photo is: "+filepath);
-
-                //now do the same to get high-res version for full screen version
-                // First decode with inJustDecodeBounds=true to check dimensions
-                options = new BitmapFactory.Options();
-                options.inJustDecodeBounds = true;
-                BitmapFactory.decodeFile(filepath, options);
-
-                //Log.d("myTag", "outheight: "+options.outHeight);
-                //Log.d("myTag", "outwidth: "+options.outWidth);
-                //Log.d("myTag", "bitmap: "+options.inBitmap);
-
-                // Calculate inSampleSize
-                DisplayMetrics metrics = getResources().getDisplayMetrics();
-                int screenHeight = (int) (metrics.heightPixels * 0.80);
-                options.inSampleSize = calculateInSampleSize(options, WindowManager.LayoutParams.MATCH_PARENT, screenHeight);
-
-                // Decode bitmap with inSampleSize set
-                options.inJustDecodeBounds = false;
-                photo = BitmapFactory.decodeFile(filepath, options);
-                treasurePhotosFull.add(photo);
-            }
-
-            if(files.length == 0)
+            boolean isSubDirCreated = subDir.exists();
+            if (!isSubDirCreated)
+                isSubDirCreated = subDir.mkdir();
+            if(isSubDirCreated)
             {
-                photo = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.defaultphoto);
-                treasurePhotos.add(photo);
+                final String prefix = treasure.getTreasurePhotoPath();
+                Bitmap photo;
+
+                File [] files = subDir.listFiles(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File directory, String name) {
+                        return name.startsWith(prefix);
+                    }
+                });
+
+                //listFiles returns in reverse alphabetical order, so we need to sort to get alphabetical
+                // so that photo order remains the same as when added.
+                Arrays.sort(files);
+
+                for (File file : files) {
+                    String filepath = file.getPath();
+
+                    // First decode with inJustDecodeBounds=true to check dimensions
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = true;
+                    BitmapFactory.decodeFile(filepath, options);
+
+                    //Log.d("myTag", "outheight: "+options.outHeight);
+                    //Log.d("myTag", "outwidth: "+options.outWidth);
+                    //Log.d("myTag", "bitmap: "+options.inBitmap);
+
+                    // Calculate inSampleSize
+                    options.inSampleSize = calculateInSampleSize(options, 100, 100);
+
+                    // Decode bitmap with inSampleSize set
+                    options.inJustDecodeBounds = false;
+                    photo = BitmapFactory.decodeFile(filepath, options);
+                    treasurePhotos.add(photo);
+                    //Log.d("myTag", "Path of photo is: "+filepath);
+
+                    //now do the same to get high-res version for full screen version
+                    // First decode with inJustDecodeBounds=true to check dimensions
+                    options = new BitmapFactory.Options();
+                    options.inJustDecodeBounds = true;
+                    BitmapFactory.decodeFile(filepath, options);
+
+                    //Log.d("myTag", "outheight: "+options.outHeight);
+                    //Log.d("myTag", "outwidth: "+options.outWidth);
+                    //Log.d("myTag", "bitmap: "+options.inBitmap);
+
+                    // Calculate inSampleSize
+                    DisplayMetrics metrics = getResources().getDisplayMetrics();
+                    int screenHeight = (int) (metrics.heightPixels * 0.80);
+                    options.inSampleSize = calculateInSampleSize(options, WindowManager.LayoutParams.MATCH_PARENT, screenHeight);
+
+                    // Decode bitmap with inSampleSize set
+                    options.inJustDecodeBounds = false;
+                    photo = BitmapFactory.decodeFile(filepath, options);
+                    treasurePhotosFull.add(photo);
+                }
+
+                if(files.length == 0)
+                {
+                    photo = BitmapFactory.decodeResource(getApplicationContext().getResources(), R.drawable.defaultphoto);
+                    treasurePhotos.add(photo);
+                }
             }
+
             return 1;
         }
 
@@ -237,12 +240,12 @@ public class TreasureDetailedActivity extends AppCompatActivity {
                         if(key.equals("Date Found: "))
                         {
                             String[] splitDate = value.split("/");
-                            String treasureFoundDate = splitDate[1]+"/"+splitDate[2]+"/"+splitDate[0];
-                            value = treasureFoundDate;
+                            value = splitDate[1]+"/"+splitDate[2]+"/"+splitDate[0];
                         }
                         TextView tv = new TextView(getApplicationContext());
                         tv.setLayoutParams(lparamsText);
-                        tv.setText(key+value);
+                        String keyValue = key + value;
+                        tv.setText(keyValue);
 
                         tv.setTextColor(R.color.colorPrimaryDark);
 
@@ -263,7 +266,8 @@ public class TreasureDetailedActivity extends AppCompatActivity {
 
                     TextView tv = new TextView(getApplicationContext());
                     tv.setLayoutParams(lparamsText);
-                    tv.setText(key+value);
+                    String keyValue = key + value;
+                    tv.setText(keyValue);
 
                     tv.setTextColor(R.color.colorPrimaryDark);
 
@@ -317,65 +321,68 @@ public class TreasureDetailedActivity extends AppCompatActivity {
             //path to subDir: /data/user/0/com.mdtt.scott.treasuretrackerfordetectorists/files/imageDir
             File directory = getApplication().getFilesDir();
             File subDir = new File(directory, "imageDir");
-            if( !subDir.exists() )
-                subDir.mkdir();
-
-            final String prefix = treasure.getTreasurePhotoPath();
-
-            File [] files = subDir.listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(File directory, String name) {
-                    return name.startsWith(prefix);
-                }
-            });
-
-            for (File file : files) {
-                File newFile = new File(subDir, file.getName());
-                Uri contentUri = FileProvider.getUriForFile(this, "com.mdtt.scott.fileprovider", newFile);
-                imageUris.add(contentUri);
-            }
-
-            //get text of detailed for sharing
-            String shareText="";
-
-            for (int i = 0; i < mLinearLayoutText.getChildCount(); i++)
+            boolean isSubDirCreated = subDir.exists();
+            if (!isSubDirCreated)
+                isSubDirCreated = subDir.mkdir();
+            if(isSubDirCreated)
             {
-                Object child = mLinearLayoutText.getChildAt(i);
-                if (child instanceof TextView)
+                final String prefix = treasure.getTreasurePhotoPath();
+
+                File [] files = subDir.listFiles(new FilenameFilter() {
+                    @Override
+                    public boolean accept(File directory, String name) {
+                        return name.startsWith(prefix);
+                    }
+                });
+
+                for (File file : files) {
+                    File newFile = new File(subDir, file.getName());
+                    Uri contentUri = FileProvider.getUriForFile(this, "com.mdtt.scott.fileprovider", newFile);
+                    imageUris.add(contentUri);
+                }
+
+                //get text of detailed for sharing
+                String shareText="";
+
+                for (int i = 0; i < mLinearLayoutText.getChildCount(); i++)
                 {
-                    TextView e = (TextView)child;
-                    if(e.getText().length() > 0)    // Whatever logic here to determine if valid.
+                    Object child = mLinearLayoutText.getChildAt(i);
+                    if (child instanceof TextView)
                     {
-                        shareText = shareText+e.getText()+"\n";
-                    }
-                    //we've gotten to the textview called extra which means all empty fields below here
-                    else
-                    {
-                        break;
+                        TextView e = (TextView)child;
+                        if(e.getText().length() > 0)    // Whatever logic here to determine if valid.
+                        {
+                            shareText = shareText+e.getText()+"\n";
+                        }
+                        //we've gotten to the textview called extra which means all empty fields below here
+                        else
+                        {
+                            break;
+                        }
                     }
                 }
-            }
 
-            Toast.makeText(this, "Treasure info copied to clipboard!", Toast.LENGTH_SHORT).show();
-            ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-            ClipData clip = ClipData.newPlainText("auto_copy_treasureInfo", shareText);
-            clipboard.setPrimaryClip(clip);
+                Toast.makeText(this, "Treasure info copied to clipboard!", Toast.LENGTH_SHORT).show();
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("auto_copy_treasureInfo", shareText);
+                clipboard.setPrimaryClip(clip);
 
-            Intent shareIntent = new Intent();
-            if(!imageUris.isEmpty())
-            {
-                shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
-                shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris);
-                shareIntent.setType("image/*");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
-                startActivity(Intent.createChooser(shareIntent, "Share photos and info to.."));
-            }
-            else
-            {
-                shareIntent.setAction(Intent.ACTION_SEND);
-                shareIntent.setType("text/plain");
-                shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
-                startActivity(Intent.createChooser(shareIntent, "Share info to.."));
+                Intent shareIntent = new Intent();
+                if(!imageUris.isEmpty())
+                {
+                    shareIntent.setAction(Intent.ACTION_SEND_MULTIPLE);
+                    shareIntent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, imageUris);
+                    shareIntent.setType("image/*");
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+                    startActivity(Intent.createChooser(shareIntent, "Share photos and info to.."));
+                }
+                else
+                {
+                    shareIntent.setAction(Intent.ACTION_SEND);
+                    shareIntent.setType("text/plain");
+                    shareIntent.putExtra(Intent.EXTRA_TEXT, shareText);
+                    startActivity(Intent.createChooser(shareIntent, "Share info to.."));
+                }
             }
         }
         return super.onOptionsItemSelected(item);

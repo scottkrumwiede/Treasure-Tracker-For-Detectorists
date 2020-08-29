@@ -19,7 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
-            android:text="Treasure Photos:" />
+            android:text="@string/treasure_photos" />
 
     <HorizontalScrollView
         android:layout_width="match_parent"
@@ -39,7 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="25dp"
-            android:text="Treasure Info:" />
+            android:text="@string/treasure_info" />
 
 
         <LinearLayout

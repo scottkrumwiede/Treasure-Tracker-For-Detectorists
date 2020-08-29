@@ -14,7 +14,7 @@
             android:id="@+id/clad_amount_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="0.00"
+            android:text="@string/_0_00"
             android:layout_marginEnd="5dp"
             android:textColor="@android:color/black"
             android:textAppearance="?android:attr/textAppearanceLarge"
@@ -24,7 +24,7 @@
             android:id="@+id/clad_currency_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="USD"
+            android:text="@string/usd"
             android:textAppearance="?android:attr/textAppearanceLarge"
             android:textColor="@android:color/black"
             android:textStyle="bold" />
@@ -36,7 +36,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:text="01/01/1988"
+        android:text="@string/_01_01_1988"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black" />
 
@@ -48,7 +48,7 @@
         android:layout_below="@id/clad_datefound_textview"
 
         android:layout_marginTop="15dp"
-        android:text="Location Found: "
+        android:text="@string/location_found"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:textColor="@android:color/black"/>
 

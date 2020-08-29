@@ -195,50 +195,52 @@ public class MainActivity extends AppCompatActivity
         //path to subDir: /data/user/0/com.mdtt.scott.treasuretrackerfordetectorists/files/imageDir
         File directory = this.getFilesDir();
         File subDir = new File(directory, "imageDir");
-        if( !subDir.exists() )
-            subDir.mkdir();
-        final String prefix = "temp_";
-        final String prefix2 = "edit_";
+        boolean isSubDirCreated = subDir.exists();
+        if (!isSubDirCreated)
+            isSubDirCreated = subDir.mkdir();
+        if(isSubDirCreated)
+        {
+            final String prefix = "temp_";
+            final String prefix2 = "edit_";
 
-        File [] files = subDir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File directory, String name) {
-                return name.startsWith(prefix);
+            File [] files = subDir.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File directory, String name) {
+                    return name.startsWith(prefix);
+                }
+            });
+            //Log.d("TEST", "The number of temp images to be deleted is: "+files.length+"\n");
+
+            //checking for photos flagged for deletion from an edit that was cancelled (prefix edit_)
+            for (File file : files) {
+                //deleting all temp images
+                boolean result = file.delete();
             }
-        });
-        //Log.d("TEST", "The number of temp images to be deleted is: "+files.length+"\n");
 
-        //checking for photos flagged for deletion from an edit that was cancelled (prefix edit_)
-        for (File file : files) {
-            //deleting all temp images
-            file.delete();
-        }
+            files = subDir.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File directory, String name) {
+                    return name.startsWith(prefix2);
+                }
+            });
+            //Log.d("TEST", "The number of edit images to be deleted is: "+files.length+"\n");
 
-        files = subDir.listFiles(new FilenameFilter() {
-            @Override
-            public boolean accept(File directory, String name) {
-                return name.startsWith(prefix2);
+            for (File file : files) {
+                //remove edit_ chars from prefix string to restore photos previously flagged for deletion
+                String newName = file.getName().substring(5);
+                File newFile = new File(subDir, newName);
+                //rename file from temp to permanent
+                boolean result = file.renameTo(newFile);
             }
-        });
-        //Log.d("TEST", "The number of edit images to be deleted is: "+files.length+"\n");
 
-        for (File file : files) {
-            //remove edit_ chars from prefix string to restore photos previously flagged for deletion
-            String newName = file.getName().substring(5);
-            File newFile = new File(subDir, newName);
-            //rename file from temp to permanent
-            file.renameTo(newFile);
+            //On startup, find out if user has any old treasure or clad rows using treasureDateFound format of mm/dd/yyyy
+            //if found, update rows to use format yyyy/mm/dd to allow for proper sql sorting by date
+
+            //On startup, also find out if user has any old treasure or clad rows using treasureDateFound with missing zero in front of month or day. i.e. 2019/1/9.
+            // Update to 2019/01/09 to allow for proper sorting
+            BackgroundTask bt = new BackgroundTask();
+            bt.execute();
         }
-
-        //On startup, find out if user has any old treasure or clad rows using treasureDateFound format of mm/dd/yyyy
-        //if found, update rows to use format yyyy/mm/dd to allow for proper sql sorting by date
-
-        //On startup, also find out if user has any old treasure or clad rows using treasureDateFound with missing zero in front of month or day. i.e. 2019/1/9.
-        // Update to 2019/01/09 to allow for proper sorting
-        BackgroundTask bt = new BackgroundTask();
-        bt.execute();
-
-
     }
 
     @Override
@@ -291,7 +293,7 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.action_settings) {
-            Snackbar.make(findViewById(android.R.id.content), "Feature coming soon", Snackbar.LENGTH_SHORT).show();
+            //Snackbar.make(findViewById(android.R.id.content), "Feature coming soon", Snackbar.LENGTH_SHORT).show();
 
                     Intent myIntent = new Intent(this, SettingsActivity.class);
                     startActivity(myIntent);
@@ -571,9 +573,10 @@ public class MainActivity extends AppCompatActivity
     }
 
     private class MyBounceInterpolator implements android.view.animation.Interpolator {
-        private double mAmplitude = 1;
-        private double mFrequency = 10;
+        private double mAmplitude;
+        private double mFrequency;
 
+        @SuppressWarnings("SameParameterValue")
         MyBounceInterpolator(double amplitude, double frequency) {
             mAmplitude = amplitude;
             mFrequency = frequency;

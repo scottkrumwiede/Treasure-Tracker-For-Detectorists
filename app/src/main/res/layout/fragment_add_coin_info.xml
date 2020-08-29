@@ -14,7 +14,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Country:" />
+        android:text="@string/country" />
 
     <Spinner
         android:id="@+id/coinCountrySpinner"
@@ -34,7 +34,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Denomination:" />
+        android:text="@string/denomination" />
 
     <Spinner
         android:id="@+id/coinTypeSpinner"
@@ -64,14 +64,14 @@
         android:paddingEnd="30dp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
-        android:hint="Choose a denomination"
+        android:hint="@string/choose_a_denomination"
         android:importantForAutofill="no"
         tools:targetApi="o" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Design/Series:" />
+        android:text="@string/design_series" />
     <Spinner
         android:id="@+id/coinSeriesSpinner"
         android:layout_width="match_parent"
@@ -99,14 +99,14 @@
         android:paddingEnd="30dp"
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
-        android:hint="Choose a design"
+        android:hint="@string/choose_a_design"
         android:importantForAutofill="no"
         tools:targetApi="o" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Year:" />
+        android:text="@string/year" />
     <EditText
         android:id="@+id/coinYearEditText"
         android:layout_width="match_parent"
@@ -121,7 +121,7 @@
         android:autoSizeMaxTextSize="100sp"
         android:autoSizeStepGranularity="2sp"
         android:maxLength="4"
-        android:hint="Year"
+        android:hint="@string/year_hint"
         android:importantForAutofill="no"
         tools:targetApi="o" />
 
@@ -129,7 +129,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Mint:" />
+        android:text="@string/mint" />
 
     <Spinner
         android:id="@+id/coinMintSpinner"
@@ -158,14 +158,14 @@
         android:paddingStart="30dp"
         android:paddingEnd="30dp"
         android:autoSizeStepGranularity="2sp"
-        android:hint="Choose a mint"
+        android:hint="@string/choose_a_mint"
         android:importantForAutofill="no"
         tools:targetApi="o" />
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Material:" />
+        android:text="@string/material" />
 
     <Spinner
         android:id="@+id/coinMaterialSpinner"

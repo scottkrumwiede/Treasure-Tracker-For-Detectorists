@@ -2,18 +2,19 @@ package com.mdtt.scott.treasuretrackerfordetectorists;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.Toast;
-
 import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -26,10 +27,13 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.Objects;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -37,6 +41,7 @@ public class SettingsActivity extends AppCompatActivity {
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 200;
     private static Activity activity;
     private static LinearLayout mProgressBarLL;
+    private static final int FILE_SELECT_CODE = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,7 +74,7 @@ public class SettingsActivity extends AppCompatActivity {
                         // Toast.LENGTH_SHORT).show();
 
                         // Here, thisActivity is the current activity
-                        if (ContextCompat.checkSelfPermission(getActivity(),
+                        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -96,8 +101,9 @@ public class SettingsActivity extends AppCompatActivity {
                 restoreButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference arg0) {
-                        Toast.makeText(getActivity(), "Feature coming soon!",
-                                Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(getActivity(), "Feature coming soon!",
+                                //Toast.LENGTH_SHORT).show();
+                        performRestore();
                         return true;
                     }
                 });
@@ -112,7 +118,7 @@ public class SettingsActivity extends AppCompatActivity {
                         // Toast.LENGTH_SHORT).show();
 
                         // Here, thisActivity is the current activity
-                        if (ContextCompat.checkSelfPermission(getActivity(),
+                        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE)
                                 != PackageManager.PERMISSION_GRANTED) {
 
@@ -139,8 +145,9 @@ public class SettingsActivity extends AppCompatActivity {
                 clearcoinsButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference arg0) {
+
                         Toast.makeText(getActivity(), "Feature coming soon!",
-                                Toast.LENGTH_SHORT).show();
+                              Toast.LENGTH_SHORT).show();
                         return true;
                     }
                 });
@@ -205,19 +212,15 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String[] permissions, int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE: {
-                // If request is cancelled, the result arrays are empty.
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay! Do the
-                    // task you need to do.
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                }
-                return;
+                                            String[] permissions,  int[] grantResults) {
+        if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {// If request is cancelled, the result arrays are empty.
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // permission was granted, yay! Do the
+                // task you need to do.
+            } else {
+                // permission denied, boo! Disable the
+                // functionality that depends on this permission.
             }
 
             // other 'case' lines to check for other
@@ -266,7 +269,90 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     private static String performRestore() {
+
+            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+            intent.setType("*/*");
+            intent.addCategory(Intent.CATEGORY_OPENABLE);
+
+            try {
+                activity.startActivityForResult(
+                        Intent.createChooser(intent, "Select a File to Upload"),
+                        FILE_SELECT_CODE);
+            } catch (android.content.ActivityNotFoundException ex) {
+                // Potentially direct the user to the Market with a Dialog
+                Toast.makeText(activity, "Please install a File Manager.",
+                        Toast.LENGTH_SHORT).show();
+            }
         return "";
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == FILE_SELECT_CODE) {
+            if (resultCode == RESULT_OK) {
+                // Get the Uri of the selected file
+                InputStream inputStream = null;
+                Uri uri = data.getData();
+                try {
+                    inputStream = getContentResolver().openInputStream(Objects.requireNonNull(uri));
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                }
+                int fileExtensionIndex = Objects.requireNonNull(uri.getPath()).lastIndexOf(".");
+                String fileExtension = uri.getPath().substring(fileExtensionIndex);
+
+                Log.d("mytag", uri.getScheme());
+
+
+                //Example: .file
+                Log.d("myTag", "" + fileExtension);
+
+                if (fileExtension.equalsIgnoreCase(".file")) {
+                    //TODO: //User has provider a .file
+                    //now check to see if it is really a legitimate backup.file by checking to see if it contains both a dbDir and filesDir
+                    //File backupFile = new File(uri.getPath());
+                    //readFromZip(backupFile);
+                    try {
+                        readFromZip(inputStream);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //TODO: //user did not provide a proper backup file
+                    //alert them to try again.
+
+                } else if (fileExtension.equalsIgnoreCase(".zip")) {
+                    try {
+                        readFromZip(inputStream);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    //TODO: //user did not provide a proper backup file
+                    //alert them to try again.
+                }
+
+                //Example: /document/raw:/storage/emulated/0/Download/Backup-2020_02_07_124302.file
+                Log.d("myTag", uri.toString());
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    //write to, write from
+    private void readFromZip(InputStream inputStream) throws IOException {
+
+        ZipInputStream zis = new ZipInputStream(inputStream);
+        ZipEntry entry;
+        while ((entry = zis.getNextEntry()) != null) {
+            System.out.println(entry.getName());
+            byte[] contents = new byte[4096];
+            int direct;
+            while ((direct = zis.read(contents, 0, contents.length)) >= 0) {
+                Log.d("mytag", ""+direct);
+            }
+            zis.closeEntry();
+        }
+
+
     }
 
     private static String performExport() {
@@ -276,7 +362,9 @@ public class SettingsActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HHmmss", Locale.getDefault());
         String currentDateandTime = sdf.format(new Date());
 
+        //directory where export file will be saved on the user's phone
         File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        //name of the export file that will be created for the user
         String exportPath = "Export-"+currentDateandTime+".zip";
 
         //create csv file from database tables
@@ -287,7 +375,6 @@ public class SettingsActivity extends AppCompatActivity {
             Cursor curCSV = dbHelper.raw();
             csvWrite.writeNext(curCSV.getColumnNames());
             while(curCSV.moveToNext()) {
-                String arrStr[]=null;
                 String[] mySecondStringArray = new String[curCSV.getColumnNames().length];
                 for(int i=0;i<curCSV.getColumnNames().length;i++)
                 {
@@ -309,7 +396,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         File exportFile = new File(downloadDir, exportPath);
 
-        FileOutputStream fos = null;
+        FileOutputStream fos;
         try {
             fos = new FileOutputStream(exportFile.getAbsolutePath());
         } catch (FileNotFoundException e) {
@@ -323,8 +410,9 @@ public class SettingsActivity extends AppCompatActivity {
 
         try {
             zos.close();
-            csvFile.delete();
+            boolean iscsvFileDeleted = csvFile.delete();
             return exportFile.getAbsolutePath();
+
         } catch (IOException e) {
             e.printStackTrace();
             return null;
@@ -368,17 +456,16 @@ public class SettingsActivity extends AppCompatActivity {
 
         protected String doInBackground(String...params) {
             String result = "";
-            if(params[0].equals("backup"))
-            {
-                result = "Backup created: "+ performBackup();
-            }
-            else if(params[0].equals("restore"))
-            {
-                result = performRestore();
-            }
-            else if(params[0].equals("export"))
-            {
-                result = "Export created: "+performExport();
+            switch (params[0]) {
+                case "backup":
+                    result = "Backup created: " + performBackup();
+                    break;
+                case "restore":
+                    result = performRestore();
+                    break;
+                case "export":
+                    result = "Export created: " + performExport();
+                    break;
             }
 
             return result;
@@ -388,10 +475,14 @@ public class SettingsActivity extends AppCompatActivity {
             mProgressBarLL.setVisibility(View.GONE);
             if(result != null)
             {
-                Toast.makeText(activity, ""+result,
-                        Toast.LENGTH_LONG).show();
+                //Toast.makeText(activity, ""+result,
+                     //   Toast.LENGTH_LONG).show();
+                new AlertDialog.Builder(Objects.requireNonNull(activity))
+                        .setTitle("Success!")
+                        .setMessage(result)
+                        .setNegativeButton(android.R.string.ok, null)
+                        .create().show();
             }
-
         }
     }
 }

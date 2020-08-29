@@ -17,7 +17,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:text="Name:" />
+            android:text="@string/name" />
         <EditText
             android:id="@+id/collectionNameEditText"
             android:layout_width="match_parent"
@@ -32,14 +32,14 @@
             android:autoSizeStepGranularity="2sp"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:hint="Include a name for your collection"
+            android:hint="@string/include_a_name_for_your_collection"
             android:importantForAutofill="no"
             tools:targetApi="o" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Location Found:" />
+            android:text="@string/location_found" />
         <EditText
             android:id="@+id/treasureLocationEditText"
             android:layout_width="match_parent"
@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:gravity="top"
             android:minLines="1"
-            android:hint="Include a location for your find"
+            android:hint="@string/include_a_location_for_your_find"
             android:importantForAutofill="no"
             tools:targetApi="o" />
 
@@ -63,13 +63,13 @@
             android:id="@+id/placePickerButton"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Use Current Location"
+            android:text="@string/use_current_location"
             android:background="@drawable/shadow_13"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Date Found:" />
+            android:text="@string/date_found" />
 
 
         <TextView
@@ -85,13 +85,13 @@
             android:gravity="center_vertical"
             android:layout_height="wrap_content"
             android:maxLines="1"
-            android:hint="Include the date of your find"
+            android:hint="@string/include_the_date_of_your_find"
             tools:targetApi="o" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Additional Info:" />
+            android:text="@string/additional_info" />
 
         <EditText
             android:id="@+id/treasureInfoEditText"
@@ -108,7 +108,7 @@
             android:layout_height="wrap_content"
             android:gravity="top"
             android:minLines="3"
-            android:hint="Include any additional info about your find"
+            android:hint="@string/include_any_additional_info_about_your_find"
             android:importantForAutofill="no"
             tools:targetApi="o" />
 
