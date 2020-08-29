@@ -15,11 +15,11 @@ android {
             keyAlias = 'treasuretrackeralias'
         }
     }
-    compileSdkVersion 28
+    compileSdkVersion 30
     defaultConfig {
         applicationId "com.mdtt.scott.treasuretrackerfordetectorists"
         minSdkVersion 23
-        targetSdkVersion 28
+        targetSdkVersion 30
         versionCode 15
         versionName "1.100"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

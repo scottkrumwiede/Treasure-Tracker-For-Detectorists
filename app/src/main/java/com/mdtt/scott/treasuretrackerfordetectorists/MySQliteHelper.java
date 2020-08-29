@@ -103,21 +103,31 @@ public class MySQliteHelper extends SQLiteOpenHelper {
     {
         ArrayList<Treasure> treasureList = new ArrayList<>();
         String selectQuery;
-        if(sortType.equals("TreasureYear") || sortType.equals("TreasureLocationFound"))
+        if(sortType.equals("TreasureYear"))
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureYear+","+colTreasureSeries+","+colTreasureDateFound+","
-                    +colTreasurePhotoPath+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='coin' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureCountry+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='coin' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
+        }
+        else if(sortType.equals("TreasureLocationFound"))
+        {
+            selectQuery = "SELECT "+colTreasureID+", "+colTreasureYear+","+colTreasureSeries+","+colTreasureDateFound+","
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureCountry+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='coin' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
         }
         else if(sortType.equals("TreasureCountry"))
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureYear+","+colTreasureSeries+","+colTreasureDateFound+","
-                    +colTreasurePhotoPath+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='coin' ORDER BY "+sortType+" ASC";
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureCountry+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='coin' ORDER BY "+sortType+" ASC";
         }
-        //treasure date found, most recently added
+        else if(sortType.equals("TreasureDateFound"))
+        {
+            selectQuery = "SELECT "+colTreasureID+", "+colTreasureYear+","+colTreasureSeries+","+colTreasureDateFound+","
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureCountry+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='coin' ORDER BY "+sortType+" DESC";
+        }
+        //most recently added
         else
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureYear+","+colTreasureSeries+","+colTreasureDateFound+","
-                    +colTreasurePhotoPath+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='coin' ORDER BY "+sortType+" DESC";
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureCountry+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='coin' ORDER BY "+sortType+" DESC";
         }
 
         //Log.d("myTag", selectQuery);
@@ -127,7 +137,7 @@ public class MySQliteHelper extends SQLiteOpenHelper {
 
         if(cursor.moveToFirst()){
             do {
-                treasureList.add(new Treasure(cursor.getInt(cursor.getColumnIndex(colTreasureID)), null, null, null, cursor.getString(cursor.getColumnIndex(colTreasureSeries)), null, cursor.getString(cursor.getColumnIndex(colTreasureYear)), null, null,null ,null, cursor.getString(cursor.getColumnIndex(colTreasureDateFound)), null, cursor.getString(cursor.getColumnIndex(colTreasurePhotoPath))));
+                treasureList.add(new Treasure(cursor.getInt(cursor.getColumnIndex(colTreasureID)), null, cursor.getString(cursor.getColumnIndex(colTreasureCountry)), null, cursor.getString(cursor.getColumnIndex(colTreasureSeries)), null, cursor.getString(cursor.getColumnIndex(colTreasureYear)), null, null,null ,cursor.getString(cursor.getColumnIndex(colTreasureLocationFound)), cursor.getString(cursor.getColumnIndex(colTreasureDateFound)), null, cursor.getString(cursor.getColumnIndex(colTreasurePhotoPath))));
             } while(cursor.moveToNext());
         }
 
@@ -142,16 +152,21 @@ public class MySQliteHelper extends SQLiteOpenHelper {
     {
         ArrayList<Treasure> treasureList = new ArrayList<>();
         String selectQuery;
-        if(sortType.equals("TreasureYear") || sortType.equals("TreasureLocationFound") || sortType.equals("TreasureName"))
+        if(sortType.equals("TreasureYear") || sortType.equals("TreasureName"))
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureYear+","+colTreasureName+","+colTreasureDateFound+","
-                    +colTreasurePhotoPath+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='token' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='token' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
+        }
+        else if(sortType.equals("TreasureLocationFound"))
+        {
+            selectQuery = "SELECT "+colTreasureID+", "+colTreasureYear+","+colTreasureName+","+colTreasureDateFound+","
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='token' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
         }
         //treasure date found, most recently added
         else
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureYear+","+colTreasureName+","+colTreasureDateFound+","
-                    +colTreasurePhotoPath+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='token' ORDER BY "+sortType+" DESC";
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='token' ORDER BY "+sortType+" DESC";
         }
 
         //Log.d("myTag", selectQuery);
@@ -161,7 +176,7 @@ public class MySQliteHelper extends SQLiteOpenHelper {
 
         if(cursor.moveToFirst()){
             do {
-                treasureList.add(new Treasure(cursor.getInt(cursor.getColumnIndex(colTreasureID)), null, null, null, null, cursor.getString(cursor.getColumnIndex(colTreasureName)), cursor.getString(cursor.getColumnIndex(colTreasureYear)), null, null,null ,null, cursor.getString(cursor.getColumnIndex(colTreasureDateFound)), null, cursor.getString(cursor.getColumnIndex(colTreasurePhotoPath))));
+                treasureList.add(new Treasure(cursor.getInt(cursor.getColumnIndex(colTreasureID)), null, null, null, null, cursor.getString(cursor.getColumnIndex(colTreasureName)), cursor.getString(cursor.getColumnIndex(colTreasureYear)), null, null,null ,cursor.getString(cursor.getColumnIndex(colTreasureLocationFound)), cursor.getString(cursor.getColumnIndex(colTreasureDateFound)), null, cursor.getString(cursor.getColumnIndex(colTreasurePhotoPath))));
             } while(cursor.moveToNext());
         }
 
@@ -180,18 +195,28 @@ public class MySQliteHelper extends SQLiteOpenHelper {
         if(sortType.equals("TreasureMaterial"))
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureMaterial+","+colTreasureName+","+colTreasureDateFound+","
-                +colTreasurePhotoPath+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='jewelry' ORDER BY "+sortType+" ASC";
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureWeight+","+colTreasureYear+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='jewelry' ORDER BY "+sortType+" ASC";
         }
-        else if(sortType.equals("TreasureWeight") || sortType.equals("TreasureYear") || sortType.equals("TreasureLocationFound"))
+        else if(sortType.equals("TreasureWeight"))
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureMaterial+","+colTreasureName+","+colTreasureDateFound+","
-                    +colTreasurePhotoPath+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='jewelry' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureWeight+","+colTreasureYear+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='jewelry' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
+        }
+        else if(sortType.equals("TreasureYear"))
+        {
+            selectQuery = "SELECT "+colTreasureID+", "+colTreasureMaterial+","+colTreasureName+","+colTreasureDateFound+","
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureWeight+","+colTreasureYear+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='jewelry' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
+        }
+        else if(sortType.equals("TreasureLocationFound"))
+        {
+            selectQuery = "SELECT "+colTreasureID+", "+colTreasureMaterial+","+colTreasureName+","+colTreasureDateFound+","
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureWeight+","+colTreasureYear+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='jewelry' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
         }
         //treasure date found, most recently added
         else
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureMaterial+","+colTreasureName+","+colTreasureDateFound+","
-                    +colTreasurePhotoPath+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='jewelry' ORDER BY "+sortType+" DESC";
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureWeight+","+colTreasureYear+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='jewelry' ORDER BY "+sortType+" DESC";
         }
 
         //Log.d("myTag", selectQuery);
@@ -201,7 +226,7 @@ public class MySQliteHelper extends SQLiteOpenHelper {
 
         if(cursor.moveToFirst()){
             do {
-                treasureList.add(new Treasure(cursor.getInt(cursor.getColumnIndex(colTreasureID)), null, null, null, null, cursor.getString(cursor.getColumnIndex(colTreasureName)), null, null, cursor.getString(cursor.getColumnIndex(colTreasureMaterial)),null ,null, cursor.getString(cursor.getColumnIndex(colTreasureDateFound)), null, cursor.getString(cursor.getColumnIndex(colTreasurePhotoPath))));
+                treasureList.add(new Treasure(cursor.getInt(cursor.getColumnIndex(colTreasureID)), null, null, null, null, cursor.getString(cursor.getColumnIndex(colTreasureName)), cursor.getString(cursor.getColumnIndex(colTreasureYear)), null, cursor.getString(cursor.getColumnIndex(colTreasureMaterial)),cursor.getString(cursor.getColumnIndex(colTreasureWeight)) ,cursor.getString(cursor.getColumnIndex(colTreasureLocationFound)), cursor.getString(cursor.getColumnIndex(colTreasureDateFound)), null, cursor.getString(cursor.getColumnIndex(colTreasurePhotoPath))));
             } while(cursor.moveToNext());
         }
 
@@ -220,13 +245,13 @@ public class MySQliteHelper extends SQLiteOpenHelper {
         if(sortType.equals("TreasureYear") || sortType.equals("TreasureLocationFound"))
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureName+","+colTreasureYear+","+colTreasureDateFound+","
-                +colTreasurePhotoPath+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='relic' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
+                +colTreasurePhotoPath+","+colTreasureLocationFound+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='relic' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
         }
         //treasure date found, most recently added
         else
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureName+","+colTreasureYear+","+colTreasureDateFound+","
-                    +colTreasurePhotoPath+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='relic' ORDER BY "+sortType+" DESC";
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='relic' ORDER BY "+sortType+" DESC";
         }
 
         //Log.d("myTag", selectQuery);
@@ -236,7 +261,7 @@ public class MySQliteHelper extends SQLiteOpenHelper {
 
         if(cursor.moveToFirst()){
             do {
-                treasureList.add(new Treasure(cursor.getInt(cursor.getColumnIndex(colTreasureID)), null, null, null, null, cursor.getString(cursor.getColumnIndex(colTreasureName)), cursor.getString(cursor.getColumnIndex(colTreasureYear)), null, null,null ,null, cursor.getString(cursor.getColumnIndex(colTreasureDateFound)), null, cursor.getString(cursor.getColumnIndex(colTreasurePhotoPath))));
+                treasureList.add(new Treasure(cursor.getInt(cursor.getColumnIndex(colTreasureID)), null, null, null, null, cursor.getString(cursor.getColumnIndex(colTreasureName)), cursor.getString(cursor.getColumnIndex(colTreasureYear)), null, null,null ,cursor.getString(cursor.getColumnIndex(colTreasureLocationFound)), cursor.getString(cursor.getColumnIndex(colTreasureDateFound)), null, cursor.getString(cursor.getColumnIndex(colTreasurePhotoPath))));
             } while(cursor.moveToNext());
         }
 
@@ -253,13 +278,13 @@ public class MySQliteHelper extends SQLiteOpenHelper {
         if(sortType.equals("TreasureLocationFound"))
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureName+","+colTreasureDateFound+","
-                    +colTreasurePhotoPath+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='collection' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='collection' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
         }
         //treasure date found, most recently added
         else
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureName+","+colTreasureDateFound+","
-                    +colTreasurePhotoPath+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='collection' ORDER BY "+sortType+" DESC";
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='collection' ORDER BY "+sortType+" DESC";
         }
 
         //Log.d("myTag", selectQuery);
@@ -269,7 +294,7 @@ public class MySQliteHelper extends SQLiteOpenHelper {
 
         if(cursor.moveToFirst()){
             do {
-                treasureList.add(new Treasure(cursor.getInt(cursor.getColumnIndex(colTreasureID)), null, null, null, null, cursor.getString(cursor.getColumnIndex(colTreasureName)), null, null, null,null,null, cursor.getString(cursor.getColumnIndex(colTreasureDateFound)), null, cursor.getString(cursor.getColumnIndex(colTreasurePhotoPath))));
+                treasureList.add(new Treasure(cursor.getInt(cursor.getColumnIndex(colTreasureID)), null, null, null, null, cursor.getString(cursor.getColumnIndex(colTreasureName)), null, null, null,null,cursor.getString(cursor.getColumnIndex(colTreasureLocationFound)), cursor.getString(cursor.getColumnIndex(colTreasureDateFound)), null, cursor.getString(cursor.getColumnIndex(colTreasurePhotoPath))));
             } while(cursor.moveToNext());
         }
 

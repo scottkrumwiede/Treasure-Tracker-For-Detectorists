@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/TreasureTrackerForDetectorists.iml" filepath="$PROJECT_DIR$/TreasureTrackerForDetectorists.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/TreasureTrackerForDetectorists.iml" filepath="$PROJECT_DIR$/TreasureTrackerForDetectorists.iml" group="TreasureTrackerForDetectorists" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" group="TreasureTrackerForDetectorists/app" />
     </modules>
   </component>
 </project>

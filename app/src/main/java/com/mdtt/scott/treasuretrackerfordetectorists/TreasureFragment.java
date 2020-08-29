@@ -202,6 +202,76 @@ public class TreasureFragment extends Fragment {
                 {
                     for (Treasure g : treasureList) {
 
+                        /*if (sortType.equals("TreasureCountry"))
+                        {
+                            //reached a new header
+                            if(!g.getTreasureCountry().equals(currentHeader))
+                            {
+                                createHeader();
+                                currentHeader = g.getTreasureCountry();
+                            }
+                        }
+                        else if (sortType.equals("TreasureYear"))
+                        {
+                            if(!g.getTreasureYear().equals(currentHeader))
+                            {
+                                createHeader();
+                                currentHeader = g.getTreasureYear();
+                            }
+
+                        }
+                        else if (sortType.equals("TreasureDateFound"))
+                        {
+                            if(!g.getTreasureDateFound().equals(currentHeader))
+                            {
+                                createHeader();
+                                currentHeader = g.getTreasureDateFound();
+                            }
+                        }
+                        else if (sortType.equals("TreasureLocationFound"))
+                        {
+                            if(!g.getTreasureLocationFound().equals(currentHeader))
+                            {
+                                createHeader();
+                                currentHeader = g.getTreasureLocationFound();
+                            }
+                        }
+                        else if (sortType.equals("TreasureName"))
+                        {
+                            if(!g.getTreasureName().equals(currentHeader))
+                            {
+                                createHeader();
+                                currentHeader = g.getTreasureName();
+                            }
+                        }
+                        else if (sortType.equals("TreasureMaterial"))
+                        {
+                            if(!g.getTreasureMaterial().equals(currentHeader))
+                            {
+                                createHeader();
+                                currentHeader = g.getTreasureMaterial();
+                            }
+                        }
+                        else if (sortType.equals("TreasureWeight"))
+                        {
+                            if(!g.getTreasureWeight().equals(currentHeader))
+                            {
+                                createHeader();
+                                currentHeader = g.getTreasureWeight();
+                            }
+                        }
+                        //most recently added, sorttype = "TreasureID"
+                        else
+                        {
+                            ///if(!String.valueOf(g.getTreasureId()).equals(currentHeader))
+                          //  {
+                             //   createHeader();
+                             //   currentHeader = g.getTreasureCountry();
+                          //  }
+                        }
+
+                         */
+
                         treasureIds.add(g.getTreasureId());
                         treasureNames.add(g.getTreasureName());
                         treasureSeries.add(g.getTreasureSeries());
@@ -332,10 +402,10 @@ public class TreasureFragment extends Fragment {
                         @Override
                         public void onItemClick(AdapterView<?> parent, View view,
                                                 int i, long id) {
-                            Intent myIntent = new Intent(getActivity(), TreasureDetailedActivity.class);
-                            myIntent.putExtra("treasureId", treasureIds.get(i));
-                            myIntent.putExtra("type", type);
-                            startActivity(myIntent);
+                                Intent myIntent = new Intent(getActivity(), TreasureDetailedActivity.class);
+                                myIntent.putExtra("treasureId", treasureIds.get(i));
+                                myIntent.putExtra("type", type);
+                                startActivity(myIntent);
                         }
                     });
 
@@ -344,24 +414,24 @@ public class TreasureFragment extends Fragment {
                         @Override
                         public boolean onItemLongClick(AdapterView<?> parent, View view,
                                                        final int i, long id) {
-                            final CharSequence[] items = {"Yes", "Cancel"};
-                            AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
-                            builder.setTitle("Are you sure you want to PERMANENTLY DELETE this treasure?");
-                            builder.setItems(items, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int item) {
-                                    if (items[item].equals("Yes")) {
+                                final CharSequence[] items = {"Yes", "Cancel"};
+                                AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
+                                builder.setTitle("Are you sure you want to PERMANENTLY DELETE this treasure?");
+                                builder.setItems(items, new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int item) {
+                                        if (items[item].equals("Yes")) {
 
-                                        //Log.d("TEST", "The value of i is: "+i);
-                                        BackgroundTask bt = new BackgroundTask();
-                                        bt.execute("deleteTreasure", Integer.toString(i));
+                                            //Log.d("TEST", "The value of i is: "+i);
+                                            BackgroundTask bt = new BackgroundTask();
+                                            bt.execute("deleteTreasure", Integer.toString(i));
 
-                                    } else if (items[item].equals("Cancel")) {
-                                        dialog.dismiss();
+                                        } else if (items[item].equals("Cancel")) {
+                                            dialog.dismiss();
+                                        }
                                     }
-                                }
-                            });
-                            builder.show();
+                                });
+                                builder.show();
                             return true;
                         }
                     });

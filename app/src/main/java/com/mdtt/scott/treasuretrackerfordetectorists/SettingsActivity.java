@@ -362,7 +362,9 @@ public class SettingsActivity extends AppCompatActivity {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy_MM_dd_HHmmss", Locale.getDefault());
         String currentDateandTime = sdf.format(new Date());
 
+        //directory where export file will be saved on the user's phone
         File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        //name of the export file that will be created for the user
         String exportPath = "Export-"+currentDateandTime+".zip";
 
         //create csv file from database tables
