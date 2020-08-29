@@ -36,3 +36,4 @@ obj/
 .externalNativeBuild
 
 app/build.gradle
+*build.gradle
