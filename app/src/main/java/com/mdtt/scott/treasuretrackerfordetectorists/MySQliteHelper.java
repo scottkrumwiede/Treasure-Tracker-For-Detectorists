@@ -92,8 +92,11 @@ public class MySQliteHelper extends SQLiteOpenHelper {
     }
 
     @Override public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion){
-        db.execSQL("DROP TABLE IF EXISTS "+TABLE_TREASURE);
-        db.execSQL("DROP TABLE IF EXISTS "+TABLE_CLAD);
+        if(oldVersion <= 58)
+        {
+            //db.execSQL("DROP TABLE IF EXISTS "+TABLE_TREASURE);
+            //db.execSQL("DROP TABLE IF EXISTS "+TABLE_CLAD);
+        }
         onCreate(db);
     }
 
@@ -111,12 +114,12 @@ public class MySQliteHelper extends SQLiteOpenHelper {
         else if(sortType.equals("TreasureLocationFound"))
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureYear+","+colTreasureSeries+","+colTreasureDateFound+","
-                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureCountry+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='coin' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureCountry+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='coin' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+"lower("+sortType+")";
         }
         else if(sortType.equals("TreasureCountry"))
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureYear+","+colTreasureSeries+","+colTreasureDateFound+","
-                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureCountry+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='coin' ORDER BY "+sortType+" ASC";
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureCountry+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='coin' ORDER BY "+"lower("+sortType+") ASC";
         }
         else if(sortType.equals("TreasureDateFound"))
         {
@@ -152,15 +155,20 @@ public class MySQliteHelper extends SQLiteOpenHelper {
     {
         ArrayList<Treasure> treasureList = new ArrayList<>();
         String selectQuery;
-        if(sortType.equals("TreasureYear") || sortType.equals("TreasureName"))
+        if(sortType.equals("TreasureYear"))
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureYear+","+colTreasureName+","+colTreasureDateFound+","
                     +colTreasurePhotoPath+","+colTreasureLocationFound+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='token' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
         }
+        else if(sortType.equals("TreasureName"))
+        {
+            selectQuery = "SELECT "+colTreasureID+", "+colTreasureYear+","+colTreasureName+","+colTreasureDateFound+","
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='token' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+"lower("+sortType+")";
+        }
         else if(sortType.equals("TreasureLocationFound"))
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureYear+","+colTreasureName+","+colTreasureDateFound+","
-                    +colTreasurePhotoPath+","+colTreasureLocationFound+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='token' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='token' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+"lower("+sortType+")";
         }
         //treasure date found, most recently added
         else
@@ -195,7 +203,7 @@ public class MySQliteHelper extends SQLiteOpenHelper {
         if(sortType.equals("TreasureMaterial"))
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureMaterial+","+colTreasureName+","+colTreasureDateFound+","
-                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureWeight+","+colTreasureYear+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='jewelry' ORDER BY "+sortType+" ASC";
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureWeight+","+colTreasureYear+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='jewelry' ORDER BY lower("+sortType+") ASC";
         }
         else if(sortType.equals("TreasureWeight"))
         {
@@ -210,7 +218,7 @@ public class MySQliteHelper extends SQLiteOpenHelper {
         else if(sortType.equals("TreasureLocationFound"))
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureMaterial+","+colTreasureName+","+colTreasureDateFound+","
-                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureWeight+","+colTreasureYear+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='jewelry' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+","+colTreasureWeight+","+colTreasureYear+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='jewelry' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), lower("+sortType+")";
         }
         //treasure date found, most recently added
         else
@@ -245,7 +253,7 @@ public class MySQliteHelper extends SQLiteOpenHelper {
         if(sortType.equals("TreasureYear") || sortType.equals("TreasureLocationFound"))
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureName+","+colTreasureYear+","+colTreasureDateFound+","
-                +colTreasurePhotoPath+","+colTreasureLocationFound+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='relic' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
+                +colTreasurePhotoPath+","+colTreasureLocationFound+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='relic' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+"lower("+sortType+")";
         }
         //treasure date found, most recently added
         else
@@ -278,7 +286,7 @@ public class MySQliteHelper extends SQLiteOpenHelper {
         if(sortType.equals("TreasureLocationFound"))
         {
             selectQuery = "SELECT "+colTreasureID+", "+colTreasureName+","+colTreasureDateFound+","
-                    +colTreasurePhotoPath+","+colTreasureLocationFound+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='collection' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+sortType;
+                    +colTreasurePhotoPath+","+colTreasureLocationFound+" FROM "+TABLE_TREASURE+" WHERE "+colTreasureType+"='collection' ORDER BY (CASE WHEN "+sortType+" IS \"\" THEN 1 ELSE 0 END), "+"lower("+sortType+")";
         }
         //treasure date found, most recently added
         else
@@ -404,6 +412,52 @@ public class MySQliteHelper extends SQLiteOpenHelper {
         cursor.close();
         db.close();
         return summaryList;
+    }
+
+    public ArrayList<Treasure> getYearlySummaryTreasure()
+    {
+        ArrayList<Treasure> treasureList = new ArrayList<>();
+        String selectQuery;
+
+            selectQuery = "SELECT "+colTreasureType+","+colTreasureDateFound+" FROM "+TABLE_TREASURE;
+
+        //Log.d("myTag", selectQuery);
+        SQLiteDatabase db=this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        //Log.d("myTag", "query retrieved.");
+
+        if(cursor.moveToFirst()){
+            do {
+                treasureList.add(new Treasure(0, cursor.getString(cursor.getColumnIndex(colTreasureType)), null, null, null, null, null, null, null, null, null, cursor.getString(cursor.getColumnIndex(colTreasureDateFound)), null, null));
+            } while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return treasureList;
+    }
+
+    public ArrayList<Clad> getYearlySummaryClad()
+    {
+        ArrayList<Clad> cladList = new ArrayList<>();
+        String selectQuery;
+
+        selectQuery = "SELECT "+colCladCurrency+","+colCladAmount+","+colCladDateFound+" FROM "+TABLE_CLAD;
+
+        //Log.d("myTag", selectQuery);
+        SQLiteDatabase db=this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        //Log.d("myTag", "query retrieved.");
+
+        if(cursor.moveToFirst()){
+            do {
+                cladList.add(new Clad(0, cursor.getString(cursor.getColumnIndex(colCladCurrency)), cursor.getDouble(cursor.getColumnIndex(colCladAmount)), null, cursor.getString(cursor.getColumnIndex(colCladDateFound))));
+            } while(cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+        return cladList;
     }
 
     public long addTreasure(Treasure treasure)

@@ -278,12 +278,13 @@
     <string name="jewelry_summary">Jewelry:</string>
     <string name="relics_summary">Relics:</string>
     <string name="total_summary">Total:</string>
-    <string name="clad_totals">Clad Totals:</string>
+    <string name="clad_totals">Clad:</string>
     <string name="collections_summary">Collections:</string>
     <string name="locations_summary">Locations:</string>
     <string name="metal_detectors_summary">Metal Detectors:</string>
     <string name="app_icon">app icon</string>
     <string name="treasure_tracker_for_detectorists">Treasure Tracker for Detectorists</string>
     <string name="treasure_photo">treasure photo</string>
+    <string name="all_time"> All-time:</string>
 
 </resources>

@@ -19,7 +19,7 @@ android {
     defaultConfig {
         applicationId "com.mdtt.scott.treasuretrackerfordetectorists"
         minSdkVersion 23
-        targetSdkVersion 30
+        targetSdkVersion 29
         versionCode 15
         versionName "1.100"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -47,7 +47,7 @@ dependencies {
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable:1.1.0'
     implementation 'com.google.android.gms:play-services-ads:18.2.0'
-    api 'com.theartofdev.edmodo:android-image-cropper:2.8.0'
+    api 'com.theartofdev.edmodo:android-image-cropper:2.8.+'
     implementation 'androidx.preference:preference:1.1.0-alpha05'
 
 }

@@ -10,6 +10,7 @@
     android:layout_height="match_parent"
     android:fillViewport="true">
     <LinearLayout
+        android:id="@+id/fragment_summary_ll0"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
@@ -49,12 +50,13 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
-                android:paddingBottom="5dp"
+                android:paddingBottom="10dp"
+                android:lines="3"
                 android:text="@string/add_your_first_treasure_now_by_clicking_the_blue_circle_below"
                 tools:targetApi="o" />
 
             <TextView
-                android:id="@+id/coinTextView"
+                android:id="@+id/ll1_TextView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center_horizontal"
@@ -63,6 +65,20 @@
                 android:autoSizeMinTextSize="16sp"
                 android:autoSizeMaxTextSize="100sp"
                 android:autoSizeStepGranularity="2sp"
+                android:paddingBottom="10dp"
+                android:text="@string/all_time"
+                tools:targetApi="o" />
+
+            <TextView
+                android:id="@+id/coinTextView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:autoSizeMaxTextSize="100sp"
+                android:autoSizeMinTextSize="16sp"
+                android:autoSizeStepGranularity="2sp"
+                android:autoSizeTextType="uniform"
+                android:gravity="center_horizontal"
                 android:text="@string/coins_summary"
                 tools:targetApi="o" />
 

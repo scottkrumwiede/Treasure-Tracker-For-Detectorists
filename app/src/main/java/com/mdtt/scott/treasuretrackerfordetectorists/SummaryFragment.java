@@ -1,6 +1,7 @@
 package com.mdtt.scott.treasuretrackerfordetectorists;
 
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
@@ -23,10 +24,15 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
 import java.text.DecimalFormat;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 /**
@@ -45,11 +51,14 @@ public class SummaryFragment extends Fragment {
     private TextView locationsTextView;
     private TextView detectorsTextView;
     private TextView helpTextView;
-    private LinearLayout mLL3;
+    private LinearLayout mLL0, mLL3;
     private DrawerLayout navDrawer;
     private ProgressBar mProgressBar;
     private BackgroundTask bt;
     private LinkedHashMap<String, Double> summaryCladList;
+    ArrayList<Treasure> summaryYearlyTreasureList;
+    ArrayList<Clad> summaryYearlyCladList;
+    private Set<Integer> sortedYears;
     private int treasureTotal;
     private int coinTotal;
     private int tokenTotal;
@@ -85,6 +94,14 @@ public class SummaryFragment extends Fragment {
     public void onResume() {
         super.onResume();
         mLL3.removeAllViews();
+
+        //remove yearly summary layouts
+        ViewGroup insertPoint = (ViewGroup) getView().findViewById(R.id.fragment_summary_ll0);
+        while(insertPoint.getChildCount() > 3)
+        {
+            insertPoint.removeViewAt(2);
+        }
+
         mProgressBar.setVisibility(View.VISIBLE);
         totalTextView.setVisibility(View.INVISIBLE);
         coinTextView.setVisibility(View.INVISIBLE);
@@ -117,6 +134,7 @@ public class SummaryFragment extends Fragment {
         locationsTextView = view.findViewById(R.id.locationsTextView);
         detectorsTextView = view.findViewById(R.id.detectorsTextView);
         cladTextView = view.findViewById(R.id.cladTextView);
+        mLL0 = view.findViewById(R.id.fragment_summary_ll0);
         LinearLayout mLL1 = view.findViewById(R.id.fragment_summary_ll1);
         LinearLayout mLL2 = view.findViewById(R.id.fragment_summary_ll2);
         mLL3 = view.findViewById(R.id.fragment_summary_ll3);
@@ -207,17 +225,42 @@ public class SummaryFragment extends Fragment {
                 collectionTotal = 0;
             }
 
+            treasureTotal = coinTotal + relicTotal + jewelryTotal + tokenTotal;
+
+            summaryCladList = helper.getSummaryClad();
+            cladTotal = summaryCladList.size();
+
             //TODO: location and detector features not planned until v1.1
             //int locationTotal = 0;
             //int detectorTotal = 0;
 
-            treasureTotal = coinTotal + relicTotal + jewelryTotal + tokenTotal;
 
-            summaryCladList = helper.getSummaryClad();
+            summaryYearlyTreasureList = helper.getYearlySummaryTreasure();
+            summaryYearlyCladList = helper.getYearlySummaryClad();
+            Set<Integer> years = new HashSet<Integer>();
+            ListIterator<Treasure> listItrTreasure = summaryYearlyTreasureList.listIterator();
+
+            while(listItrTreasure.hasNext())
+            {
+                String date = listItrTreasure.next().getTreasureDateFound();
+                int year = Integer.parseInt(date.substring(0, 4));
+                years.add(year);
+            }
+
+            ListIterator<Clad> listItrClad = summaryYearlyCladList.listIterator();
+
+            while(listItrClad.hasNext())
+            {
+                String date = listItrClad.next().getCladDateFound();
+                int year = Integer.parseInt(date.substring(0, 4));
+                years.add(year);
+            }
+
+            sortedYears = new TreeSet<Integer>(years);
 
             //Log.d("myTag", "SummaryCladlist is of size: " + summaryCladList.size());
 
-            cladTotal = summaryCladList.size();
+            //cladTotal = summaryCladList.size();
             return 1;
 
         }
@@ -246,13 +289,12 @@ public class SummaryFragment extends Fragment {
             String collectionTextViewText = "Collections: "+collectionTotal;
             collectionTextView.setText(collectionTextViewText);
 
+            //adds total for each country clad found all time
             for (Map.Entry<String, Double> entry : summaryCladList.entrySet()) {
                 String key = entry.getKey();
                 double value = entry.getValue();
 
                 String newCladAmount = df.format(value);
-
-                //Log.d("myTag", "Key: "+key+", value="+value);
 
                 TextView tv1=new TextView(getContext());
                 String tv1Text = newCladAmount+" "+key+"\n";
@@ -264,11 +306,160 @@ public class SummaryFragment extends Fragment {
                 mLL3.addView(tv1);
             }
 
+            for (int s : sortedYears) {
+                LayoutInflater vi = (LayoutInflater) getContext().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View v = vi.inflate(R.layout.linearlayout_yearly_summary, null);
+
+                // fill in any details dynamically here
+                TextView yearTextView = (TextView) v.findViewById(R.id.yearTextView);
+                yearTextView.setText(s+":");
+                TextView coinTextView = (TextView) v.findViewById(R.id.yearCoinTextView);
+                TextView tokenTextView = (TextView) v.findViewById(R.id.yearTokenTextView);
+                TextView jewelryTextView = (TextView) v.findViewById(R.id.yearJewelryTextView);
+                TextView relicTextView = (TextView) v.findViewById(R.id.yearRelicTextView);
+                TextView totalTextView = (TextView) v.findViewById(R.id.yearTotalTextView);
+                ProgressBar progressBar = (ProgressBar) v.findViewById(R.id.yearProgressBar);
+                LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.year_summary_ll1);
+
+                int coinTotal = 0, tokenTotal = 0, jewelryTotal = 0, relicTotal = 0, totalTotal = 0;
+
+                ListIterator<Treasure> listItrTreasure = summaryYearlyTreasureList.listIterator();
+
+                while(listItrTreasure.hasNext())
+                {
+                    Treasure t = listItrTreasure.next();
+                    String date = t.getTreasureDateFound();
+                    int year = Integer.parseInt(date.substring(0, 4));
+                    if(year == s)
+                    {
+                        String type = t.getTreasureType();
+                        switch (type)
+                        {
+                            case "coin": coinTotal++;
+                                break;
+                            case "token": tokenTotal++;
+                                break;
+                            case "jewelry": jewelryTotal++;
+                                break;
+                            case "relic": relicTotal++;
+                                break;
+                        }
+                    }
+                }
+
+                ListIterator<Clad> listItrClad = summaryYearlyCladList.listIterator();
+
+                Map<String,Double> cladCurrencyMap = new HashMap<String,Double>();
+
+                while(listItrClad.hasNext())
+                {
+                    Clad c = listItrClad.next();
+                    String date = c.getCladDateFound();
+                    int year = Integer.parseInt(date.substring(0, 4));
+                    if(year == s)
+                    {
+                        //currency has already been seen before: just add sum of amount total over previous entry
+                        if(cladCurrencyMap.containsKey(c.getCladCurrency()))
+                        {
+                            Double oldAmount = cladCurrencyMap.get(c.getCladCurrency());
+                            cladCurrencyMap.put(c.getCladCurrency(), oldAmount + c.getCladAmount());
+                            //Log.d("myTag", "Year: "+s+", "+c.getCladCurrency()+", "+c.getCladAmount());
+                        }
+                        //new currency: add both currency and amount
+                        else
+                        {
+                            //Log.d("myTag", "Year: "+s+", "+c.getCladCurrency()+", "+c.getCladAmount());
+                            cladCurrencyMap.put(c.getCladCurrency(), c.getCladAmount());
+                        }
+                    }
+                }
+
+                //adds total for each country clad found all time
+                for (Map.Entry<String, Double> entry : cladCurrencyMap.entrySet()) {
+                    String currency = entry.getKey();
+                    double amount = entry.getValue();
+
+                    String newCladAmount = df.format(amount);
+
+                    TextView tv1=new TextView(getContext());
+                    String tv1Text = newCladAmount+" "+currency+"\n";
+                    tv1.setText(tv1Text);
+                    if (Build.VERSION.SDK_INT > 25) {
+                        tv1.setAutoSizeTextTypeUniformWithConfiguration(17, 100, 2, TypedValue.COMPLEX_UNIT_SP);
+                    }
+                    tv1.setGravity(Gravity.CENTER_HORIZONTAL);
+                    linearLayout.addView(tv1);
+                }
+                //if no clad added this year, hide clad totals header
+                if(cladCurrencyMap.isEmpty())
+                {
+                    TextView yearCladTextView = (TextView) v.findViewById(R.id.yearCladTextView);
+                    yearCladTextView.setVisibility(View.GONE);
+                }
+
+
+                totalTotal = coinTotal + tokenTotal + jewelryTotal + relicTotal;
+                if(coinTotal == 0)
+                {
+                    coinTextView.setVisibility(View.GONE);
+                }
+                else
+                {
+                    coinTextView.setText("Coins: "+coinTotal);
+                }
+                if(tokenTotal == 0)
+                {
+                    tokenTextView.setVisibility(View.GONE);
+                }
+                else
+                {
+                    tokenTextView.setText("Tokens: "+tokenTotal);
+                }
+                if(jewelryTotal == 0)
+                {
+                    jewelryTextView.setVisibility(View.GONE);
+                }
+                else
+                {
+                    jewelryTextView.setText("Jewelry: "+jewelryTotal);
+                }
+                if(relicTotal == 0)
+                {
+                    relicTextView.setVisibility(View.GONE);
+                }
+                else
+                {
+                    relicTextView.setText("Relics: "+relicTotal);
+                }
+                if(totalTotal == 0)
+                {
+                    totalTextView.setVisibility(View.GONE);
+                }
+                else
+                {
+                    totalTextView.setText("Total: "+totalTotal);
+                }
+                //adds total for each country clad found for this year
+
+                // insert into main view
+                ViewGroup insertPoint = (ViewGroup) getView().findViewById(R.id.fragment_summary_ll0);
+
+                insertPoint.addView(v, 2, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
+
+                progressBar.setVisibility(View.GONE);
+                linearLayout.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if(!navDrawer.isDrawerOpen(GravityCompat.START)) navDrawer.openDrawer(GravityCompat.START);
+                        else navDrawer.closeDrawer(GravityCompat.END);
+                    }
+                });
+            }
+
             //TODO: location and detector features not planned until v1.1
             locationsTextView.setText("Locations: 0");
             detectorsTextView.setText("Detectors: 0");
 
-            //Log.d("myTag", "ONPOSTEXECUTE");
             mProgressBar.setVisibility(View.GONE);
             totalTextView.setVisibility(View.VISIBLE);
             coinTextView.setVisibility(View.VISIBLE);
