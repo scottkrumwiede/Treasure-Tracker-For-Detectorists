@@ -61,6 +61,10 @@
             app:key="clearcollections"
             app:title="@string/clear_collections_title"
             app:summary="@string/clear_collections_summary"/>
+        <Preference
+            app:key="resetApp"
+            app:title="@string/reset_account_title"
+            app:summary="@string/reset_account_summary"/>
 
     </PreferenceCategory>
 

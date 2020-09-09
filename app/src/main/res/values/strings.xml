@@ -212,7 +212,7 @@
     <string name="clear_collections_title">Delete All Collections</string>
 
     <string name="backup_summary">Creates a backup file to transfer to a new device</string>
-    <string name="restore_summary">Accepts a backup file from another device</string>
+    <string name="restore_summary">Accepts a created backup file</string>
     <string name="csv_export_summary">Export to readable/printable format (.csv)</string>
     <string name="clear_coins_summary">Permanently delete all added coins</string>
     <string name="clear_tokens_summary">Permanently delete all added tokens</string>
@@ -286,5 +286,7 @@
     <string name="treasure_tracker_for_detectorists">Treasure Tracker for Detectorists</string>
     <string name="treasure_photo">treasure photo</string>
     <string name="all_time"> All-time:</string>
+    <string name="reset_account_title">Reset App</string>
+    <string name="reset_account_summary">Permanetely reset app to brand new state</string>
 
 </resources>

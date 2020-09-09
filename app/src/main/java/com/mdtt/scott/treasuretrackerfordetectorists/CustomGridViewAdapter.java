@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.TreeSet;
 
 /**
  * Created by Scott on 1/28/2018.
@@ -38,10 +37,11 @@ public class CustomGridViewAdapter extends BaseAdapter {
 
         View gridView = convertView;
 
-        if (convertView == null) {
+        if(convertView == null)
+        {
             LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-                    gridView = inflater.inflate(R.layout.treasure_gridview_item, parent, false);
+            gridView = inflater.inflate(R.layout.treasure_gridview_item, parent, false);
+        }
                     ImageView treasureImage = gridView.findViewById(R.id.android_gridview_image);
                     //Log.d("myTag", "size of gridViewImages: "+gridViewImages.size());
                     TextView treasureFirstLine = gridView.findViewById(R.id.android_gridview_firstline);
@@ -86,7 +86,6 @@ public class CustomGridViewAdapter extends BaseAdapter {
                         }
                         return gridView;
                     }
-        }
         return gridView;
     }
 
