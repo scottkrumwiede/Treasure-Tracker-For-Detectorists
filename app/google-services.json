@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "986110012512",
+    "firebase_url": "https://treasuretrackerfordetectorists.firebaseio.com",
+    "project_id": "treasuretrackerfordetectorists",
+    "storage_bucket": "treasuretrackerfordetectorists.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:986110012512:android:c68e1add82fed262",
+        "android_client_info": {
+          "package_name": "com.mdtt.scott.treasuretrackerfordetectorists"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "986110012512-04hrb73ctfhtvce0bf4gp66947b2mjnn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mdtt.scott.treasuretrackerfordetectorists",
+            "certificate_hash": "c07b2c9a0db48407442653ad8fee3972eccdd49b"
+          }
+        },
+        {
+          "client_id": "986110012512-pea17bhtjkn384u8dehdgbj3q8c20s5l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCrh5cPMXSWaOVS8DpEAFllaqdq-kq5_vE"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "986110012512-pea17bhtjkn384u8dehdgbj3q8c20s5l.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -295,8 +295,21 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.action_settings) {
             //Snackbar.make(findViewById(android.R.id.content), "Feature coming soon", Snackbar.LENGTH_SHORT).show();
 
-                    Intent myIntent = new Intent(this, SettingsActivity.class);
-                    startActivity(myIntent);
+            //if on summary, page will automatically auto update changes
+            if(menu.findItem(R.id.nav_summary).isChecked())
+            {
+                Intent myIntent = new Intent(this, SettingsActivity.class);
+                startActivity(myIntent);
+            }
+            //if on a treasure page, send request code 1 to update changes
+            else
+            {
+                Intent myIntent = new Intent(this, SettingsActivity.class);
+                startActivityForResult(myIntent, 1);
+            }
+
+
+
         }
         else if(id == R.id.action_sorting)
         {

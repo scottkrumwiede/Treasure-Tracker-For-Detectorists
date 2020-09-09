@@ -290,7 +290,6 @@ public class AddCladInfoFragment extends Fragment {
                                         cladCurrencySpinner.setAdapter(spinnerAdapter);
                                         cladCurrencySpinner.setSelection(currencyList.size()-2);
                                         spinnerAdapter.notifyDataSetChanged();
-                                        Toast.makeText(getContext(),"Custom currency added!", Toast.LENGTH_SHORT).show();
                                     }
                                 })
                                 .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -326,6 +325,15 @@ public class AddCladInfoFragment extends Fragment {
 
     public void saveClad() {
         cladLocationFoundEditText.requestFocus();
+        String selectedCurrency = cladCurrencySpinner.getSelectedItem().toString().toUpperCase();
+        if(!selectedCurrency.startsWith("("))
+        {
+            selectedCurrency = "("+selectedCurrency;
+        }
+        if(!selectedCurrency.endsWith(")"))
+        {
+            selectedCurrency = selectedCurrency + ")";
+        }
 
         if(cladAmountEditText.getText().toString().isEmpty())
         {
@@ -341,6 +349,7 @@ public class AddCladInfoFragment extends Fragment {
         {
             inputManager.hideSoftInputFromWindow(Objects.requireNonNull(Objects.requireNonNull(getActivity()).getCurrentFocus()).getWindowToken(),
                     InputMethodManager.HIDE_NOT_ALWAYS);
+            final String finalSelectedCurrency = selectedCurrency;
             new AlertDialog.Builder(Objects.requireNonNull(getContext()))
                     .setTitle("Confirm?")
                     .setMessage("Add this clad now?")
@@ -355,7 +364,7 @@ public class AddCladInfoFragment extends Fragment {
                             String[] splitDate = oldDate.split("/");
                             String cladFoundDate = splitDate[2]+"/"+splitDate[0]+"/"+splitDate[1];
 
-                            Clad clad = new Clad(0, cladCurrencySpinner.getSelectedItem().toString(), cladAmount, cladLocationFoundEditText.getText().toString(),cladFoundDate);
+                            Clad clad = new Clad(0, finalSelectedCurrency, cladAmount, cladLocationFoundEditText.getText().toString(),cladFoundDate);
 
                             MySQliteHelper helper = new MySQliteHelper(getContext());
                             long result = helper.addClad(clad);

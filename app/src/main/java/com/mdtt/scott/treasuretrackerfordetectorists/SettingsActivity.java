@@ -2,6 +2,7 @@ package com.mdtt.scott.treasuretrackerfordetectorists;
 
 import android.Manifest;
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -9,10 +10,10 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
@@ -39,9 +40,11 @@ import java.util.zip.ZipOutputStream;
 public class SettingsActivity extends AppCompatActivity {
     private static BackgroundTask bt;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE = 200;
+    private static final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 201;
     private static Activity activity;
     private static LinearLayout mProgressBarLL;
     private static final int FILE_SELECT_CODE = 0;
+    private static InputStream inputStream;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,20 @@ public class SettingsActivity extends AppCompatActivity {
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
         mProgressBarLL = findViewById(R.id.progressbar_ll);
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(bt != null) {
+            //keeps user from hitting back while in middle of backup/export/restore
+            if (bt.getStatus() != AsyncTask.Status.RUNNING) {
+                super.onBackPressed();
+            }
+        }
+        else
+        {
+            super.onBackPressed();
+        }
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
@@ -101,9 +118,39 @@ public class SettingsActivity extends AppCompatActivity {
                 restoreButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
                     @Override
                     public boolean onPreferenceClick(Preference arg0) {
-                        //Toast.makeText(getActivity(), "Feature coming soon!",
-                                //Toast.LENGTH_SHORT).show();
-                        performRestore();
+                        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
+                                Manifest.permission.READ_EXTERNAL_STORAGE)
+                                != PackageManager.PERMISSION_GRANTED) {
+
+                            // Permission is not granted
+
+                            // No explanation needed; request the permission
+                            ActivityCompat.requestPermissions(getActivity(),
+                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
+                        } else {
+                            final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                            intent.setType("*/*");
+                            intent.addCategory(Intent.CATEGORY_OPENABLE);
+                            new AlertDialog.Builder(Objects.requireNonNull(getContext()))
+                                    .setMessage("WARNING: Restoring from a backup file will PERMANENTLY DELETE AND REPLACE all your current treasures. Are you sure?")
+                                    .setNegativeButton(android.R.string.no, null)
+                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
+
+                                        public void onClick(DialogInterface arg0, int arg1) {
+                                            try {
+                                                activity.startActivityForResult(
+                                                        Intent.createChooser(intent, "Select a File to Upload"),
+                                                        FILE_SELECT_CODE);
+                                            } catch (android.content.ActivityNotFoundException ex) {
+                                                // Potentially direct the user to the Market with a Dialog
+                                                Toast.makeText(activity, "Please install a File Manager.",
+                                                        Toast.LENGTH_SHORT).show();
+                                            };
+                                        }
+                                    }).create().show();
+                        }
                         return true;
                     }
                 });
@@ -207,6 +254,17 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 });
             }
+            Preference resetAppButton = getPreferenceManager().findPreference("resetApp");
+            if (resetAppButton != null) {
+                resetAppButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
+                    @Override
+                    public boolean onPreferenceClick(Preference arg0) {
+                        Toast.makeText(getActivity(), "Feature coming soon!",
+                                Toast.LENGTH_SHORT).show();
+                        return true;
+                    }
+                });
+            }
         }
     }
 
@@ -247,6 +305,7 @@ public class SettingsActivity extends AppCompatActivity {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(backupFile.getAbsolutePath());
+            //Log.d("mytag", backupFile.getAbsolutePath());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -265,25 +324,16 @@ public class SettingsActivity extends AppCompatActivity {
             e.printStackTrace();
             return null;
         }
-
     }
 
     private static String performRestore() {
 
-            Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-            intent.setType("*/*");
-            intent.addCategory(Intent.CATEGORY_OPENABLE);
-
-            try {
-                activity.startActivityForResult(
-                        Intent.createChooser(intent, "Select a File to Upload"),
-                        FILE_SELECT_CODE);
-            } catch (android.content.ActivityNotFoundException ex) {
-                // Potentially direct the user to the Market with a Dialog
-                Toast.makeText(activity, "Please install a File Manager.",
-                        Toast.LENGTH_SHORT).show();
-            }
-        return "";
+        try {
+            return unzipFile(inputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     @Override
@@ -291,68 +341,123 @@ public class SettingsActivity extends AppCompatActivity {
         if (requestCode == FILE_SELECT_CODE) {
             if (resultCode == RESULT_OK) {
                 // Get the Uri of the selected file
-                InputStream inputStream = null;
+
                 Uri uri = data.getData();
                 try {
                     inputStream = getContentResolver().openInputStream(Objects.requireNonNull(uri));
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
-                int fileExtensionIndex = Objects.requireNonNull(uri.getPath()).lastIndexOf(".");
-                String fileExtension = uri.getPath().substring(fileExtensionIndex);
 
-                Log.d("mytag", uri.getScheme());
-
-
-                //Example: .file
-                Log.d("myTag", "" + fileExtension);
-
-                if (fileExtension.equalsIgnoreCase(".file")) {
+                if (uri.getPath().matches(".+Backup-...._.._.._.......file$")) {
                     //TODO: //User has provider a .file
-                    //now check to see if it is really a legitimate backup.file by checking to see if it contains both a dbDir and filesDir
-                    //File backupFile = new File(uri.getPath());
-                    //readFromZip(backupFile);
-                    try {
-                        readFromZip(inputStream);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //TODO: //user did not provide a proper backup file
-                    //alert them to try again.
 
-                } else if (fileExtension.equalsIgnoreCase(".zip")) {
-                    try {
-                        readFromZip(inputStream);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                    //TODO: //user did not provide a proper backup file
-                    //alert them to try again.
+                        bt = new BackgroundTask();
+                        bt.execute("restore");
+                        mProgressBarLL.setVisibility(View.VISIBLE);
                 }
+                else
+                {
+                    new AlertDialog.Builder(Objects.requireNonNull(activity))
+                            .setTitle("Incorrect file format")
+                            .setMessage("Please select a proper backup file 'Backup-YYYY-MM-DD-HHMMSS.file'")
+                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
-                //Example: /document/raw:/storage/emulated/0/Download/Backup-2020_02_07_124302.file
-                Log.d("myTag", uri.toString());
+                                public void onClick(DialogInterface arg0, int arg1) {
+
+                                }
+                            }).create().show();
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-
-    //write to, write from
-    private void readFromZip(InputStream inputStream) throws IOException {
-
+    
+    private static String unzipFile(InputStream inputStream) throws IOException {
+        File dataDir = Environment.getDataDirectory();
+        String dbPath = "/data/" + "com.mdtt.scott.treasuretrackerfordetectorists" + "/databases/";
+        String filesPath = "/data/" + "com.mdtt.scott.treasuretrackerfordetectorists" + "/files/";
+        File filesDir = new File(dataDir, filesPath);
+        File dbDir = new File(dataDir, dbPath);
+        byte[] buffer = new byte[1024];
         ZipInputStream zis = new ZipInputStream(inputStream);
-        ZipEntry entry;
-        while ((entry = zis.getNextEntry()) != null) {
-            System.out.println(entry.getName());
-            byte[] contents = new byte[4096];
-            int direct;
-            while ((direct = zis.read(contents, 0, contents.length)) >= 0) {
-                Log.d("mytag", ""+direct);
+        ZipEntry zipEntry = zis.getNextEntry();
+
+        File imageDir = new File(filesDir, "/imageDir/");
+        //Log.d("mytag,","Imagedir: "+imageDir.getPath());
+        //cleanup any old images
+        for(File file : imageDir.listFiles())
+        {
+            if(file.isFile())
+            {
+                //Log.d("mytag","Deleting file: "+file.getPath());
+                file.delete();
             }
-            zis.closeEntry();
         }
 
+        while (zipEntry != null) {
+            //Log.d("mytag", "zipentry name: "+zipEntry.getName());
+            //db files
+            if(zipEntry.getName().contains("findsDB")||zipEntry.getName().contains("findsDB-journal")||zipEntry.getName().contains("google_app"))
+            {
+                File newFile;
+                //old format
+                if(zipEntry.getName().contains("/data/data"))
+                {
+                    //Log.d("mytag","old format");
+                    newFile = new File(zipEntry.getName());
+                }
+                //current format
+                else
+                {
+                    //Log.d("mytag","new format");
+                    newFile = new File(dbDir, zipEntry.getName());
+                }
 
+                FileOutputStream fos = new FileOutputStream(newFile);
+                int len;
+                while ((len = zis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, len);
+                }
+                fos.close();
+                zipEntry = zis.getNextEntry();
+            }
+            //images
+            else
+            {
+                File newFile;
+                //old format
+                if(zipEntry.getName().contains("/data/data"))
+                {
+                    //Log.d("mytag","old format");
+                    newFile = new File(zipEntry.getName());
+                }
+                //current format
+                else
+                {
+                    //Log.d("mytag", "zipentry name: "+zipEntry.getName());
+                    String ze = zipEntry.getName();
+                    ze = ze.replace("images","imageDir");
+                    //Log.d("mytag",ze);
+                    newFile = new File(filesDir, "/"+ze);
+                }
+
+
+
+
+                FileOutputStream fos = new FileOutputStream(newFile);
+                int len;
+                while ((len = zis.read(buffer)) > 0) {
+                    fos.write(buffer, 0, len);
+                }
+                fos.close();
+                zipEntry = zis.getNextEntry();
+            }
+
+        }
+        zis.closeEntry();
+        zis.close();
+        return "Restore complete.";
     }
 
     private static String performExport() {
@@ -366,6 +471,21 @@ public class SettingsActivity extends AppCompatActivity {
         File downloadDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         //name of the export file that will be created for the user
         String exportPath = "Export-"+currentDateandTime+".zip";
+
+        File dataDir = Environment.getDataDirectory();
+        //Log.d("mytag", dataDir.getPath());
+        //String filesPath = "/files/";
+        String filesPath = "/data/" + "com.mdtt.scott.treasuretrackerfordetectorists" + "/files/";
+        File filesDir = new File(dataDir, filesPath);
+        //cleanup any old export .csv files
+        for(File file : filesDir.listFiles())
+        {
+            if(file.isFile())
+            {
+                file.delete();
+            }
+        }
+        //Log.d("mytag", filesDir.getPath());
 
         //create csv file from database tables
         File csvFile = new File(activity.getApplicationContext().getFilesDir(), "Export-"+currentDateandTime+".csv");
@@ -390,11 +510,9 @@ public class SettingsActivity extends AppCompatActivity {
             return null;
         }
 
-        File dataDir = Environment.getDataDirectory();
-        String filesPath = "/data/" + "com.mdtt.scott.treasuretrackerfordetectorists" + "/files/";
-        File filesDir = new File(dataDir, filesPath);
-
+        //file that will be created in Downloads folder
         File exportFile = new File(downloadDir, exportPath);
+        //Log.d("mytag", exportFile.getPath());
 
         FileOutputStream fos;
         try {
@@ -410,7 +528,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         try {
             zos.close();
-            boolean iscsvFileDeleted = csvFile.delete();
+            //Log.d("mytag", csvFile.getPath());
+            csvFile.delete();
             return exportFile.getAbsolutePath();
 
         } catch (IOException e) {
@@ -426,18 +545,29 @@ public class SettingsActivity extends AppCompatActivity {
                 //recursively explores a subdir
                 if(file.isDirectory())
                 {
+                    //Log.d("mytag", "Directory found: "+file.getPath());
                     writeToZip(zos, file);
                     continue;
                 }
-                Log.d("mytag", "\nCurrent file to be zipped: "+file.getPath());
+
+                //Log.d("mytag", "\nCurrent file to be zipped: "+file.getPath());
+
                 byte[] buffer = new byte[1024];
                 FileInputStream fis = new FileInputStream(file.getPath());
                 try {
-                    zos.putNextEntry(new ZipEntry(file.getPath()));
+                    if(file.getPath().contains("imageDir"))
+                    {
+                        zos.putNextEntry(new ZipEntry("/images/"+file.getName()));
+                    }
+                    else
+                    {
+                        zos.putNextEntry(new ZipEntry(file.getName()));
+                    }
+
                     int length;
 
                     while ((length = fis.read(buffer)) > 0) {
-                        Log.d("mytag", "Length of current buffer: " + length);
+                        //Log.d("mytag", "Length of current buffer: " + length);
                         zos.write(buffer, 0, length);
                     }
                     zos.closeEntry();
@@ -478,10 +608,14 @@ public class SettingsActivity extends AppCompatActivity {
                 //Toast.makeText(activity, ""+result,
                      //   Toast.LENGTH_LONG).show();
                 new AlertDialog.Builder(Objects.requireNonNull(activity))
-                        .setTitle("Success!")
+                        .setTitle("Success")
                         .setMessage(result)
-                        .setNegativeButton(android.R.string.ok, null)
-                        .create().show();
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface arg0, int arg1) {
+
+                            }
+                        }).create().show();
             }
         }
     }
