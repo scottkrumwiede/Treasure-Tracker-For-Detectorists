@@ -171,10 +171,10 @@ public class SettingsActivity extends AppCompatActivity {
 
                             // Permission is not granted
 
-                                // No explanation needed; request the permission
-                                ActivityCompat.requestPermissions(getActivity(),
-                                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                        MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                            // No explanation needed; request the permission
+                            ActivityCompat.requestPermissions(getActivity(),
+                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
 
                         } else {
                             bt = new BackgroundTask();
@@ -194,7 +194,7 @@ public class SettingsActivity extends AppCompatActivity {
                     public boolean onPreferenceClick(Preference arg0) {
 
                         Toast.makeText(getActivity(), "Feature coming soon!",
-                              Toast.LENGTH_SHORT).show();
+                                Toast.LENGTH_SHORT).show();
                         return true;
                     }
                 });
@@ -270,7 +270,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                            String[] permissions,  int[] grantResults) {
+                                           String[] permissions,  int[] grantResults) {
         if (requestCode == MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE) {// If request is cancelled, the result arrays are empty.
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -349,30 +349,14 @@ public class SettingsActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
-                if (uri.getPath().matches(".+Backup-...._.._.._.......file$")) {
-                    //TODO: //User has provider a .file
-
-                        bt = new BackgroundTask();
-                        bt.execute("restore");
-                        mProgressBarLL.setVisibility(View.VISIBLE);
-                }
-                else
-                {
-                    new AlertDialog.Builder(Objects.requireNonNull(activity))
-                            .setTitle("Incorrect file format")
-                            .setMessage("Please select a proper backup file 'Backup-YYYY-MM-DD-HHMMSS.file'")
-                            .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-
-                                public void onClick(DialogInterface arg0, int arg1) {
-
-                                }
-                            }).create().show();
-                }
+                    bt = new BackgroundTask();
+                    bt.execute("restore");
+                    mProgressBarLL.setVisibility(View.VISIBLE);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
-    
+
     private static String unzipFile(InputStream inputStream) throws IOException {
         File dataDir = Environment.getDataDirectory();
         String dbPath = "/data/" + "com.mdtt.scott.treasuretrackerfordetectorists" + "/databases/";
@@ -383,81 +367,96 @@ public class SettingsActivity extends AppCompatActivity {
         ZipInputStream zis = new ZipInputStream(inputStream);
         ZipEntry zipEntry = zis.getNextEntry();
 
-        File imageDir = new File(filesDir, "/imageDir/");
-        //Log.d("mytag,","Imagedir: "+imageDir.getPath());
-        //cleanup any old images
-        for(File file : imageDir.listFiles())
-        {
-            if(file.isFile())
-            {
-                //Log.d("mytag","Deleting file: "+file.getPath());
-                file.delete();
+        if (zipEntry != null) {
+            if (!zipEntry.getName().contains("findsDB") && !zipEntry.getName().contains("findsDB-journal") && !zipEntry.getName().contains("google_app")) {
+                return null;
             }
-        }
-
-        while (zipEntry != null) {
-            //Log.d("mytag", "zipentry name: "+zipEntry.getName());
-            //db files
-            if(zipEntry.getName().contains("findsDB")||zipEntry.getName().contains("findsDB-journal")||zipEntry.getName().contains("google_app"))
-            {
-                File newFile;
-                //old format
-                if(zipEntry.getName().contains("/data/data"))
-                {
-                    //Log.d("mytag","old format");
-                    newFile = new File(zipEntry.getName());
-                }
-                //current format
-                else
-                {
-                    //Log.d("mytag","new format");
-                    newFile = new File(dbDir, zipEntry.getName());
-                }
-
-                FileOutputStream fos = new FileOutputStream(newFile);
-                int len;
-                while ((len = zis.read(buffer)) > 0) {
-                    fos.write(buffer, 0, len);
-                }
-                fos.close();
-                zipEntry = zis.getNextEntry();
-            }
-            //images
             else
             {
-                File newFile;
-                //old format
-                if(zipEntry.getName().contains("/data/data"))
+                File imageDir = new File(filesDir, "/imageDir/");
+                //Log.d("mytag,","Imagedir: "+imageDir.getPath());
+
+
+                //cleanup any old images
+                for(File file : imageDir.listFiles())
                 {
-                    //Log.d("mytag","old format");
-                    newFile = new File(zipEntry.getName());
+                    if(file.isFile())
+                    {
+                        //Log.d("mytag","Deleting file: "+file.getPath());
+                        file.delete();
+                    }
                 }
-                //current format
-                else
-                {
+
+                while (zipEntry != null) {
                     //Log.d("mytag", "zipentry name: "+zipEntry.getName());
-                    String ze = zipEntry.getName();
-                    ze = ze.replace("images","imageDir");
-                    //Log.d("mytag",ze);
-                    newFile = new File(filesDir, "/"+ze);
+                    //db files
+                    if(zipEntry.getName().contains("findsDB")||zipEntry.getName().contains("findsDB-journal")||zipEntry.getName().contains("google_app"))
+                    {
+                        File newFile;
+                        //old format
+                        if(zipEntry.getName().contains("/data/data"))
+                        {
+                            //Log.d("mytag","old format");
+                            newFile = new File(zipEntry.getName());
+                        }
+                        //current format
+                        else
+                        {
+                            //Log.d("mytag","new format");
+                            newFile = new File(dbDir, zipEntry.getName());
+                        }
+
+                        FileOutputStream fos = new FileOutputStream(newFile);
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                        }
+                        fos.close();
+                        zipEntry = zis.getNextEntry();
+                    }
+                    //images
+                    else
+                    {
+                        File newFile;
+                        //old format
+                        if(zipEntry.getName().contains("/data/data"))
+                        {
+                            //Log.d("mytag","old format");
+                            newFile = new File(zipEntry.getName());
+                        }
+                        //current format
+                        else
+                        {
+                            //Log.d("mytag", "zipentry name: "+zipEntry.getName());
+                            String ze = zipEntry.getName();
+                            ze = ze.replace("images","imageDir");
+                            //Log.d("mytag",ze);
+                            newFile = new File(filesDir, "/"+ze);
+                        }
+
+
+
+
+                        FileOutputStream fos = new FileOutputStream(newFile);
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                        }
+                        fos.close();
+                        zipEntry = zis.getNextEntry();
+                    }
+
                 }
-
-
-
-
-                FileOutputStream fos = new FileOutputStream(newFile);
-                int len;
-                while ((len = zis.read(buffer)) > 0) {
-                    fos.write(buffer, 0, len);
-                }
-                fos.close();
-                zipEntry = zis.getNextEntry();
+                zis.closeEntry();
+                zis.close();
+                return "Restore complete.";
             }
-
         }
         zis.closeEntry();
         zis.close();
-        return "Restore complete.";
+        return null;
+
+
     }
 
     private static String performExport() {
@@ -606,10 +605,22 @@ public class SettingsActivity extends AppCompatActivity {
             if(result != null)
             {
                 //Toast.makeText(activity, ""+result,
-                     //   Toast.LENGTH_LONG).show();
+                //   Toast.LENGTH_LONG).show();
                 new AlertDialog.Builder(Objects.requireNonNull(activity))
                         .setTitle("Success")
                         .setMessage(result)
+                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+
+                            public void onClick(DialogInterface arg0, int arg1) {
+
+                            }
+                        }).create().show();
+            }
+            else
+            {
+                new AlertDialog.Builder(Objects.requireNonNull(activity))
+                        .setTitle("Incorrect file format")
+                        .setMessage("Please select a proper backup file 'Backup-YYYY_MM_DD_HHMMSS.file'")
                         .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 
                             public void onClick(DialogInterface arg0, int arg1) {
