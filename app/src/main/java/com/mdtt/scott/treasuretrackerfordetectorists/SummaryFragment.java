@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -122,13 +123,15 @@ public class SummaryFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         //Log.d("myTag", "We're here!");
         mProgressBar = view.findViewById(R.id.progressBar);
-        totalTextView = view.findViewById(R.id.totalTextView);
+        helpTextView = view.findViewById(R.id.helpTextView);
+
         coinTextView = view.findViewById(R.id.coinTextView);
         tokenTextView = view.findViewById(R.id.tokenTextView);
         jewelryTextView = view.findViewById(R.id.jewelryTextView);
         relicTextView = view.findViewById(R.id.relicTextView);
-        helpTextView = view.findViewById(R.id.helpTextView);
         collectionTextView = view.findViewById(R.id.collectionsTextView);
+        totalTextView = view.findViewById(R.id.totalTextView);
+
         locationsTextView = view.findViewById(R.id.locationsTextView);
         detectorsTextView = view.findViewById(R.id.detectorsTextView);
         cladTextView = view.findViewById(R.id.cladTextView);
@@ -216,7 +219,7 @@ public class SummaryFragment extends Fragment {
                 collectionTotal = 0;
             }
 
-            treasureTotal = coinTotal + relicTotal + jewelryTotal + tokenTotal;
+            treasureTotal = coinTotal + tokenTotal + jewelryTotal + relicTotal + collectionTotal;
 
             summaryCladList = helper.getSummaryClad();
             cladTotal = summaryCladList.size();
@@ -252,7 +255,7 @@ public class SummaryFragment extends Fragment {
 
         protected void onPostExecute(Integer result) {
 
-            if(treasureTotal == 0 && collectionTotal == 0 && cladTotal == 0)
+            if(treasureTotal == 0 && cladTotal == 0)
             {
                 helpTextView.setVisibility(View.VISIBLE);
             }
@@ -292,6 +295,7 @@ public class SummaryFragment extends Fragment {
             }
 
             for (int s : sortedYears) {
+                Log.d("mytag", s+"");
                 LayoutInflater vi = (LayoutInflater) getContext().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
                 View v = vi.inflate(R.layout.linearlayout_yearly_summary, null);
 
@@ -302,11 +306,12 @@ public class SummaryFragment extends Fragment {
                 TextView tokenTextView = v.findViewById(R.id.yearTokenTextView);
                 TextView jewelryTextView = v.findViewById(R.id.yearJewelryTextView);
                 TextView relicTextView = v.findViewById(R.id.yearRelicTextView);
+                TextView collectionTextView = v.findViewById(R.id.yearCollectionTextView);
                 TextView totalTextView = v.findViewById(R.id.yearTotalTextView);
                 ProgressBar progressBar = v.findViewById(R.id.yearProgressBar);
                 LinearLayout linearLayout = v.findViewById(R.id.year_summary_ll1);
 
-                int coinTotal = 0, tokenTotal = 0, jewelryTotal = 0, relicTotal = 0, totalTotal = 0;
+                int coinTotal = 0, tokenTotal = 0, jewelryTotal = 0, relicTotal = 0, collectionTotal=0, totalTotal = 0;
 
                 for (Treasure t : summaryYearlyTreasureList) {
                     String date = t.getTreasureDateFound();
@@ -325,6 +330,9 @@ public class SummaryFragment extends Fragment {
                                 break;
                             case "relic":
                                 relicTotal++;
+                                break;
+                            case "collection":
+                                collectionTotal++;
                                 break;
                         }
                     }
@@ -381,7 +389,7 @@ public class SummaryFragment extends Fragment {
                 }
 
 
-                totalTotal = coinTotal + tokenTotal + jewelryTotal + relicTotal;
+                totalTotal = coinTotal + tokenTotal + jewelryTotal + relicTotal + collectionTotal;
                 if(coinTotal == 0)
                 {
                     coinTextView.setVisibility(View.GONE);
@@ -413,6 +421,14 @@ public class SummaryFragment extends Fragment {
                 else
                 {
                     relicTextView.setText(getString(R.string.relicTextViewPlaceholder, relicTotal));
+                }
+                if(collectionTotal == 0)
+                {
+                    collectionTextView.setVisibility(View.GONE);
+                }
+                else
+                {
+                    collectionTextView.setText(getString(R.string.collectionTextViewPlaceholder, collectionTotal));
                 }
                 if(totalTotal == 0)
                 {

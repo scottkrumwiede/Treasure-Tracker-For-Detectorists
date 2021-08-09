@@ -26,13 +26,13 @@
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/relics" />
         <item
-            android:id="@+id/nav_clad"
-            android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/clad" />
-        <item
             android:id="@+id/nav_collection"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/collections" />
+        <item
+            android:id="@+id/nav_clad"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/clad" />
     </group>
     </menu>
     </item>
