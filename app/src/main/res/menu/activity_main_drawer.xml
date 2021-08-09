@@ -29,17 +29,15 @@
             android:id="@+id/nav_clad"
             android:icon="@drawable/ic_menu_gallery"
             android:title="@string/clad" />
+        <item
+            android:id="@+id/nav_collection"
+            android:icon="@drawable/ic_menu_gallery"
+            android:title="@string/collections" />
     </group>
     </menu>
     </item>
     <item android:title="@string/other">
         <menu>
-            <group android:checkableBehavior="single">
-            <item
-                android:id="@+id/nav_collection"
-                android:icon="@drawable/ic_menu_gallery"
-                android:title="@string/collections" />
-            </group>
 
             <item
                 android:id="@+id/nav_locations"

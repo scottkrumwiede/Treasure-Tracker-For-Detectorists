@@ -1,12 +1,10 @@
 package com.mdtt.scott.treasuretrackerfordetectorists;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 
@@ -25,7 +23,6 @@ import com.google.android.material.navigation.NavigationView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
@@ -34,7 +31,6 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     private final FragmentManager mFragmentManager = getSupportFragmentManager();
-    private boolean onSummary;
     private NavigationView navigationView;
     private String sortType;
     private ArrayList<String> sortTypes;
@@ -45,6 +41,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onResume(){
         super.onResume();
+        invalidateOptionsMenu();
         if(treasureListNeedsUpdated)
         {
             FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
@@ -167,25 +164,21 @@ public class MainActivity extends AppCompatActivity
             SummaryFragment summaryFragment = new SummaryFragment();
             fm.beginTransaction().replace(R.id.main_fragment, summaryFragment).commit();
             navigationView.setCheckedItem(R.id.nav_summary);
-            onSummary = true;
         }
 
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String type = getTitle().toString();
+        fab.setOnClickListener(view -> {
+            String type = getTitle().toString();
 
-                if(type.equals("Summary:"))
-                {
-                    Intent myIntent = new Intent(getApplicationContext(), AddChooseTypeActivity.class);
-                    startActivity(myIntent);
-                }
-                else
-                {
-                    Intent myIntent = new Intent(getApplicationContext(), AddActivity.class);
-                    myIntent.putExtra("type", getTitle()); //Optional parameters
-                    startActivityForResult(myIntent, 1);
-                }
+            if(type.equals("Summary:"))
+            {
+                Intent myIntent = new Intent(getApplicationContext(), AddChooseTypeActivity.class);
+                startActivity(myIntent);
+            }
+            else
+            {
+                Intent myIntent = new Intent(getApplicationContext(), AddActivity.class);
+                myIntent.putExtra("type", getTitle()); //Optional parameters
+                startActivityForResult(myIntent, 1);
             }
         });
     }
@@ -203,26 +196,16 @@ public class MainActivity extends AppCompatActivity
             final String prefix = "temp_";
             final String prefix2 = "edit_";
 
-            File [] files = subDir.listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(File directory, String name) {
-                    return name.startsWith(prefix);
-                }
-            });
+            File [] files = subDir.listFiles((directory12, name) -> name.startsWith(prefix));
             //Log.d("TEST", "The number of temp images to be deleted is: "+files.length+"\n");
 
             //checking for photos flagged for deletion from an edit that was cancelled (prefix edit_)
             for (File file : files) {
                 //deleting all temp images
-                boolean result = file.delete();
+                file.delete();
             }
 
-            files = subDir.listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(File directory, String name) {
-                    return name.startsWith(prefix2);
-                }
-            });
+            files = subDir.listFiles((directory1, name) -> name.startsWith(prefix2));
             //Log.d("TEST", "The number of edit images to be deleted is: "+files.length+"\n");
 
             for (File file : files) {
@@ -230,7 +213,7 @@ public class MainActivity extends AppCompatActivity
                 String newName = file.getName().substring(5);
                 File newFile = new File(subDir, newName);
                 //rename file from temp to permanent
-                boolean result = file.renameTo(newFile);
+                file.renameTo(newFile);
             }
 
             //On startup, find out if user has any old treasure or clad rows using treasureDateFound format of mm/dd/yyyy
@@ -257,7 +240,6 @@ public class MainActivity extends AppCompatActivity
                 mFragmentManager.popBackStackImmediate();
             }
             //setTitle("Summary:");
-            onSummary = true;
             invalidateOptionsMenu();
             NavigationView navigationView = findViewById(R.id.nav_view);
             navigationView.setCheckedItem(R.id.nav_summary);
@@ -278,8 +260,9 @@ public class MainActivity extends AppCompatActivity
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
 
-        if(onSummary)
+        if(navigationView.getCheckedItem().getItemId()  == R.id.nav_summary)
         {
+            //Log.d("myTag", "We went through OnPrepareOptionsMenu because we are in Summary.");
             menu.findItem(R.id.action_sorting).setVisible(false);
         }
         return super.onPrepareOptionsMenu(menu);
@@ -368,87 +351,84 @@ public class MainActivity extends AppCompatActivity
             //make an alert window to select sorttype
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle("Sort By:");
-            builder.setItems(sortArray, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //set sortType
-                    String oldType = sortType;
-                    switch (sortTypes.get(which)) {
-                        case "Treasure Amount":
-                            sortType = "CladAmount";
-                            break;
-                        case "Treasure Country":
-                            sortType = "TreasureCountry";
-                            break;
-                        case "Treasure Maker":
-                            sortType = "TreasureName";
-                            break;
-                        case "Treasure Material":
-                            sortType = "TreasureMaterial";
-                            break;
-                        case "Treasure Weight":
-                            sortType = "TreasureWeight";
-                            break;
-                        case "Treasure Year":
-                            sortType = "TreasureYear";
-                            break;
-                        case "Treasure Location Found":
-                            if (menu.findItem(R.id.nav_clad).isChecked()) {
-                                sortType = "CladLocationFound";
-                            } else {
-                                sortType = "TreasureLocationFound";
-                            }
+            builder.setItems(sortArray, (dialog, which) -> {
+                //set sortType
+                String oldType = sortType;
+                switch (sortTypes.get(which)) {
+                    case "Treasure Amount":
+                        sortType = "CladAmount";
+                        break;
+                    case "Treasure Country":
+                        sortType = "TreasureCountry";
+                        break;
+                    case "Treasure Maker":
+                        sortType = "TreasureName";
+                        break;
+                    case "Treasure Material":
+                        sortType = "TreasureMaterial";
+                        break;
+                    case "Treasure Weight":
+                        sortType = "TreasureWeight";
+                        break;
+                    case "Treasure Year":
+                        sortType = "TreasureYear";
+                        break;
+                    case "Treasure Location Found":
+                        if (menu.findItem(R.id.nav_clad).isChecked()) {
+                            sortType = "CladLocationFound";
+                        } else {
+                            sortType = "TreasureLocationFound";
+                        }
 
-                            break;
-                        case "Treasure Date Found":
-                            if (menu.findItem(R.id.nav_clad).isChecked()) {
-                                sortType = "CladDateFound";
-                            } else {
-                                sortType = "TreasureDateFound";
-                            }
-                            break;
-                        case "Most Recently Added":
-                            if (menu.findItem(R.id.nav_clad).isChecked()) {
-                                sortType = "CladID";
-                            } else {
-                                sortType = "TreasureID";
-                            }
-                            break;
-                    }
+                        break;
+                    case "Treasure Date Found":
+                        if (menu.findItem(R.id.nav_clad).isChecked()) {
+                            sortType = "CladDateFound";
+                        } else {
+                            sortType = "TreasureDateFound";
+                        }
+                        break;
+                    case "Most Recently Added":
+                        if (menu.findItem(R.id.nav_clad).isChecked()) {
+                            sortType = "CladID";
+                        } else {
+                            sortType = "TreasureID";
+                        }
+                        break;
+                }
 
-                    //sorttype has changed. refresh the treasureFragment to indicate this
-                    if(!oldType.equals(sortType))
+                //sorttype has changed. refresh the treasureFragment to indicate this
+                if(!oldType.equals(sortType))
+                {
+                    bundle.putString("sortBy", sortType);
+                    if(menu.findItem(R.id.nav_clad).isChecked())
                     {
-                        bundle.putString("sortBy", sortType);
-                        if(menu.findItem(R.id.nav_clad).isChecked())
-                        {
-                            CladFragment cladFragment = new CladFragment();
-                            cladFragment.setArguments(bundle);
-                            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                            fragmentTransaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout, R.anim.enterfromleft, R.anim.exittoright);
-                            fragmentTransaction.replace(R.id.main_fragment, cladFragment);
-                            fragmentTransaction.addToBackStack(null);
-                            fragmentTransaction.commit();
+                        CladFragment cladFragment = new CladFragment();
+                        cladFragment.setArguments(bundle);
+                        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                        fragmentTransaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout, R.anim.enterfromleft, R.anim.exittoright);
+                        fragmentTransaction.replace(R.id.main_fragment, cladFragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
+                    }
+                    else
+                    {
+                        if(Objects.requireNonNull(navigationView.getCheckedItem()).toString().toLowerCase().equals("jewelry")) {
+                            bundle.putString("type", navigationView.getCheckedItem().toString().toLowerCase());
                         }
                         else
                         {
-                            if(Objects.requireNonNull(navigationView.getCheckedItem()).toString().toLowerCase().equals("jewelry")) {
-                                bundle.putString("type", navigationView.getCheckedItem().toString().toLowerCase());
-                            }
-                            else
-                            {
-                                String type = navigationView.getCheckedItem().toString().toLowerCase();
-                                type = type.substring(0, type.length()-1);
-                                bundle.putString("type", type);
-                            }
-                            TreasureFragment treasureFragment = new TreasureFragment();
-                            treasureFragment.setArguments(bundle);
-                            FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-                            fragmentTransaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout, R.anim.enterfromleft, R.anim.exittoright);
-                            fragmentTransaction.replace(R.id.main_fragment, treasureFragment);
-                            fragmentTransaction.addToBackStack(null);
-                            fragmentTransaction.commit();
+                            String type = navigationView.getCheckedItem().toString().toLowerCase();
+                            type = type.substring(0, type.length()-1);
+                            bundle.putString("type", type);
                         }
+                        TreasureFragment treasureFragment = new TreasureFragment();
+                        treasureFragment.setArguments(bundle);
+                        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+                        fragmentTransaction.setCustomAnimations(R.anim.fadein, R.anim.fadeout, R.anim.enterfromleft, R.anim.exittoright);
+                        fragmentTransaction.replace(R.id.main_fragment, treasureFragment);
+                        fragmentTransaction.addToBackStack(null);
+                        fragmentTransaction.commit();
                     }
                 }
             });
@@ -468,7 +448,6 @@ public class MainActivity extends AppCompatActivity
         fragmentTransaction.setCustomAnimations(R.anim.enterfromright, R.anim.exittoleft, R.anim.enterfromleft, R.anim.exittoright);
 
         if(id == R.id.nav_summary && !menu.findItem(R.id.nav_summary).isChecked()) {
-            onSummary = true;
             //Log.d("myTag", "GOING TO SUMMARY!!!");
             while (mFragmentManager.getBackStackEntryCount() > 0) {
                 mFragmentManager.popBackStackImmediate();
@@ -476,7 +455,6 @@ public class MainActivity extends AppCompatActivity
             //setTitle("Summary:");
 
         } else if (id == R.id.nav_coins && !menu.findItem(R.id.nav_coins).isChecked()) {
-            onSummary = false;
             //setTitle("Coins:");
             args.putString("type", "coin");
             args.putString("sortBy", "TreasureID");
@@ -490,7 +468,6 @@ public class MainActivity extends AppCompatActivity
             //Log.d("myTag", "backstackentryCount after= "+mFragmentManager.getBackStackEntryCount());
 
         } else if (id == R.id.nav_tokens && !menu.findItem(R.id.nav_tokens).isChecked()) {
-            onSummary = false;
             //setTitle("Tokens:");
             args.putString("type", "token");
             args.putString("sortBy", "TreasureID");
@@ -503,7 +480,6 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.commit();
             //Log.d("myTag", "backstackentryCount after= "+mFragmentManager.getBackStackEntryCount());
         } else if (id == R.id.nav_jewelry && !menu.findItem(R.id.nav_jewelry).isChecked()) {
-            onSummary = false;
             //setTitle("Jewelry:");
             args.putString("type", "jewelry");
             args.putString("sortBy", "TreasureID");
@@ -515,7 +491,6 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.addToBackStack(null);
             fragmentTransaction.commit();
         } else if (id == R.id.nav_relics && !menu.findItem(R.id.nav_relics).isChecked()) {
-            onSummary = false;
             //setTitle("Relics:");
             args.putString("type", "relic");
             args.putString("sortBy", "TreasureID");
@@ -528,7 +503,6 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_clad && !menu.findItem(R.id.nav_clad).isChecked()) {
-            onSummary = false;
             //setTitle("Clad:");
             args.putString("sortBy", "CladID");
             sortType = "CladID";
@@ -540,7 +514,6 @@ public class MainActivity extends AppCompatActivity
             fragmentTransaction.commit();
 
         } else if (id == R.id.nav_collection && !menu.findItem(R.id.nav_collection).isChecked()) {
-            onSummary = false;
             //setTitle("Collections:");
             args.putString("type", "collection");
             args.putString("sortBy", "TreasureID");
@@ -586,8 +559,8 @@ public class MainActivity extends AppCompatActivity
     }
 
     private class MyBounceInterpolator implements android.view.animation.Interpolator {
-        private double mAmplitude;
-        private double mFrequency;
+        private final double mAmplitude;
+        private final double mFrequency;
 
         @SuppressWarnings("SameParameterValue")
         MyBounceInterpolator(double amplitude, double frequency) {

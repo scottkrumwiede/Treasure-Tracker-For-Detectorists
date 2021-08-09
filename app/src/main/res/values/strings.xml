@@ -3,17 +3,14 @@
     <string name="admob_app_id">ca-app-pub-9595024238231934~8798865468</string>
     <string name="banner_ad_unit_id">ca-app-pub-9595024238231934/7567698365</string>
     <string name="test_banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
     <string name="action_sortby">Sort By</string>
-    <string name="action_edit">Edit treasure</string>
+    <string name="action_edit">Edit</string>
     <string name="action_share">Share treasure</string>
     <string name="action_add_next">Next</string>
-
-    <string name="imageDir">imageDir</string>
 
     <string name="country_prompt">Choose a country</string>
     <string-array name="countries_array">
@@ -192,34 +189,50 @@
         <item>Custom…</item>
     </string-array>
 
+    <string name="weight_unit_prompt">Choose a weight unit</string>
+    <string-array name="jewelry_weight_unit_array">
+        <item>Grams (g)</item>
+        <item>Ounces (oz.)</item>
+        <item>Pounds (lbs)</item>
+        <item>Kilograms (kg)</item>
+        <item>Custom…</item>
+    </string-array>
+
     <integer name="grid_columns">3</integer>
     <string name="title_activity_settings">Settings</string>
 
     <!-- Preference Titles -->
-    <string name="backup_header">Backup / Restore</string>
+    <string name="backup_header">Backup / Restore / Export</string>
     <string name="clear_header">Fast Clear</string>
+    <string name="info_header">Additional Info</string>
 
     <!-- Import / Export Preferences -->
     <string name="backup_title">Backup Treasures</string>
     <string name="restore_title">Restore Treasures</string>
 
-    <!-- Clear Preferences -->
+    <!-- Clear Settings -->
+    <string name="fastclear">Fast Clear Treasures</string>
     <string name="clear_coins_title">Delete All Coins</string>
     <string name="clear_tokens_title">Delete All Tokens</string>
     <string name="clear_jewelry_title">Delete All Jewelry</string>
     <string name="clear_relics_title">Delete All Relics</string>
     <string name="clear_clad_title">Delete All Clad</string>
     <string name="clear_collections_title">Delete All Collections</string>
+    <string name="clear_all_title">Delete All</string>
 
     <string name="backup_summary">Creates a backup file to transfer to a new device</string>
     <string name="restore_summary">Accepts a created backup file</string>
     <string name="csv_export_summary">Export to readable/printable format (.csv)</string>
+    <string name="fastclear_summary">Permanently delete groups of added treasures</string>
     <string name="clear_coins_summary">Permanently delete all added coins</string>
     <string name="clear_tokens_summary">Permanently delete all added tokens</string>
     <string name="clear_jewelry_summary">Permanently delete all added jewelry</string>
     <string name="clear_relics_summary">Permanently delete all added relics</string>
     <string name="clear_clad_summary">Permanently delete all added clad</string>
     <string name="clear_collections_summary">Permanently delete all added collections</string>
+    <string name="clear_all_summary">Permanently delete all added in above categories</string>
+    <string name="clear_warning"><![CDATA[WARNING: Use Fast Clear with caution! All deletions are permanent. Make a backup first if you are not sure what these do.\n\n
+        To delete individual treasures instead…  touch & hold on a treasure on the treasure list grid.]]></string>
     <string name="csv_export_title">Export Treasures</string>
     <string name="what_type_of_treasure_do_you_want_to_add">What type of treasure do you want to add?</string>
     <string name="coin">Coin</string>
@@ -266,7 +279,8 @@
     <string name="item">Item:</string>
     <string name="item_hint">Item</string>
     <string name="design_series_hint">Design/Series</string>
-    <string name="weight_grams">Weight (Grams):</string>
+    <string name="weight_amount">Weight (Amount):</string>
+    <string name="weight_unit">Weight (Unit):</string>
     <string name="weight">Weight</string>
     <string name="add_photo">Add Photo</string>
     <string name="maker">Maker:</string>
@@ -286,7 +300,40 @@
     <string name="treasure_tracker_for_detectorists">Treasure Tracker for Detectorists</string>
     <string name="treasure_photo">treasure photo</string>
     <string name="all_time"> All-time:</string>
-    <string name="reset_account_title">Reset App</string>
-    <string name="reset_account_summary">Permanetely reset app to brand new state</string>
+    <string name="version_info_title">Version:</string>
+    <string name="version_info_summary">N/A</string>
+    <string name="app_info_title">About this App</string>
+    <string name="app_info_summary">More about Treasure Tracker for Detectorists</string>
+    <string name="aboutapp_info_statement">About <b>Treasure Tracker for Detectorists</b>:\n\n<b>Privacy:</b> This app does <b>NOT</b> share, send or save any of your data externally. All treasures are saved locally on your device only.\n\n<b>Advertising:</b> This app is currently supported by Google Admob but can be used without an internet connection if desired.\n\nThis app was created and is maintained solely by <b>Scott Krumwiede</b>.\n\nPlease send any ideas/concerns/bugs to: <b>treasuretrackerfordetectorists@gmail.com</b>\n</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="restore">Restore</string>
+    <string name="save">Save</string>
+    <string name="Zero_CladAmountEditText">0.00</string>
+    <string name="AddAnotherPhoto">ADD ANOTHER PHOTO</string>
+    <string name="AddPhoto">ADD PHOTO</string>
+    <string name="SummaryCladEmpty">Clad:   —</string>
+    <string name="yearTextViewPlaceholder">%1$d:</string>
+    <string name="sortByLabel_MostRecentlyAdded">Sorting by: Most Recently Added</string>
+    <string name="sortByLabel_CladDateFound">Sorting by: Clad Date Found</string>
+    <string name="sortByLabel_CladAmount">Sorting by: Clad Amount</string>
+    <string name="sortByLabel_CladLocationFound">Sorting by: Clad Location Found</string>
+    <string name="cladCountLabel_Empty">You haven\'t added any clad yet…</string>
+    <string name="sortByLabel_Empty">Click the blue circle below to add one now!</string>
+    <string name="locationSummary_Empty">Locations: 0</string>
+    <string name="detectorsSummary_Empty">Detectors: 0</string>
+    <string name="sortByLabel_TreasureYear">Sorting by: Treasure Year</string>
+    <string name="sortByLabel_TreasureCountry">Sorting by: Treasure Country</string>
+    <string name="sortByLabel_TreasureMaterial">Sorting by: Treasure Material</string>
+    <string name="sortByLabel_TreasureWeight">Sorting by: Treasure Weight</string>
+    <string name="sortByLabel_LocationFound">Sorting by: Treasure Location Found</string>
+    <string name="sortByLabel_TreasureDateFound">Sorting by: Treasure Date Found</string>
+    <string name="sortByLabel_TreasureMaker">Sorting by: Treasure Maker</string>
+    <string name="coinTextViewPlaceholder">Coins: %1$d</string>
+    <string name="tokenTextViewPlaceholder">Tokens: %1$d</string>
+    <string name="jewelryTextViewPlaceholder">Jewelry: %1$d</string>
+    <string name="relicTextViewPlaceholder">Relics: %1$d</string>
+    <string name="totalTextViewPlaceholder">Total: %1$d</string>
+
 
 </resources>

@@ -30,7 +30,8 @@
         android:autoSizeStepGranularity="2sp"
         android:hint="@string/maker_hint"
         android:importantForAutofill="no"
-        tools:targetApi="o" />
+        tools:targetApi="o"
+        android:inputType="text" />
 
     <TextView
         android:layout_width="match_parent"
@@ -50,7 +51,8 @@
         android:autoSizeStepGranularity="2sp"
         android:hint="@string/design_series_hint"
         android:importantForAutofill="no"
-        tools:targetApi="o" />
+        tools:targetApi="o"
+        android:inputType="text" />
 
     <TextView
         android:layout_width="match_parent"

@@ -2,7 +2,6 @@ package com.mdtt.scott.treasuretrackerfordetectorists;
 
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,7 +63,7 @@ public class AddTokenInfoFragment extends Fragment {
         tokenYearEditText = view.findViewById(R.id.tokenYearEditText);
 
         //Log.d("test", "on view created we're here");
-        ArrayAdapter<String> tokenMaterialSpinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, tokenMaterialList);
+        ArrayAdapter<String> tokenMaterialSpinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, tokenMaterialList);
 
         //If the user had previously filled out info here but then backed up to a previous fragment before returning
         if(bundle.containsKey("treasureName"))
@@ -97,45 +96,36 @@ public class AddTokenInfoFragment extends Fragment {
                         AlertDialog dialog = new AlertDialog.Builder(getContext())
                                 .setTitle("Custom Material:")
                                 .setView(taskEditText)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        String task = String.valueOf(taskEditText.getText());
-                                        if(task.isEmpty())
-                                        {
-                                            tokenMaterialSpinner.setSelection(previousMaterial);
-                                            tokenMaterialSelected = previousMaterial;
-                                            return;
-                                        }
-                                        while(tokenMaterialList.size() > 5)
-                                        {
-                                            tokenMaterialList.remove(tokenMaterialList.size()-1);
-                                        }
-                                        tokenMaterialList.add(task);
-                                        tokenMaterialList.add("Custom…");
-                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, tokenMaterialList);
-                                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        tokenMaterialSpinner.setAdapter(spinnerAdapter);
-                                        tokenMaterialSpinner.setSelection(tokenMaterialList.size()-2);
-                                        spinnerAdapter.notifyDataSetChanged();
-                                    }
-                                })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                                .setPositiveButton("OK", (dialog13, which) -> {
+                                    String task = String.valueOf(taskEditText.getText());
+                                    if(task.isEmpty())
+                                    {
                                         tokenMaterialSpinner.setSelection(previousMaterial);
                                         tokenMaterialSelected = previousMaterial;
+                                        return;
                                     }
+                                    while(tokenMaterialList.size() > 5)
+                                    {
+                                        tokenMaterialList.remove(tokenMaterialList.size()-1);
+                                    }
+                                    tokenMaterialList.add(task);
+                                    tokenMaterialList.add("Custom…");
+                                    ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, tokenMaterialList);
+                                    spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    tokenMaterialSpinner.setAdapter(spinnerAdapter);
+                                    tokenMaterialSpinner.setSelection(tokenMaterialList.size()-2);
+                                    spinnerAdapter.notifyDataSetChanged();
+                                })
+                                .setNegativeButton("Cancel", (dialog12, which) -> {
+                                    tokenMaterialSpinner.setSelection(previousMaterial);
+                                    tokenMaterialSelected = previousMaterial;
                                 })
                                 .create();
                         dialog.show();
                         Objects.requireNonNull(dialog.getWindow()).setSoftInputMode (WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                                tokenMaterialSpinner.setSelection(previousMaterial);
-                                tokenMaterialSelected = previousMaterial;
-                            }
+                        dialog.setOnCancelListener(dialog1 -> {
+                            tokenMaterialSpinner.setSelection(previousMaterial);
+                            tokenMaterialSelected = previousMaterial;
                         });
                     }
                 }
@@ -152,7 +142,7 @@ public class AddTokenInfoFragment extends Fragment {
 
     public void nextButtonClicked() {
         addToBundle();
-        ((AddActivity) Objects.requireNonNull(getActivity())).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
+        ((AddActivity) requireActivity()).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
     }
 
     public void addToBundle() {

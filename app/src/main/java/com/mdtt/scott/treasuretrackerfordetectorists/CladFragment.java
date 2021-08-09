@@ -1,7 +1,6 @@
 package com.mdtt.scott.treasuretrackerfordetectorists;
 
 
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +8,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -24,7 +22,6 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 
 /**
@@ -55,7 +52,7 @@ public class CladFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //Log.d("myTag", "We came through onCreate of CladFragment");
-        sortType = Objects.requireNonNull(getArguments()).getString("sortBy");
+        sortType = requireArguments().getString("sortBy");
         adRequest = new AdRequest.Builder().build();
         myAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.bounceonce);
     }
@@ -71,7 +68,7 @@ public class CladFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Objects.requireNonNull(getActivity()).setTitle("Clad:");
+        requireActivity().setTitle("Clad:");
         listView.setAdapter(null);
         mProgressBar.setVisibility(View.VISIBLE);
         bt = new BackgroundTask();
@@ -127,7 +124,7 @@ public class CladFragment extends Fragment {
             }
             else if(params[0].equals("deleteClad"))
             {
-                helper.deleteClad(String.valueOf(cladList.get(Integer.valueOf(params[1])).getCladId()));
+                helper.deleteClad(String.valueOf(cladList.get(Integer.parseInt(params[1])).getCladId()));
                 return "Deleted a clad";
             }
             return "Retrieved all clad";
@@ -142,30 +139,22 @@ public class CladFragment extends Fragment {
                     CustomListViewAdapter adapter = new CustomListViewAdapter(cladList, getActivity());
                     listView.setAdapter(adapter);
 
-                    listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    listView.setOnItemLongClickListener((parent, view, i, id) -> {
+                        final CharSequence[] items = {"Yes", "Cancel"};
+                        AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+                        builder.setTitle("Are you sure you want to PERMANENTLY DELETE this clad?");
+                        builder.setItems(items, (dialog, item) -> {
+                            if (items[item].equals("Yes")) {
 
-                        @Override
-                        public boolean onItemLongClick(AdapterView<?> parent, View view,
-                                                       final int i, long id) {
-                            final CharSequence[] items = {"Yes", "Cancel"};
-                            AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
-                            builder.setTitle("Are you sure you want to PERMANENTLY DELETE this clad?");
-                            builder.setItems(items, new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int item) {
-                                    if (items[item].equals("Yes")) {
+                                BackgroundTask bt = new BackgroundTask();
+                                bt.execute("deleteClad", Integer.toString(i));
 
-                                        BackgroundTask bt = new BackgroundTask();
-                                        bt.execute("deleteClad", Integer.toString(i));
-
-                                    } else if (items[item].equals("Cancel")) {
-                                        dialog.dismiss();
-                                    }
-                                }
-                            });
-                            builder.show();
-                            return true;
-                        }
+                            } else if (items[item].equals("Cancel")) {
+                                dialog.dismiss();
+                            }
+                        });
+                        builder.show();
+                        return true;
                     });
 
                     mProgressBar.setVisibility(View.GONE);
@@ -176,16 +165,16 @@ public class CladFragment extends Fragment {
 
                     switch (sortType) {
                         case "CladID":
-                            sortByLabel.setText("Sorting by: Most Recently Added");
+                            sortByLabel.setText(R.string.sortByLabel_MostRecentlyAdded);
                             break;
                         case "CladDateFound":
-                            sortByLabel.setText("Sorting by: Clad Date Found");
+                            sortByLabel.setText(R.string.sortByLabel_CladDateFound);
                             break;
                         case "CladAmount":
-                            sortByLabel.setText("Sorting by: Clad Amount");
+                            sortByLabel.setText(R.string.sortByLabel_CladAmount);
                             break;
                         case "CladLocationFound":
-                            sortByLabel.setText("Sorting by: Clad Location Found");
+                            sortByLabel.setText(R.string.sortByLabel_CladLocationFound);
                             break;
                     }
 
@@ -197,14 +186,14 @@ public class CladFragment extends Fragment {
                     mProgressBar.setVisibility(View.GONE);
                     //Log.d("myTag", "empty clad list...");
 
-                    cladCountLabel.setText("You haven't added any clad yet...");
-                    sortByLabel.setText("Click the blue circle below to add one now!");
+                    cladCountLabel.setText(R.string.cladCountLabel_Empty);
+                    sortByLabel.setText(R.string.sortByLabel_Empty);
                 }
             }
             //just deleted a clad
             else
             {
-                Snackbar.make(Objects.requireNonNull(getActivity()).findViewById(android.R.id.content), "Your clad was deleted!", Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(requireActivity().findViewById(android.R.id.content), "Your clad was deleted!", Snackbar.LENGTH_SHORT).show();
                 BackgroundTask bt = new BackgroundTask();
                 bt.execute();
             }
@@ -212,8 +201,8 @@ public class CladFragment extends Fragment {
     }
 
     private class MyBounceInterpolator implements android.view.animation.Interpolator {
-        private double mAmplitude;
-        private double mFrequency;
+        private final double mAmplitude;
+        private final double mFrequency;
 
         @SuppressWarnings("SameParameterValue")
         MyBounceInterpolator(double amplitude, double frequency) {

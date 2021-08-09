@@ -34,7 +34,8 @@
             android:visibility="gone"
             android:hint="@string/include_a_name_for_your_collection"
             android:importantForAutofill="no"
-            tools:targetApi="o" />
+            tools:targetApi="o"
+            android:inputType="text" />
 
         <TextView
             android:layout_width="match_parent"
@@ -57,7 +58,8 @@
             android:minLines="1"
             android:hint="@string/include_a_location_for_your_find"
             android:importantForAutofill="no"
-            tools:targetApi="o" />
+            tools:targetApi="o"
+            android:inputType="text" />
 
         <Button
             android:id="@+id/placePickerButton"
@@ -110,7 +112,8 @@
             android:minLines="3"
             android:hint="@string/include_any_additional_info_about_your_find"
             android:importantForAutofill="no"
-            tools:targetApi="o" />
+            tools:targetApi="o"
+            android:inputType="text" />
 
     </LinearLayout>
 </ScrollView>

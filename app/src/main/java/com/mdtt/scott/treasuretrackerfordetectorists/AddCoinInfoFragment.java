@@ -2,7 +2,6 @@
 package com.mdtt.scott.treasuretrackerfordetectorists;
 
 
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -66,7 +65,7 @@ public class AddCoinInfoFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
+        requireActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -132,7 +131,7 @@ public class AddCoinInfoFragment extends Fragment {
             //Log.d("test", "Material: "+coinMaterialSelected);
         }
 
-        ArrayAdapter<String> countrySpinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, countriesList);
+        ArrayAdapter<String> countrySpinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, countriesList);
         countrySpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         coinCountrySpinner.setAdapter(countrySpinnerAdapter);
         coinCountrySpinner.setSelection(coinCountrySelected);
@@ -178,7 +177,7 @@ public class AddCoinInfoFragment extends Fragment {
                             customMintEditText.setVisibility(View.GONE);
                             coinTypeSpinner.setVisibility(View.VISIBLE);
                             coinMintSpinner.setVisibility(View.VISIBLE);
-                            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, coinTypeList);
+                            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, coinTypeList);
                             spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             coinTypeSpinner.setAdapter(spinnerAdapter);
                             coinTypeSpinner.setSelection(coinTypeSelected);
@@ -197,61 +196,52 @@ public class AddCoinInfoFragment extends Fragment {
                         else if(parentView.getItemAtPosition(position).toString().equals("Custom…"))
                         {
                             final EditText taskEditText = new EditText(getContext());
-                            AlertDialog dialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
+                            AlertDialog dialog = new AlertDialog.Builder(requireContext())
                                     .setTitle("Custom Country:")
                                     .setView(taskEditText)
-                                    .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            Toast.makeText(getActivity(), "Custom added!", Toast.LENGTH_SHORT).show();
-                                            String task = String.valueOf(taskEditText.getText());
-                                            if(task.isEmpty())
-                                            {
-                                                coinCountrySpinner.setSelection(previousCountry);
-                                                coinCountrySelected = previousCountry;
-                                                return;
-                                            }
-                                            while(countriesList.size() > 1)
-                                            {
-                                                countriesList.remove(countriesList.size()-1);
-                                            }
-                                            countriesList.add(task);
-                                            countriesList.add("Custom…");
-                                            ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, countriesList);
-                                            spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                            coinCountrySpinner.setAdapter(spinnerAdapter);
-                                            coinCountrySpinner.setSelection(countriesList.size()-2);
-                                            spinnerAdapter.notifyDataSetChanged();
-
-                                            customDesignEditText.setVisibility(View.VISIBLE);
-                                            customTypeEditText.setVisibility(View.VISIBLE);
-                                            customMintEditText.setVisibility(View.VISIBLE);
-                                            customDesignEditText.setText("");
-                                            customTypeEditText.setText("");
-                                            customMintEditText.setText("");
-                                            coinTypeSpinner.setVisibility(View.GONE);
-                                            coinSeriesSpinner.setVisibility(View.GONE);
-                                            coinMintSpinner.setVisibility(View.GONE);
-                                            customTypeEditText.requestFocus();
-
-                                        }
-                                    })
-                                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
+                                    .setPositiveButton("OK", (dialog115, which) -> {
+                                        Toast.makeText(getActivity(), "Custom added!", Toast.LENGTH_SHORT).show();
+                                        String task = String.valueOf(taskEditText.getText());
+                                        if(task.isEmpty())
+                                        {
                                             coinCountrySpinner.setSelection(previousCountry);
                                             coinCountrySelected = previousCountry;
+                                            return;
                                         }
+                                        while(countriesList.size() > 1)
+                                        {
+                                            countriesList.remove(countriesList.size()-1);
+                                        }
+                                        countriesList.add(task);
+                                        countriesList.add("Custom…");
+                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, countriesList);
+                                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                        coinCountrySpinner.setAdapter(spinnerAdapter);
+                                        coinCountrySpinner.setSelection(countriesList.size()-2);
+                                        spinnerAdapter.notifyDataSetChanged();
+
+                                        customDesignEditText.setVisibility(View.VISIBLE);
+                                        customTypeEditText.setVisibility(View.VISIBLE);
+                                        customMintEditText.setVisibility(View.VISIBLE);
+                                        customDesignEditText.setText("");
+                                        customTypeEditText.setText("");
+                                        customMintEditText.setText("");
+                                        coinTypeSpinner.setVisibility(View.GONE);
+                                        coinSeriesSpinner.setVisibility(View.GONE);
+                                        coinMintSpinner.setVisibility(View.GONE);
+                                        customTypeEditText.requestFocus();
+
+                                    })
+                                    .setNegativeButton("Cancel", (dialog114, which) -> {
+                                        coinCountrySpinner.setSelection(previousCountry);
+                                        coinCountrySelected = previousCountry;
                                     })
                                     .create();
                             dialog.show();
                             Objects.requireNonNull(dialog.getWindow()).setSoftInputMode (WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                            dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                                @Override
-                                public void onCancel(DialogInterface dialog) {
-                                    coinCountrySpinner.setSelection(previousCountry);
-                                    coinCountrySelected = previousCountry;
-                                }
+                            dialog.setOnCancelListener(dialog113 -> {
+                                coinCountrySpinner.setSelection(previousCountry);
+                                coinCountrySelected = previousCountry;
                             });
                         }
                         else
@@ -304,7 +294,7 @@ public class AddCoinInfoFragment extends Fragment {
                         coinSeriesList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.uscoin_penny_series_array)));
                         coinSeriesListSize = coinSeriesList.size();
 
-                        spinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_penny_series_array));
+                        spinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_penny_series_array));
                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         coinSeriesSpinner.setAdapter(spinnerAdapter);
                         spinnerAdapter.notifyDataSetChanged();
@@ -317,7 +307,7 @@ public class AddCoinInfoFragment extends Fragment {
                         coinSeriesList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.uscoin_nickel_series_array)));
                         coinSeriesListSize = coinSeriesList.size();
 
-                        spinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_nickel_series_array));
+                        spinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_nickel_series_array));
                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         coinSeriesSpinner.setAdapter(spinnerAdapter);
                         spinnerAdapter.notifyDataSetChanged();
@@ -330,7 +320,7 @@ public class AddCoinInfoFragment extends Fragment {
                         coinSeriesList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.uscoin_dime_series_array)));
                         coinSeriesListSize = coinSeriesList.size();
 
-                        spinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_dime_series_array));
+                        spinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_dime_series_array));
                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         coinSeriesSpinner.setAdapter(spinnerAdapter);
                         spinnerAdapter.notifyDataSetChanged();
@@ -343,7 +333,7 @@ public class AddCoinInfoFragment extends Fragment {
                         coinSeriesList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.uscoin_quarter_series_array)));
                         coinSeriesListSize = coinSeriesList.size();
 
-                        spinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_quarter_series_array));
+                        spinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_quarter_series_array));
                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         coinSeriesSpinner.setAdapter(spinnerAdapter);
                         spinnerAdapter.notifyDataSetChanged();
@@ -356,7 +346,7 @@ public class AddCoinInfoFragment extends Fragment {
                         coinSeriesList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.uscoin_halfdollar_series_array)));
                         coinSeriesListSize = coinSeriesList.size();
 
-                        spinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_halfdollar_series_array));
+                        spinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_halfdollar_series_array));
                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         coinSeriesSpinner.setAdapter(spinnerAdapter);
                         spinnerAdapter.notifyDataSetChanged();
@@ -369,7 +359,7 @@ public class AddCoinInfoFragment extends Fragment {
                         coinSeriesList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.uscoin_dollar_series_array)));
                         coinSeriesListSize = coinSeriesList.size();
 
-                        spinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_dollar_series_array));
+                        spinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, getResources().getStringArray(R.array.uscoin_dollar_series_array));
                         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                         coinSeriesSpinner.setAdapter(spinnerAdapter);
                         spinnerAdapter.notifyDataSetChanged();
@@ -377,53 +367,44 @@ public class AddCoinInfoFragment extends Fragment {
                     else if(parentView.getItemAtPosition(position).toString().equals("Custom…"))
                     {
                         final EditText taskEditText = new EditText(getContext());
-                        AlertDialog dialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
+                        AlertDialog dialog = new AlertDialog.Builder(requireContext())
                                 .setTitle("Custom Denomination:")
                                 .setView(taskEditText)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Toast.makeText(getActivity(), "Custom added!", Toast.LENGTH_SHORT).show();
-                                        String task = String.valueOf(taskEditText.getText());
-                                        if(task.isEmpty())
-                                        {
-                                            coinTypeSpinner.setSelection(previousType);
-                                            coinTypeSelected = previousType;
-                                            return;
-                                        }
-                                        while(coinTypeList.size() > 6)
-                                        {
-                                            coinTypeList.remove(coinTypeList.size()-1);
-                                        }
-                                        coinTypeList.add(task);
-                                        coinTypeList.add("Custom…");
-                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, coinTypeList);
-                                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        coinTypeSpinner.setAdapter(spinnerAdapter);
-                                        coinTypeSpinner.setSelection(coinTypeList.size()-2);
-                                        spinnerAdapter.notifyDataSetChanged();
-                                        customDesignEditText.setVisibility(View.VISIBLE);
-                                        customDesignEditText.setText("");
-                                        customDesignEditText.requestFocus();
-                                        coinSeriesSpinner.setVisibility(View.GONE);
-                                    }
-                                })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                                .setPositiveButton("OK", (dialog112, which) -> {
+                                    Toast.makeText(getActivity(), "Custom added!", Toast.LENGTH_SHORT).show();
+                                    String task = String.valueOf(taskEditText.getText());
+                                    if(task.isEmpty())
+                                    {
                                         coinTypeSpinner.setSelection(previousType);
                                         coinTypeSelected = previousType;
+                                        return;
                                     }
+                                    while(coinTypeList.size() > 6)
+                                    {
+                                        coinTypeList.remove(coinTypeList.size()-1);
+                                    }
+                                    coinTypeList.add(task);
+                                    coinTypeList.add("Custom…");
+                                    ArrayAdapter<String> spinnerAdapter1 = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, coinTypeList);
+                                    spinnerAdapter1.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    coinTypeSpinner.setAdapter(spinnerAdapter1);
+                                    coinTypeSpinner.setSelection(coinTypeList.size()-2);
+                                    spinnerAdapter1.notifyDataSetChanged();
+                                    customDesignEditText.setVisibility(View.VISIBLE);
+                                    customDesignEditText.setText("");
+                                    customDesignEditText.requestFocus();
+                                    coinSeriesSpinner.setVisibility(View.GONE);
+                                })
+                                .setNegativeButton("Cancel", (dialog111, which) -> {
+                                    coinTypeSpinner.setSelection(previousType);
+                                    coinTypeSelected = previousType;
                                 })
                                 .create();
                         dialog.show();
                         Objects.requireNonNull(dialog.getWindow()).setSoftInputMode (WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                                coinTypeSpinner.setSelection(previousType);
-                                coinTypeSelected = previousType;
-                            }
+                        dialog.setOnCancelListener(dialog110 -> {
+                            coinTypeSpinner.setSelection(previousType);
+                            coinTypeSelected = previousType;
                         });
                     }
                     else
@@ -456,49 +437,40 @@ public class AddCoinInfoFragment extends Fragment {
                     if(parentView.getItemAtPosition(position).toString().equals("Custom…"))
                     {
                         final EditText taskEditText = new EditText(getContext());
-                        AlertDialog dialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
+                        AlertDialog dialog = new AlertDialog.Builder(requireContext())
                                 .setTitle("Custom Design/Series:")
                                 .setView(taskEditText)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Toast.makeText(getActivity(), "Custom added!", Toast.LENGTH_SHORT).show();
-                                        String task = String.valueOf(taskEditText.getText());
-                                        if(task.isEmpty())
-                                        {
-                                            coinSeriesSpinner.setSelection(previousSeries);
-                                            coinSeriesSelected = previousSeries;
-                                            return;
-                                        }
-                                        while(coinSeriesList.size() > coinSeriesListSize-1)
-                                        {
-                                            coinSeriesList.remove(coinSeriesList.size()-1);
-                                        }
-                                        coinSeriesList.add(task);
-                                        coinSeriesList.add("Custom…");
-                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, coinSeriesList);
-                                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        coinSeriesSpinner.setAdapter(spinnerAdapter);
-                                        coinSeriesSpinner.setSelection(coinSeriesList.size()-2);
-                                        spinnerAdapter.notifyDataSetChanged();
-                                    }
-                                })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                                .setPositiveButton("OK", (dialog19, which) -> {
+                                    Toast.makeText(getActivity(), "Custom added!", Toast.LENGTH_SHORT).show();
+                                    String task = String.valueOf(taskEditText.getText());
+                                    if(task.isEmpty())
+                                    {
                                         coinSeriesSpinner.setSelection(previousSeries);
                                         coinSeriesSelected = previousSeries;
+                                        return;
                                     }
+                                    while(coinSeriesList.size() > coinSeriesListSize-1)
+                                    {
+                                        coinSeriesList.remove(coinSeriesList.size()-1);
+                                    }
+                                    coinSeriesList.add(task);
+                                    coinSeriesList.add("Custom…");
+                                    ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, coinSeriesList);
+                                    spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    coinSeriesSpinner.setAdapter(spinnerAdapter);
+                                    coinSeriesSpinner.setSelection(coinSeriesList.size()-2);
+                                    spinnerAdapter.notifyDataSetChanged();
+                                })
+                                .setNegativeButton("Cancel", (dialog18, which) -> {
+                                    coinSeriesSpinner.setSelection(previousSeries);
+                                    coinSeriesSelected = previousSeries;
                                 })
                                 .create();
                         dialog.show();
                         Objects.requireNonNull(dialog.getWindow()).setSoftInputMode (WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                                coinSeriesSpinner.setSelection(previousSeries);
-                                coinSeriesSelected = previousSeries;
-                            }
+                        dialog.setOnCancelListener(dialog17 -> {
+                            coinSeriesSpinner.setSelection(previousSeries);
+                            coinSeriesSelected = previousSeries;
                         });
                     }
                 }
@@ -525,49 +497,40 @@ public class AddCoinInfoFragment extends Fragment {
                     if(parentView.getItemAtPosition(position).toString().equals("Custom…"))
                     {
                         final EditText taskEditText = new EditText(getContext());
-                        AlertDialog dialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
+                        AlertDialog dialog = new AlertDialog.Builder(requireContext())
                                 .setTitle("Custom Mint:")
                                 .setView(taskEditText)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Toast.makeText(getActivity(), "Custom added!", Toast.LENGTH_SHORT).show();
-                                        String task = String.valueOf(taskEditText.getText());
-                                        if(task.isEmpty())
-                                        {
-                                            coinMintSpinner.setSelection(previousMint);
-                                            coinMintSelected = previousMint;
-                                            return;
-                                        }
-                                        while(coinMintList.size() > 10)
-                                        {
-                                            coinMintList.remove(coinMintList.size()-1);
-                                        }
-                                        coinMintList.add(task);
-                                        coinMintList.add("Custom…");
-                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, coinMintList);
-                                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        coinMintSpinner.setAdapter(spinnerAdapter);
-                                        coinMintSpinner.setSelection(coinMintList.size()-2);
-                                        spinnerAdapter.notifyDataSetChanged();
-                                    }
-                                })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                                .setPositiveButton("OK", (dialog16, which) -> {
+                                    Toast.makeText(getActivity(), "Custom added!", Toast.LENGTH_SHORT).show();
+                                    String task = String.valueOf(taskEditText.getText());
+                                    if(task.isEmpty())
+                                    {
                                         coinMintSpinner.setSelection(previousMint);
                                         coinMintSelected = previousMint;
+                                        return;
                                     }
+                                    while(coinMintList.size() > 10)
+                                    {
+                                        coinMintList.remove(coinMintList.size()-1);
+                                    }
+                                    coinMintList.add(task);
+                                    coinMintList.add("Custom…");
+                                    ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, coinMintList);
+                                    spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    coinMintSpinner.setAdapter(spinnerAdapter);
+                                    coinMintSpinner.setSelection(coinMintList.size()-2);
+                                    spinnerAdapter.notifyDataSetChanged();
+                                })
+                                .setNegativeButton("Cancel", (dialog15, which) -> {
+                                    coinMintSpinner.setSelection(previousMint);
+                                    coinMintSelected = previousMint;
                                 })
                                 .create();
                         dialog.show();
                         Objects.requireNonNull(dialog.getWindow()).setSoftInputMode (WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                                coinMintSpinner.setSelection(previousMint);
-                                coinMintSelected = previousMint;
-                            }
+                        dialog.setOnCancelListener(dialog14 -> {
+                            coinMintSpinner.setSelection(previousMint);
+                            coinMintSelected = previousMint;
                         });
                     }
                 }
@@ -591,49 +554,40 @@ public class AddCoinInfoFragment extends Fragment {
                     if(parentView.getItemAtPosition(position).toString().equals("Custom…"))
                     {
                         final EditText taskEditText = new EditText(getContext());
-                        AlertDialog dialog = new AlertDialog.Builder(Objects.requireNonNull(getContext()))
+                        AlertDialog dialog = new AlertDialog.Builder(requireContext())
                                 .setTitle("Custom Material:")
                                 .setView(taskEditText)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        Toast.makeText(getActivity(), "Custom added!", Toast.LENGTH_SHORT).show();
-                                        String task = String.valueOf(taskEditText.getText());
-                                        if(task.isEmpty())
-                                        {
-                                            coinMaterialSpinner.setSelection(previousMaterial);
-                                            coinMaterialSelected = previousMaterial;
-                                            return;
-                                        }
-                                        while(coinMaterialList.size() > 10)
-                                        {
-                                            coinMaterialList.remove(coinMaterialList.size()-1);
-                                        }
-                                        coinMaterialList.add(task);
-                                        coinMaterialList.add("Custom…");
-                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, coinMaterialList);
-                                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        coinMaterialSpinner.setAdapter(spinnerAdapter);
-                                        coinMaterialSpinner.setSelection(coinMaterialList.size()-2);
-                                        spinnerAdapter.notifyDataSetChanged();
-                                    }
-                                })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                                .setPositiveButton("OK", (dialog13, which) -> {
+                                    Toast.makeText(getActivity(), "Custom added!", Toast.LENGTH_SHORT).show();
+                                    String task = String.valueOf(taskEditText.getText());
+                                    if(task.isEmpty())
+                                    {
                                         coinMaterialSpinner.setSelection(previousMaterial);
                                         coinMaterialSelected = previousMaterial;
+                                        return;
                                     }
+                                    while(coinMaterialList.size() > 10)
+                                    {
+                                        coinMaterialList.remove(coinMaterialList.size()-1);
+                                    }
+                                    coinMaterialList.add(task);
+                                    coinMaterialList.add("Custom…");
+                                    ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, coinMaterialList);
+                                    spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    coinMaterialSpinner.setAdapter(spinnerAdapter);
+                                    coinMaterialSpinner.setSelection(coinMaterialList.size()-2);
+                                    spinnerAdapter.notifyDataSetChanged();
+                                })
+                                .setNegativeButton("Cancel", (dialog12, which) -> {
+                                    coinMaterialSpinner.setSelection(previousMaterial);
+                                    coinMaterialSelected = previousMaterial;
                                 })
                                 .create();
                         dialog.show();
                         Objects.requireNonNull(dialog.getWindow()).setSoftInputMode (WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                                coinMaterialSpinner.setSelection(previousMaterial);
-                                coinMaterialSelected = previousMaterial;
-                            }
+                        dialog.setOnCancelListener(dialog1 -> {
+                            coinMaterialSpinner.setSelection(previousMaterial);
+                            coinMaterialSelected = previousMaterial;
                         });
                     }
                 }
@@ -799,7 +753,7 @@ public class AddCoinInfoFragment extends Fragment {
 
     public void nextButtonClicked() {
         addToBundle();
-        ((AddActivity) Objects.requireNonNull(getActivity())).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
+        ((AddActivity) requireActivity()).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
     }
 
     public void addToBundle() {
