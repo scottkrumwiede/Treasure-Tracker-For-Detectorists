@@ -2,7 +2,6 @@ package com.mdtt.scott.treasuretrackerfordetectorists;
 
 import android.Manifest;
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -10,6 +9,7 @@ import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -19,6 +19,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentManager;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 
@@ -30,6 +31,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 import java.util.Objects;
@@ -52,7 +54,7 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
         getSupportFragmentManager()
                 .beginTransaction()
-                .replace(R.id.settings, new SettingsFragment())
+                .replace(R.id.settings, new SettingsFragment(getSupportFragmentManager()), "settings_main")
                 .commit();
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
@@ -71,202 +73,244 @@ public class SettingsActivity extends AppCompatActivity {
         }
         else
         {
-            super.onBackPressed();
+                if (getSupportFragmentManager().findFragmentByTag("settings_fastclear") != null) {
+                    getSupportFragmentManager().beginTransaction()
+                            .remove(getSupportFragmentManager().findFragmentByTag("settings_fastclear"))
+                            .show(getSupportFragmentManager().findFragmentByTag("settings_main"))
+                            .commit();
+                }
+                else
+                {
+                    super.onBackPressed();
+                }
         }
     }
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
 
+        final FragmentManager sfm;
+        public SettingsFragment(FragmentManager supportFragmentManager) {
+            sfm = supportFragmentManager;
+        }
+
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
-            setPreferencesFromResource(R.xml.root_preferences, rootKey);
+            setPreferencesFromResource(R.xml.main_settings, rootKey);
             activity = getActivity();
 
             Preference backupButton = getPreferenceManager().findPreference("backup");
             if (backupButton != null) {
-                backupButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference arg0) {
-                        //Toast.makeText(getActivity(), "backup button is clicked",
-                        // Toast.LENGTH_SHORT).show();
+                backupButton.setOnPreferenceClickListener(arg0 -> {
+                    //Toast.makeText(getActivity(), "backup button is clicked",
+                    // Toast.LENGTH_SHORT).show();
 
-                        // Here, thisActivity is the current activity
-                        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                                != PackageManager.PERMISSION_GRANTED) {
+                    // Here, thisActivity is the current activity
+                    if (ContextCompat.checkSelfPermission(requireActivity(),
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED) {
 
-                            // Permission is not granted
+                        // Permission is not granted
 
-                            // No explanation needed; request the permission
-                            ActivityCompat.requestPermissions(getActivity(),
-                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                        // No explanation needed; request the permission
+                        ActivityCompat.requestPermissions(getActivity(),
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
 
-                        } else {
-                            bt = new BackgroundTask();
-                            bt.execute("backup");
-                            mProgressBarLL.setVisibility(View.VISIBLE);
-                        }
-
-                        return true;
+                    } else {
+                        bt = new BackgroundTask();
+                        bt.execute("backup");
+                        mProgressBarLL.setVisibility(View.VISIBLE);
                     }
+
+                    return true;
                 });
             }
 
             Preference restoreButton = getPreferenceManager().findPreference("restore");
             if (restoreButton != null) {
-                restoreButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference arg0) {
-                        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
-                                Manifest.permission.READ_EXTERNAL_STORAGE)
-                                != PackageManager.PERMISSION_GRANTED) {
+                restoreButton.setOnPreferenceClickListener(arg0 -> {
+                    if (ContextCompat.checkSelfPermission(requireActivity(),
+                            Manifest.permission.READ_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED) {
 
-                            // Permission is not granted
+                        // Permission is not granted
 
-                            // No explanation needed; request the permission
-                            ActivityCompat.requestPermissions(getActivity(),
-                                    new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                                    MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+                        // No explanation needed; request the permission
+                        ActivityCompat.requestPermissions(getActivity(),
+                                new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                                MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
 
-                        } else {
-                            final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-                            intent.setType("*/*");
-                            intent.addCategory(Intent.CATEGORY_OPENABLE);
-                            new AlertDialog.Builder(Objects.requireNonNull(getContext()))
-                                    .setMessage("WARNING: Restoring from a backup file will PERMANENTLY DELETE AND REPLACE all your current treasures. Are you sure?")
-                                    .setNegativeButton(android.R.string.no, null)
-                                    .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
-
-                                        public void onClick(DialogInterface arg0, int arg1) {
-                                            try {
-                                                activity.startActivityForResult(
-                                                        Intent.createChooser(intent, "Select a File to Upload"),
-                                                        FILE_SELECT_CODE);
-                                            } catch (android.content.ActivityNotFoundException ex) {
-                                                // Potentially direct the user to the Market with a Dialog
-                                                Toast.makeText(activity, "Please install a File Manager.",
-                                                        Toast.LENGTH_SHORT).show();
-                                            };
-                                        }
-                                    }).create().show();
-                        }
-                        return true;
+                    } else {
+                        final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                        intent.setType("*/*");
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        new AlertDialog.Builder(requireContext())
+                                .setMessage("WARNING: Restoring from a backup file will PERMANENTLY DELETE AND REPLACE all your current treasures. Are you sure?")
+                                .setNegativeButton(R.string.cancel, null)
+                                .setPositiveButton(R.string.restore, (arg01, arg1) -> {
+                                    try {
+                                        activity.startActivityForResult(
+                                                Intent.createChooser(intent, "Select a File to Upload"),
+                                                FILE_SELECT_CODE);
+                                    } catch (android.content.ActivityNotFoundException ex) {
+                                        // Potentially direct the user to the Market with a Dialog
+                                        Toast.makeText(activity, "Please install a File Manager.",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+                                }).create().show();
                     }
+                    return true;
                 });
             }
 
             Preference exportButton = getPreferenceManager().findPreference("export");
             if (exportButton != null) {
-                exportButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference arg0) {
-                        //Toast.makeText(getActivity(), "export button is clicked",
-                        // Toast.LENGTH_SHORT).show();
+                exportButton.setOnPreferenceClickListener(arg0 -> {
+                    //Toast.makeText(getActivity(), "export button is clicked",
+                    // Toast.LENGTH_SHORT).show();
 
-                        // Here, thisActivity is the current activity
-                        if (ContextCompat.checkSelfPermission(Objects.requireNonNull(getActivity()),
-                                Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                                != PackageManager.PERMISSION_GRANTED) {
+                    // Here, thisActivity is the current activity
+                    if (ContextCompat.checkSelfPermission(requireActivity(),
+                            Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                            != PackageManager.PERMISSION_GRANTED) {
 
-                            // Permission is not granted
+                        // Permission is not granted
 
-                            // No explanation needed; request the permission
-                            ActivityCompat.requestPermissions(getActivity(),
-                                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-                                    MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
+                        // No explanation needed; request the permission
+                        ActivityCompat.requestPermissions(getActivity(),
+                                new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                                MY_PERMISSIONS_REQUEST_WRITE_EXTERNAL_STORAGE);
 
-                        } else {
-                            bt = new BackgroundTask();
-                            bt.execute("export");
-                            mProgressBarLL.setVisibility(View.VISIBLE);
-                        }
-
-                        return true;
+                    } else {
+                        bt = new BackgroundTask();
+                        bt.execute("export");
+                        mProgressBarLL.setVisibility(View.VISIBLE);
                     }
+
+                    return true;
                 });
             }
 
-            Preference clearcoinsButton = getPreferenceManager().findPreference("clearcoins");
-            if (clearcoinsButton != null) {
-                clearcoinsButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference arg0) {
+            Preference fastClearButton = getPreferenceManager().findPreference("fastclear");
+            if (fastClearButton != null) {
+                final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                fastClearButton.setOnPreferenceClickListener(arg0 -> {
+                    sfm.beginTransaction()
+                            .hide(sfm.findFragmentByTag("settings_main"))
+                            .add(R.id.settings, new SettingsFastClearFragment(), "settings_fastclear")
+                            .commit();
+                    return true;
+                });
+            }
 
-                        Toast.makeText(getActivity(), "Feature coming soon!",
-                                Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                });
-            }
-            Preference cleartokensButton = getPreferenceManager().findPreference("cleartokens");
-            if (cleartokensButton != null) {
-                cleartokensButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference arg0) {
-                        Toast.makeText(getActivity(), "Feature coming soon!",
-                                Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                });
-            }
-            Preference clearjewelryButton = getPreferenceManager().findPreference("clearjewelry");
-            if (clearjewelryButton != null) {
-                clearjewelryButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference arg0) {
-                        Toast.makeText(getActivity(), "Feature coming soon!",
-                                Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                });
-            }
-            Preference clearrelicsButton = getPreferenceManager().findPreference("clearrelics");
-            if (clearrelicsButton != null) {
-                clearrelicsButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference arg0) {
-                        Toast.makeText(getActivity(), "Feature coming soon!",
-                                Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                });
-            }
-            Preference clearcladButton = getPreferenceManager().findPreference("clearclad");
-            if (clearcladButton != null) {
-                clearcladButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference arg0) {
-                        Toast.makeText(getActivity(), "Feature coming soon!",
-                                Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                });
-            }
-            Preference clearcollectionsButton = getPreferenceManager().findPreference("clearcollections");
-            if (clearcollectionsButton != null) {
-                clearcollectionsButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference arg0) {
-                        Toast.makeText(getActivity(), "Feature coming soon!",
-                                Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
-                });
-            }
-            Preference resetAppButton = getPreferenceManager().findPreference("resetApp");
-            if (resetAppButton != null) {
-                resetAppButton.setOnPreferenceClickListener(new Preference.OnPreferenceClickListener() {
-                    @Override
-                    public boolean onPreferenceClick(Preference arg0) {
-                        Toast.makeText(getActivity(), "Feature coming soon!",
-                                Toast.LENGTH_SHORT).show();
-                        return true;
-                    }
+
+
+            Preference versionButton = getPreferenceManager().findPreference("versionName");
+            String versionName = BuildConfig.VERSION_NAME;
+            versionButton.setSummary(versionName);
+            //versionButton.setSelectable(false);
+
+            Preference aboutButton = getPreferenceManager().findPreference("aboutApp");
+            if (aboutButton != null) {
+                final Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+                intent.setType("*/*");
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                aboutButton.setOnPreferenceClickListener(arg0 -> {
+                    new AlertDialog.Builder(requireContext())
+                            .setMessage(R.string.aboutapp_info_statement)
+                            .create().show();
+                    return true;
                 });
             }
         }
     }
+
+    public static class SettingsFastClearFragment extends PreferenceFragmentCompat {
+
+        @Override
+        public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+            setPreferencesFromResource(R.xml.fastclear_settings, rootKey);
+            activity = getActivity();
+
+            Preference clearcoinsButton = getPreferenceManager().findPreference("clearcoins");
+            if (clearcoinsButton != null) {
+                clearcoinsButton.setOnPreferenceClickListener(arg0 -> {
+
+                    fastClear("Coins");
+                    return true;
+                });
+            }
+            Preference cleartokensButton = getPreferenceManager().findPreference("cleartokens");
+            if (cleartokensButton != null) {
+                cleartokensButton.setOnPreferenceClickListener(arg0 -> {
+
+                    fastClear("Tokens");
+                    return true;
+                });
+            }
+            Preference clearjewelryButton = getPreferenceManager().findPreference("clearjewelry");
+            if (clearjewelryButton != null) {
+                clearjewelryButton.setOnPreferenceClickListener(arg0 -> {
+
+                    fastClear("Jewelry");
+                    return true;
+                });
+            }
+            Preference clearrelicsButton = getPreferenceManager().findPreference("clearrelics");
+            if (clearrelicsButton != null) {
+                clearrelicsButton.setOnPreferenceClickListener(arg0 -> {
+
+                    fastClear("Relics");
+                    return true;
+                });
+            }
+            Preference clearcladButton = getPreferenceManager().findPreference("clearclad");
+            if (clearcladButton != null) {
+                clearcladButton.setOnPreferenceClickListener(arg0 -> {
+
+                    fastClear("Clad");
+                    return true;
+                });
+            }
+            Preference clearcollectionsButton = getPreferenceManager().findPreference("clearcollections");
+            if (clearcollectionsButton != null) {
+                clearcollectionsButton.setOnPreferenceClickListener(arg0 -> {
+
+                    fastClear("Collections");
+                    return true;
+                });
+            }
+            Preference clearallButton = getPreferenceManager().findPreference("clearall");
+            if (clearallButton != null) {
+                clearallButton.setOnPreferenceClickListener(arg0 -> {
+
+                    fastClear("All");
+                    return true;
+                });
+            }
+        }
+    }
+
+    private static void fastClear(String type)
+    {
+        String message = "Are you sure you want to PERMANENTLY DELETE all added "+type+"? These items cannot be recovered without a backup file!";
+        if(type.equals("All"))
+        {
+            message = "Are you sure you want to PERMANENTLY DELETE all added in above categories? (Coins, Tokens, Jewelry, Relics, Clad and Collections) These items cannot be recovered without a backup file!";
+        }
+        new AlertDialog.Builder(activity)
+                .setTitle("Confirm?")
+                .setMessage(message)
+                .setNegativeButton(R.string.cancel, null)
+                .setPositiveButton(R.string.delete, (arg0, arg1) -> {
+                    bt = new BackgroundTask();
+                    bt.execute("fastClear", type);
+                    mProgressBarLL.setVisibility(View.VISIBLE);
+                }).create().show();
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
@@ -305,7 +349,6 @@ public class SettingsActivity extends AppCompatActivity {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(backupFile.getAbsolutePath());
-            //Log.d("mytag", backupFile.getAbsolutePath());
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
@@ -331,7 +374,6 @@ public class SettingsActivity extends AppCompatActivity {
         try {
             return unzipFile(inputStream);
         } catch (IOException e) {
-            e.printStackTrace();
             return null;
         }
     }
@@ -368,7 +410,7 @@ public class SettingsActivity extends AppCompatActivity {
         ZipEntry zipEntry = zis.getNextEntry();
 
         if (zipEntry != null) {
-            if (!zipEntry.getName().contains("findsDB") && !zipEntry.getName().contains("findsDB-journal") && !zipEntry.getName().contains("google_app")) {
+            if (!zipEntry.getName().contains("androidx.work.workdb") && !zipEntry.getName().contains("findsDB") && !zipEntry.getName().contains("findsDB-journal") && !zipEntry.getName().contains("google_app")) {
                 return null;
             }
             else
@@ -472,7 +514,6 @@ public class SettingsActivity extends AppCompatActivity {
         String exportPath = "Export-"+currentDateandTime+".zip";
 
         File dataDir = Environment.getDataDirectory();
-        //Log.d("mytag", dataDir.getPath());
         //String filesPath = "/files/";
         String filesPath = "/data/" + "com.mdtt.scott.treasuretrackerfordetectorists" + "/files/";
         File filesDir = new File(dataDir, filesPath);
@@ -484,25 +525,53 @@ public class SettingsActivity extends AppCompatActivity {
                 file.delete();
             }
         }
-        //Log.d("mytag", filesDir.getPath());
 
-        //create csv file from database tables
-        File csvFile = new File(activity.getApplicationContext().getFilesDir(), "Export-"+currentDateandTime+".csv");
+        //create csv files from database tables
+        File csvTreasureFile = new File(activity.getApplicationContext().getFilesDir(), "Export-Treasures-"+currentDateandTime+".csv");
+        File csvCladFile = new File(activity.getApplicationContext().getFilesDir(), "Export-Clad-"+currentDateandTime+".csv");
+
 
         try {
-            CSVWriter csvWrite = new CSVWriter(new FileWriter(csvFile));
-            Cursor curCSV = dbHelper.raw();
+            //write treasure table to CSV file
+            CSVWriter csvWrite = new CSVWriter(new FileWriter(csvTreasureFile));
+            Cursor curCSV = dbHelper.raw("treasure");
+            //write column headers
             csvWrite.writeNext(curCSV.getColumnNames());
-            while(curCSV.moveToNext()) {
-                String[] mySecondStringArray = new String[curCSV.getColumnNames().length];
-                for(int i=0;i<curCSV.getColumnNames().length;i++)
-                {
-                    mySecondStringArray[i] =curCSV.getString(i);
+            if(curCSV != null)
+            {
+                //write each row
+                while(curCSV.moveToNext()) {
+                    String[] mySecondStringArray = new String[curCSV.getColumnNames().length];
+                    for(int i=0;i<curCSV.getColumnNames().length;i++)
+                    {
+                        mySecondStringArray[i] =curCSV.getString(i);
+                    }
+                    csvWrite.writeNext(mySecondStringArray);
                 }
-                csvWrite.writeNext(mySecondStringArray);
+                curCSV.close();
+                csvWrite.close();
             }
-            csvWrite.close();
-            curCSV.close();
+
+            //write clad table to CSV file
+            csvWrite = new CSVWriter(new FileWriter(csvCladFile));
+            curCSV = dbHelper.raw("clad");
+            //write column headers
+            csvWrite.writeNext(curCSV.getColumnNames());
+            if(curCSV != null)
+            {
+                //write each row
+                while(curCSV.moveToNext()) {
+                    String[] mySecondStringArray = new String[curCSV.getColumnNames().length];
+                    for(int i=0;i<curCSV.getColumnNames().length;i++)
+                    {
+                        mySecondStringArray[i] =curCSV.getString(i);
+                    }
+                    csvWrite.writeNext(mySecondStringArray);
+                }
+                curCSV.close();
+                csvWrite.close();
+            }
+
             dbHelper.close();
         } catch (IOException e) {
             e.printStackTrace();
@@ -511,7 +580,6 @@ public class SettingsActivity extends AppCompatActivity {
 
         //file that will be created in Downloads folder
         File exportFile = new File(downloadDir, exportPath);
-        //Log.d("mytag", exportFile.getPath());
 
         FileOutputStream fos;
         try {
@@ -527,8 +595,8 @@ public class SettingsActivity extends AppCompatActivity {
 
         try {
             zos.close();
-            //Log.d("mytag", csvFile.getPath());
-            csvFile.delete();
+            csvTreasureFile.delete();
+            csvCladFile.delete();
             return exportFile.getAbsolutePath();
 
         } catch (IOException e) {
@@ -595,8 +663,49 @@ public class SettingsActivity extends AppCompatActivity {
                 case "export":
                     result = "Export created: " + performExport();
                     break;
-            }
+                case "fastClear":
+                    //Log.d("mytag", "Type: "+params[1]);
+                    MySQliteHelper helper = new MySQliteHelper(activity);
+                    ArrayList<String> photoPathsOfRemovedList = helper.deleteAllOfType(params[1]);
 
+                    if(photoPathsOfRemovedList != null)
+                    {
+                        //path to subDir: /data/user/0/com.mdtt.scott.treasuretrackerfordetectorists/files/imageDir
+                        File directory = Objects.requireNonNull(activity.getFilesDir());
+                        File subDir = new File(directory, "imageDir");
+                        boolean isSubDirCreated = subDir.exists();
+                        if (!isSubDirCreated)
+                            isSubDirCreated = subDir.mkdir();
+
+                        if(isSubDirCreated)
+                        {
+                            for(String photoPath : photoPathsOfRemovedList)
+                            {
+                                final String prefix = photoPath;
+
+                                File [] files = subDir.listFiles((directory1, name) -> name.startsWith(prefix));
+
+                                for (File file : files) {
+                                    Log.d("TEST", "Deleting file at path: "+file.getPath());
+                                    file.delete();
+                                }
+                            }
+                        }
+                    }
+                    //result grammar formatting based on type
+                    if(params[1].equals("Clad") || params[1].equals("Jewelry"))
+                    {
+                        result = "All "+params[1]+" has been fast cleared!";
+                    }
+                    else if(params[1].equals("All"))
+                    {
+                        result = "All categories have been fast cleared!";
+                    }
+                    else
+                    {
+                        result = "All "+params[1]+" have been fast cleared!";
+                    }
+            }
             return result;
         }
 
@@ -609,11 +718,8 @@ public class SettingsActivity extends AppCompatActivity {
                 new AlertDialog.Builder(Objects.requireNonNull(activity))
                         .setTitle("Success")
                         .setMessage(result)
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(android.R.string.ok, (arg0, arg1) -> {
 
-                            public void onClick(DialogInterface arg0, int arg1) {
-
-                            }
                         }).create().show();
             }
             else
@@ -621,13 +727,12 @@ public class SettingsActivity extends AppCompatActivity {
                 new AlertDialog.Builder(Objects.requireNonNull(activity))
                         .setTitle("Incorrect file format")
                         .setMessage("Please select a proper backup file 'Backup-YYYY_MM_DD_HHMMSS.file'")
-                        .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                        .setPositiveButton(android.R.string.ok, (arg0, arg1) -> {
 
-                            public void onClick(DialogInterface arg0, int arg1) {
-
-                            }
                         }).create().show();
             }
+            //allows for proper onBackPressed
+            bt = null;
         }
     }
 }

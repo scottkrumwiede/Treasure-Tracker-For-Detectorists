@@ -21,8 +21,9 @@ public class Treasure{
     final private String treasureDateFound;
     final private String treasureInfo;
     final private String treasurePhotoPath;
+    final private String treasureWeightUnit;
 
-    public Treasure(int treasureId, String treasureType, String treasureCountry, String treasureDenomination, String treasureSeries, String treasureName, String treasureYear, String treasureMint, String treasureMaterial, String treasureWeight, String treasureLocationFound, String treasureDateFound, String treasureInfo, String treasurePhotoPath) {
+    public Treasure(int treasureId, String treasureType, String treasureCountry, String treasureDenomination, String treasureSeries, String treasureName, String treasureYear, String treasureMint, String treasureMaterial, String treasureWeight, String treasureLocationFound, String treasureDateFound, String treasureInfo, String treasurePhotoPath, String treasureWeightUnit) {
         this.treasureId = treasureId;
         this.treasureType = treasureType;
         this.treasureCountry = treasureCountry;
@@ -37,6 +38,7 @@ public class Treasure{
         this.treasureDateFound = treasureDateFound;
         this.treasureInfo = treasureInfo;
         this.treasurePhotoPath = treasurePhotoPath;
+        this.treasureWeightUnit = treasureWeightUnit;
     }
 
     public int getTreasureId() {
@@ -89,9 +91,12 @@ public class Treasure{
 
     public String getTreasurePhotoPath() { return treasurePhotoPath; }
 
+    public String getTreasureWeightUnit() { return treasureWeightUnit; }
+
     public String getTreasureInfo() {
         return treasureInfo;
     }
+
     public LinkedHashMap<String, String> getTreasureDetailed(){
         LinkedHashMap<String, String> lhashMap = new LinkedHashMap<>();
         lhashMap.put("Country: ",treasureCountry);
@@ -101,10 +106,11 @@ public class Treasure{
         lhashMap.put("Year: ",treasureYear);
         lhashMap.put("Mint: ",treasureMint);
         lhashMap.put("Material: ",treasureMaterial);
-        lhashMap.put("Weight: ",treasureWeight);
+        lhashMap.put("Weight: ",treasureWeight+" "+treasureWeightUnit);
         lhashMap.put("Location Found: ",treasureLocationFound);
         lhashMap.put("Date Found: ",treasureDateFound);
         lhashMap.put("Additional Info: ",treasureInfo);
+
         return lhashMap;
     }
 }

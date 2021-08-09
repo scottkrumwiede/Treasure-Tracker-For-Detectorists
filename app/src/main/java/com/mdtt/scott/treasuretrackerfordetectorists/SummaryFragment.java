@@ -30,7 +30,6 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.ListIterator;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -51,7 +50,7 @@ public class SummaryFragment extends Fragment {
     private TextView locationsTextView;
     private TextView detectorsTextView;
     private TextView helpTextView;
-    private LinearLayout mLL0, mLL3;
+    private LinearLayout mLL3;
     private DrawerLayout navDrawer;
     private ProgressBar mProgressBar;
     private BackgroundTask bt;
@@ -80,7 +79,6 @@ public class SummaryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         return inflater.inflate(R.layout.fragment_summary, container, false);
     }
 
@@ -96,7 +94,7 @@ public class SummaryFragment extends Fragment {
         mLL3.removeAllViews();
 
         //remove yearly summary layouts
-        ViewGroup insertPoint = (ViewGroup) getView().findViewById(R.id.fragment_summary_ll0);
+        ViewGroup insertPoint = getView().findViewById(R.id.fragment_summary_ll0);
         while(insertPoint.getChildCount() > 3)
         {
             insertPoint.removeViewAt(2);
@@ -113,7 +111,7 @@ public class SummaryFragment extends Fragment {
         detectorsTextView.setVisibility(View.INVISIBLE);
         locationsTextView.setVisibility(View.INVISIBLE);
         helpTextView.setVisibility(View.GONE);
-        Objects.requireNonNull(getActivity()).setTitle("Summary:");
+        requireActivity().setTitle("Summary:");
         bt = new BackgroundTask();
         bt.execute();
         mAdView.loadAd(adRequest);
@@ -134,11 +132,10 @@ public class SummaryFragment extends Fragment {
         locationsTextView = view.findViewById(R.id.locationsTextView);
         detectorsTextView = view.findViewById(R.id.detectorsTextView);
         cladTextView = view.findViewById(R.id.cladTextView);
-        mLL0 = view.findViewById(R.id.fragment_summary_ll0);
         LinearLayout mLL1 = view.findViewById(R.id.fragment_summary_ll1);
         LinearLayout mLL2 = view.findViewById(R.id.fragment_summary_ll2);
         mLL3 = view.findViewById(R.id.fragment_summary_ll3);
-        navDrawer = Objects.requireNonNull(getActivity()).findViewById(R.id.drawer_layout);
+        navDrawer = requireActivity().findViewById(R.id.drawer_layout);
         mAdView = view.findViewById(R.id.fragmentTreasureAdView);
 
         mAdView.setAdListener(new AdListener() {
@@ -157,21 +154,15 @@ public class SummaryFragment extends Fragment {
             }
         });
 
-        mLL1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!navDrawer.isDrawerOpen(GravityCompat.START)) navDrawer.openDrawer(GravityCompat.START);
-                else navDrawer.closeDrawer(GravityCompat.END);
-            }
+        mLL1.setOnClickListener(v -> {
+            if(!navDrawer.isDrawerOpen(GravityCompat.START)) navDrawer.openDrawer(GravityCompat.START);
+            else navDrawer.closeDrawer(GravityCompat.END);
         });
 
-        mLL2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(!navDrawer.isDrawerOpen(GravityCompat.START)) navDrawer.openDrawer(GravityCompat.START);
-                else navDrawer.closeDrawer(GravityCompat.END);
+        mLL2.setOnClickListener(v -> {
+            if(!navDrawer.isDrawerOpen(GravityCompat.START)) navDrawer.openDrawer(GravityCompat.START);
+            else navDrawer.closeDrawer(GravityCompat.END);
 
-            }
         });
 
     }
@@ -237,29 +228,23 @@ public class SummaryFragment extends Fragment {
 
             summaryYearlyTreasureList = helper.getYearlySummaryTreasure();
             summaryYearlyCladList = helper.getYearlySummaryClad();
-            Set<Integer> years = new HashSet<Integer>();
-            ListIterator<Treasure> listItrTreasure = summaryYearlyTreasureList.listIterator();
+            Set<Integer> years = new HashSet<>();
 
-            while(listItrTreasure.hasNext())
-            {
-                String date = listItrTreasure.next().getTreasureDateFound();
+            for (Treasure treasure : summaryYearlyTreasureList) {
+                String date = treasure.getTreasureDateFound();
                 int year = Integer.parseInt(date.substring(0, 4));
                 years.add(year);
             }
 
-            ListIterator<Clad> listItrClad = summaryYearlyCladList.listIterator();
-
-            while(listItrClad.hasNext())
-            {
-                String date = listItrClad.next().getCladDateFound();
+            for (Clad clad : summaryYearlyCladList) {
+                String date = clad.getCladDateFound();
                 int year = Integer.parseInt(date.substring(0, 4));
                 years.add(year);
             }
 
-            sortedYears = new TreeSet<Integer>(years);
+            sortedYears = new TreeSet<>(years);
 
             //Log.d("myTag", "SummaryCladlist is of size: " + summaryCladList.size());
-
             //cladTotal = summaryCladList.size();
             return 1;
 
@@ -273,7 +258,7 @@ public class SummaryFragment extends Fragment {
             }
             if(cladTotal == 0)
             {
-                cladTextView.setText("Clad:   \u2014");
+                cladTextView.setText(R.string.SummaryCladEmpty);
             }
 
             String totalTextViewText = "Total: "+treasureTotal;
@@ -311,37 +296,35 @@ public class SummaryFragment extends Fragment {
                 View v = vi.inflate(R.layout.linearlayout_yearly_summary, null);
 
                 // fill in any details dynamically here
-                TextView yearTextView = (TextView) v.findViewById(R.id.yearTextView);
-                yearTextView.setText(s+":");
-                TextView coinTextView = (TextView) v.findViewById(R.id.yearCoinTextView);
-                TextView tokenTextView = (TextView) v.findViewById(R.id.yearTokenTextView);
-                TextView jewelryTextView = (TextView) v.findViewById(R.id.yearJewelryTextView);
-                TextView relicTextView = (TextView) v.findViewById(R.id.yearRelicTextView);
-                TextView totalTextView = (TextView) v.findViewById(R.id.yearTotalTextView);
-                ProgressBar progressBar = (ProgressBar) v.findViewById(R.id.yearProgressBar);
-                LinearLayout linearLayout = (LinearLayout) v.findViewById(R.id.year_summary_ll1);
+                TextView yearTextView = v.findViewById(R.id.yearTextView);
+                yearTextView.setText(getString(R.string.yearTextViewPlaceholder, s));
+                TextView coinTextView = v.findViewById(R.id.yearCoinTextView);
+                TextView tokenTextView = v.findViewById(R.id.yearTokenTextView);
+                TextView jewelryTextView = v.findViewById(R.id.yearJewelryTextView);
+                TextView relicTextView = v.findViewById(R.id.yearRelicTextView);
+                TextView totalTextView = v.findViewById(R.id.yearTotalTextView);
+                ProgressBar progressBar = v.findViewById(R.id.yearProgressBar);
+                LinearLayout linearLayout = v.findViewById(R.id.year_summary_ll1);
 
                 int coinTotal = 0, tokenTotal = 0, jewelryTotal = 0, relicTotal = 0, totalTotal = 0;
 
-                ListIterator<Treasure> listItrTreasure = summaryYearlyTreasureList.listIterator();
-
-                while(listItrTreasure.hasNext())
-                {
-                    Treasure t = listItrTreasure.next();
+                for (Treasure t : summaryYearlyTreasureList) {
                     String date = t.getTreasureDateFound();
                     int year = Integer.parseInt(date.substring(0, 4));
-                    if(year == s)
-                    {
+                    if (year == s) {
                         String type = t.getTreasureType();
-                        switch (type)
-                        {
-                            case "coin": coinTotal++;
+                        switch (type) {
+                            case "coin":
+                                coinTotal++;
                                 break;
-                            case "token": tokenTotal++;
+                            case "token":
+                                tokenTotal++;
                                 break;
-                            case "jewelry": jewelryTotal++;
+                            case "jewelry":
+                                jewelryTotal++;
                                 break;
-                            case "relic": relicTotal++;
+                            case "relic":
+                                relicTotal++;
                                 break;
                         }
                     }
@@ -349,7 +332,7 @@ public class SummaryFragment extends Fragment {
 
                 ListIterator<Clad> listItrClad = summaryYearlyCladList.listIterator();
 
-                Map<String,Double> cladCurrencyMap = new HashMap<String,Double>();
+                Map<String,Double> cladCurrencyMap = new HashMap<>();
 
                 while(listItrClad.hasNext())
                 {
@@ -393,7 +376,7 @@ public class SummaryFragment extends Fragment {
                 //if no clad added this year, hide clad totals header
                 if(cladCurrencyMap.isEmpty())
                 {
-                    TextView yearCladTextView = (TextView) v.findViewById(R.id.yearCladTextView);
+                    TextView yearCladTextView = v.findViewById(R.id.yearCladTextView);
                     yearCladTextView.setVisibility(View.GONE);
                 }
 
@@ -405,7 +388,7 @@ public class SummaryFragment extends Fragment {
                 }
                 else
                 {
-                    coinTextView.setText("Coins: "+coinTotal);
+                    coinTextView.setText(getString(R.string.coinTextViewPlaceholder, coinTotal));
                 }
                 if(tokenTotal == 0)
                 {
@@ -413,7 +396,7 @@ public class SummaryFragment extends Fragment {
                 }
                 else
                 {
-                    tokenTextView.setText("Tokens: "+tokenTotal);
+                    tokenTextView.setText(getString(R.string.tokenTextViewPlaceholder, tokenTotal));
                 }
                 if(jewelryTotal == 0)
                 {
@@ -421,7 +404,7 @@ public class SummaryFragment extends Fragment {
                 }
                 else
                 {
-                    jewelryTextView.setText("Jewelry: "+jewelryTotal);
+                    jewelryTextView.setText(getString(R.string.jewelryTextViewPlaceholder, jewelryTotal));
                 }
                 if(relicTotal == 0)
                 {
@@ -429,7 +412,7 @@ public class SummaryFragment extends Fragment {
                 }
                 else
                 {
-                    relicTextView.setText("Relics: "+relicTotal);
+                    relicTextView.setText(getString(R.string.relicTextViewPlaceholder, relicTotal));
                 }
                 if(totalTotal == 0)
                 {
@@ -437,28 +420,25 @@ public class SummaryFragment extends Fragment {
                 }
                 else
                 {
-                    totalTextView.setText("Total: "+totalTotal);
+                    totalTextView.setText(getString(R.string.totalTextViewPlaceholder, totalTotal));
                 }
                 //adds total for each country clad found for this year
 
                 // insert into main view
-                ViewGroup insertPoint = (ViewGroup) getView().findViewById(R.id.fragment_summary_ll0);
+                ViewGroup insertPoint = getView().findViewById(R.id.fragment_summary_ll0);
 
                 insertPoint.addView(v, 2, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.FILL_PARENT, ViewGroup.LayoutParams.FILL_PARENT));
 
                 progressBar.setVisibility(View.GONE);
-                linearLayout.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if(!navDrawer.isDrawerOpen(GravityCompat.START)) navDrawer.openDrawer(GravityCompat.START);
-                        else navDrawer.closeDrawer(GravityCompat.END);
-                    }
+                linearLayout.setOnClickListener(v1 -> {
+                    if(!navDrawer.isDrawerOpen(GravityCompat.START)) navDrawer.openDrawer(GravityCompat.START);
+                    else navDrawer.closeDrawer(GravityCompat.END);
                 });
             }
 
             //TODO: location and detector features not planned until v1.1
-            locationsTextView.setText("Locations: 0");
-            detectorsTextView.setText("Detectors: 0");
+            locationsTextView.setText(R.string.locationSummary_Empty);
+            detectorsTextView.setText(R.string.detectorsSummary_Empty);
 
             mProgressBar.setVisibility(View.GONE);
             totalTextView.setVisibility(View.VISIBLE);

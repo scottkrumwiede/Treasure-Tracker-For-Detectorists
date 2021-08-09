@@ -1,6 +1,5 @@
 package com.mdtt.scott.treasuretrackerfordetectorists;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -11,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -25,10 +23,8 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Objects;
 
 
 /**
@@ -57,7 +53,7 @@ public class TreasureFragment extends Fragment {
     private Animation myAnim;
 
     private AdRequest adRequest;
-    private boolean shouldCheckForUpdates;
+    //private boolean shouldCheckForUpdates;
 
     public TreasureFragment() {
         // Required empty public constructor
@@ -67,7 +63,7 @@ public class TreasureFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        shouldCheckForUpdates = true;
+        //shouldCheckForUpdates = true;
         if (getArguments() != null) {
             type = getArguments().getString("type");
             sortType = getArguments().getString("sortBy");
@@ -80,15 +76,12 @@ public class TreasureFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        //Log.d("myTag", "We came through onCreateView of TreasureFragment!");
         return inflater.inflate(R.layout.fragment_treasure, container, false);
 
     }
 
     @Override
     public void onResume() {
-        //Log.d("myTag", "We came through onResume of TreasureFragment!");
         super.onResume();
         String title = type;
         if(type.equals("jewelry"))
@@ -99,14 +92,14 @@ public class TreasureFragment extends Fragment {
         {
             title = title.substring(0,1).toUpperCase() + title.substring(1) + "s:";
         }
-        Objects.requireNonNull(getActivity()).setTitle(title);
+        requireActivity().setTitle(title);
         mAdView.loadAd(adRequest);
-        if(shouldCheckForUpdates)
-        {
+        //if(shouldCheckForUpdates)
+        //{
             bt = new BackgroundTask();
             bt.execute();
-            shouldCheckForUpdates = false;
-        }
+            //shouldCheckForUpdates = false;
+       //}
 
     }
 
@@ -192,7 +185,7 @@ public class TreasureFragment extends Fragment {
                 treasurePhotos.clear();
 
                 //path to subDir: /data/user/0/com.mdtt.scott.treasuretrackerfordetectorists/files/imageDir
-                File directory = Objects.requireNonNull(getActivity()).getFilesDir();
+                File directory = requireActivity().getFilesDir();
                 File subDir = new File(directory, "imageDir");
                 //Log.d("myTag", subDir.getPath());
                 boolean isSubDirCreated = subDir.exists();
@@ -292,12 +285,9 @@ public class TreasureFragment extends Fragment {
                         if (prefix != null)
                         {
 
-                            File[] files = subDir.listFiles(new FilenameFilter() {
-                                @Override
-                                public boolean accept(File directory, String name) {
-                                    //Log.d("myTag", "Name of photo found is: "+name);
-                                    return name.startsWith(prefix);
-                                }
+                            File[] files = subDir.listFiles((directory1, name) -> {
+                                //Log.d("myTag", "Name of photo found is: "+name);
+                                return name.startsWith(prefix);
                             });
 
                             //listFiles returns in reverse alphabetical order, so we need to sort to get alphabetical
@@ -326,14 +316,14 @@ public class TreasureFragment extends Fragment {
                                 // First decode with inJustDecodeBounds=true to check dimensions
                                 BitmapFactory.Options options = new BitmapFactory.Options();
                                 options.inJustDecodeBounds = true;
-                                BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto, options);
+                                BitmapFactory.decodeResource(requireContext().getResources(), R.drawable.defaultphoto, options);
 
                                 // Calculate inSampleSize
                                 options.inSampleSize = calculateInSampleSize(options, 100, 100);
 
                                 // Decode bitmap with inSampleSize set
                                 options.inJustDecodeBounds = false;
-                                photo = BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto, options);
+                                photo = BitmapFactory.decodeResource(requireContext().getResources(), R.drawable.defaultphoto, options);
                             }
 
                         }
@@ -341,14 +331,14 @@ public class TreasureFragment extends Fragment {
                             // First decode with inJustDecodeBounds=true to check dimensions
                             BitmapFactory.Options options = new BitmapFactory.Options();
                             options.inJustDecodeBounds = true;
-                            BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto, options);
+                            BitmapFactory.decodeResource(requireContext().getResources(), R.drawable.defaultphoto, options);
 
                             // Calculate inSampleSize
                             options.inSampleSize = calculateInSampleSize(options, 100, 100);
 
                             // Decode bitmap with inSampleSize set
                             options.inJustDecodeBounds = false;
-                            photo = BitmapFactory.decodeResource(Objects.requireNonNull(getContext()).getResources(), R.drawable.defaultphoto, options);
+                            photo = BitmapFactory.decodeResource(requireContext().getResources(), R.drawable.defaultphoto, options);
                         }
                         treasurePhotos.add(photo);
                     }
@@ -356,8 +346,8 @@ public class TreasureFragment extends Fragment {
             }
             else if(params[0].equals("deleteTreasure"))
             {
-                helper.deleteTreasure(String.valueOf(treasureIds.get(Integer.valueOf(params[1]))));
-                return treasurePhotoPaths.get(Integer.valueOf(params[1]));
+                helper.deleteTreasure(String.valueOf(treasureIds.get(Integer.parseInt(params[1]))));
+                return treasurePhotoPaths.get(Integer.parseInt(params[1]));
             }
             return "Retrieved all treasures";
         }
@@ -397,43 +387,30 @@ public class TreasureFragment extends Fragment {
 
                     //Log.d("myTag", "ONPOSTEXECUTE2");
 
-                    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view,
-                                                int i, long id) {
-                                Intent myIntent = new Intent(getActivity(), TreasureDetailedActivity.class);
-                                myIntent.putExtra("treasureId", treasureIds.get(i));
-                                myIntent.putExtra("type", type);
-                                startActivity(myIntent);
-                        }
+                    gridView.setOnItemClickListener((parent, view, i, id) -> {
+                            Intent myIntent = new Intent(getActivity(), TreasureDetailedActivity.class);
+                            myIntent.putExtra("treasureId", treasureIds.get(i));
+                            myIntent.putExtra("type", type);
+                            startActivity(myIntent);
                     });
 
-                    gridView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                    gridView.setOnItemLongClickListener((parent, view, i, id) -> {
+                            final CharSequence[] items = {"Yes", "Cancel"};
+                            AlertDialog.Builder builder = new AlertDialog.Builder(requireActivity());
+                            builder.setTitle("Are you sure you want to PERMANENTLY DELETE this treasure?");
+                            builder.setItems(items, (dialog, item) -> {
+                                if (items[item].equals("Yes")) {
 
-                        @Override
-                        public boolean onItemLongClick(AdapterView<?> parent, View view,
-                                                       final int i, long id) {
-                                final CharSequence[] items = {"Yes", "Cancel"};
-                                AlertDialog.Builder builder = new AlertDialog.Builder(Objects.requireNonNull(getActivity()));
-                                builder.setTitle("Are you sure you want to PERMANENTLY DELETE this treasure?");
-                                builder.setItems(items, new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int item) {
-                                        if (items[item].equals("Yes")) {
+                                    //Log.d("TEST", "The value of i is: "+i);
+                                    BackgroundTask bt = new BackgroundTask();
+                                    bt.execute("deleteTreasure", Integer.toString(i));
 
-                                            //Log.d("TEST", "The value of i is: "+i);
-                                            BackgroundTask bt = new BackgroundTask();
-                                            bt.execute("deleteTreasure", Integer.toString(i));
-
-                                        } else if (items[item].equals("Cancel")) {
-                                            dialog.dismiss();
-                                        }
-                                    }
-                                });
-                                builder.show();
-                            return true;
-                        }
+                                } else if (items[item].equals("Cancel")) {
+                                    dialog.dismiss();
+                                }
+                            });
+                            builder.show();
+                        return true;
                     });
 
                     //Log.d("myTag", "non-empty treasure list...");
@@ -451,28 +428,28 @@ public class TreasureFragment extends Fragment {
 
                     switch (sortType) {
                         case "TreasureID":
-                            sortByLabel.setText("Sorting by: Most Recently Added");
+                            sortByLabel.setText(R.string.sortByLabel_MostRecentlyAdded);
                             break;
                         case "TreasureYear":
-                            sortByLabel.setText("Sorting by: Treasure Year");
+                            sortByLabel.setText(R.string.sortByLabel_TreasureYear);
                             break;
                         case "TreasureCountry":
-                            sortByLabel.setText("Sorting by: Treasure Country");
+                            sortByLabel.setText(R.string.sortByLabel_TreasureCountry);
                             break;
                         case "TreasureMaterial":
-                            sortByLabel.setText("Sorting by: Treasure Material");
+                            sortByLabel.setText(R.string.sortByLabel_TreasureMaterial);
                             break;
                         case "TreasureWeight":
-                            sortByLabel.setText("Sorting by: Treasure Weight");
+                            sortByLabel.setText(R.string.sortByLabel_TreasureWeight);
                             break;
                         case "TreasureLocationFound":
-                            sortByLabel.setText("Sorting by: Treasure Location Found");
+                            sortByLabel.setText(R.string.sortByLabel_LocationFound);
                             break;
                         case "TreasureDateFound":
-                            sortByLabel.setText("Sorting by: Treasure Date Found");
+                            sortByLabel.setText(R.string.sortByLabel_TreasureDateFound);
                             break;
                         case "TreasureMaker":
-                            sortByLabel.setText("Sorting by: Treasure Maker");
+                            sortByLabel.setText(R.string.sortByLabel_TreasureMaker);
                             break;
                     }
 
@@ -494,14 +471,14 @@ public class TreasureFragment extends Fragment {
                         String treasureCountLabelText = "You haven't added any "+type+"s yet...";
                         treasureCountLabel.setText(treasureCountLabelText);
                     }
-                    sortByLabel.setText("Click the blue circle below to add one now!");
+                    sortByLabel.setText(R.string.sortByLabel_Empty);
                 }
             }
             //deleted a treasure
             else
             {
                 //path to subDir: /data/user/0/com.mdtt.scott.treasuretrackerfordetectorists/files/imageDir
-                File directory = Objects.requireNonNull(getActivity()).getFilesDir();
+                File directory = requireActivity().getFilesDir();
                 File subDir = new File(directory, "imageDir");
                 boolean isSubDirCreated = subDir.exists();
                 if (!isSubDirCreated)
@@ -510,16 +487,11 @@ public class TreasureFragment extends Fragment {
                 {
                     final String prefix = result;
 
-                    File [] files = subDir.listFiles(new FilenameFilter() {
-                        @Override
-                        public boolean accept(File directory, String name) {
-                            return name.startsWith(prefix);
-                        }
-                    });
+                    File [] files = subDir.listFiles((directory1, name) -> name.startsWith(prefix));
 
                     for (File file : files) {
                         //Log.d("TEST", "Deleting file at path: "+file.getPath());
-                        boolean isFileDeleted = file.delete();
+                        file.delete();
                     }
                     Snackbar.make(getActivity().findViewById(android.R.id.content), "Your treasure was deleted!", Snackbar.LENGTH_SHORT).show();
 
@@ -554,8 +526,8 @@ public class TreasureFragment extends Fragment {
     }
 
     private class MyBounceInterpolator implements android.view.animation.Interpolator {
-        private double mAmplitude;
-        private double mFrequency;
+        private final double mAmplitude;
+        private final double mFrequency;
 
         @SuppressWarnings("SameParameterValue")
         MyBounceInterpolator(double amplitude, double frequency) {

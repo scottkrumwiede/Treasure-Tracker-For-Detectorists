@@ -30,7 +30,8 @@
         android:autoSizeStepGranularity="2sp"
         android:hint="@string/item_hint"
         android:importantForAutofill="no"
-        tools:targetApi="o" />
+        tools:targetApi="o"
+        android:inputType="text" />
 
     <TextView
         android:layout_width="match_parent"
@@ -50,7 +51,8 @@
         android:autoSizeStepGranularity="2sp"
         android:hint="@string/design_series_hint"
         android:importantForAutofill="no"
-        tools:targetApi="o" />
+        tools:targetApi="o"
+        android:inputType="text" />
 
     <TextView
         android:layout_width="match_parent"
@@ -97,7 +99,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/weight_grams" />
+        android:text="@string/weight_amount" />
     <EditText
         android:id="@+id/jewelryWeightEditText"
         android:layout_width="match_parent"
@@ -114,6 +116,26 @@
         android:hint="@string/weight"
         android:importantForAutofill="no"
         tools:targetApi="o" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/weight_unit" />
+        <Spinner
+            android:id="@+id/jewelryWeightUnitSpinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/jewelry_weight_unit_array"
+            android:background="@drawable/shadow_13"
+            android:paddingStart="30dp"
+            android:paddingEnd="30dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="12sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeStepGranularity="2sp"
+            android:prompt="@string/weight_unit_prompt"
+            tools:targetApi="o" />
+
+
 
 </LinearLayout>
 </ScrollView>

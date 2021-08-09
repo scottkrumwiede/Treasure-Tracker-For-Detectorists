@@ -38,33 +38,25 @@
     <PreferenceCategory app:title="@string/clear_header">
 
         <Preference
-            app:key="clearcoins"
-            app:title="@string/clear_coins_title"
-            app:summary="@string/clear_coins_summary"/>
+            app:key="fastclear"
+            app:title="@string/fastclear"
+            app:summary="@string/fastclear_summary"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="@string/info_header">
+
         <Preference
-            app:key="cleartokens"
-            app:title="@string/clear_tokens_title"
-            app:summary="@string/clear_tokens_summary"/>
+            app:key="versionName"
+            app:title="@string/version_info_title"
+            app:summary="@string/version_info_summary"/>
+
         <Preference
-            app:key="clearjewelry"
-            app:title="@string/clear_jewelry_title"
-            app:summary="@string/clear_jewelry_summary"/>
-        <Preference
-            app:key="clearrelics"
-            app:title="@string/clear_relics_title"
-            app:summary="@string/clear_relics_summary"/>
-        <Preference
-            app:key="clearclad"
-            app:title="@string/clear_clad_title"
-            app:summary="@string/clear_clad_summary"/>
-        <Preference
-            app:key="clearcollections"
-            app:title="@string/clear_collections_title"
-            app:summary="@string/clear_collections_summary"/>
-        <Preference
-            app:key="resetApp"
-            app:title="@string/reset_account_title"
-            app:summary="@string/reset_account_summary"/>
+            app:key="aboutApp"
+            app:title="@string/app_info_title"
+            app:summary="@string/app_info_summary"/>
+
+
 
     </PreferenceCategory>
 

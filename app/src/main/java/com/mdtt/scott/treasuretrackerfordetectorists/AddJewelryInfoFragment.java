@@ -2,7 +2,6 @@ package com.mdtt.scott.treasuretrackerfordetectorists;
 
 
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -34,8 +33,11 @@ public class AddJewelryInfoFragment extends Fragment {
     private EditText jewelrySeriesEditText;
     private EditText jewelryYearEditText;
     private EditText jewelryWeightEditText;
+    private Spinner jewelryWeightUnitSpinner;
     private int jewelryMaterialSelected;
+    private int jewelryWeightUnitSelected;
     private ArrayList<String> jewelryMaterialList;
+    private ArrayList<String> jewelryWeightUnitList;
 
     public AddJewelryInfoFragment() {
         // Required empty public constructor
@@ -47,12 +49,13 @@ public class AddJewelryInfoFragment extends Fragment {
         super.onCreate(savedInstanceState);
         bundle = getArguments();
         jewelryMaterialList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.jewelry_material_array)));
+        jewelryWeightUnitList = new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.jewelry_weight_unit_array)));
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        Objects.requireNonNull(getActivity()).invalidateOptionsMenu();
+        requireActivity().invalidateOptionsMenu();
     }
 
     @Override
@@ -71,9 +74,11 @@ public class AddJewelryInfoFragment extends Fragment {
         jewelrySeriesEditText = view.findViewById(R.id.jewelrySeriesEditText);
         jewelryYearEditText = view.findViewById(R.id.jewelryYearEditText);
         jewelryWeightEditText = view.findViewById(R.id.jewelryWeightEditText);
+        jewelryWeightUnitSpinner = view.findViewById(R.id.jewelryWeightUnitSpinner);
 
         ////Log.d("test", "on view created we're here");
-        ArrayAdapter<String> jewelryMaterialSpinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, jewelryMaterialList);
+        ArrayAdapter<String> jewelryMaterialSpinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, jewelryMaterialList);
+        ArrayAdapter<String> jewelryWeightUnitSpinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, jewelryWeightUnitList);
 
         //If the user had previously filled out info here but then backed up to a previous fragment before returning
         if(bundle.containsKey("treasureName"))
@@ -84,6 +89,7 @@ public class AddJewelryInfoFragment extends Fragment {
         else
         {
             jewelryMaterialSelected = jewelryMaterialSpinner.getSelectedItemPosition();
+            jewelryWeightUnitSelected = jewelryWeightUnitSpinner.getSelectedItemPosition();
         }
 
         //Log.d("test", "Material: " + jewelryMaterialSelected);
@@ -106,45 +112,36 @@ public class AddJewelryInfoFragment extends Fragment {
                         AlertDialog dialog = new AlertDialog.Builder(getContext())
                                 .setTitle("Custom Material:")
                                 .setView(taskEditText)
-                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
-                                        String task = String.valueOf(taskEditText.getText());
-                                        if(task.isEmpty())
-                                        {
-                                            jewelryMaterialSpinner.setSelection(previousMaterial);
-                                            jewelryMaterialSelected = previousMaterial;
-                                            return;
-                                        }
-                                        while(jewelryMaterialList.size() > 9)
-                                        {
-                                            jewelryMaterialList.remove(jewelryMaterialList.size()-1);
-                                        }
-                                        jewelryMaterialList.add(task);
-                                        jewelryMaterialList.add("Custom…");
-                                        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(Objects.requireNonNull(getActivity()), android.R.layout.simple_spinner_item, jewelryMaterialList);
-                                        spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                                        jewelryMaterialSpinner.setAdapter(spinnerAdapter);
-                                        jewelryMaterialSpinner.setSelection(jewelryMaterialList.size()-2);
-                                        spinnerAdapter.notifyDataSetChanged();
-                                    }
-                                })
-                                .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                    @Override
-                                    public void onClick(DialogInterface dialog, int which) {
+                                .setPositiveButton("OK", (dialog16, which) -> {
+                                    String task = String.valueOf(taskEditText.getText());
+                                    if(task.isEmpty())
+                                    {
                                         jewelryMaterialSpinner.setSelection(previousMaterial);
                                         jewelryMaterialSelected = previousMaterial;
+                                        return;
                                     }
+                                    while(jewelryMaterialList.size() > 9)
+                                    {
+                                        jewelryMaterialList.remove(jewelryMaterialList.size()-1);
+                                    }
+                                    jewelryMaterialList.add(task);
+                                    jewelryMaterialList.add("Custom…");
+                                    ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, jewelryMaterialList);
+                                    spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    jewelryMaterialSpinner.setAdapter(spinnerAdapter);
+                                    jewelryMaterialSpinner.setSelection(jewelryMaterialList.size()-2);
+                                    spinnerAdapter.notifyDataSetChanged();
+                                })
+                                .setNegativeButton("Cancel", (dialog15, which) -> {
+                                    jewelryMaterialSpinner.setSelection(previousMaterial);
+                                    jewelryMaterialSelected = previousMaterial;
                                 })
                                 .create();
                         dialog.show();
                         Objects.requireNonNull(dialog.getWindow()).setSoftInputMode (WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
-                        dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
-                            @Override
-                            public void onCancel(DialogInterface dialog) {
-                                jewelryMaterialSpinner.setSelection(previousMaterial);
-                                jewelryMaterialSelected = previousMaterial;
-                            }
+                        dialog.setOnCancelListener(dialog14 -> {
+                            jewelryMaterialSpinner.setSelection(previousMaterial);
+                            jewelryMaterialSelected = previousMaterial;
                         });
                     }
                 }
@@ -157,11 +154,72 @@ public class AddJewelryInfoFragment extends Fragment {
                 Toast.makeText(getActivity(), "NOTHING added!", Toast.LENGTH_SHORT).show();
             }
         });
+
+        jewelryWeightUnitSpinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        jewelryWeightUnitSpinner.setAdapter(jewelryWeightUnitSpinnerAdapter);
+        jewelryWeightUnitSpinner.setSelection(jewelryWeightUnitSelected);
+        jewelryWeightUnitSpinnerAdapter.notifyDataSetChanged();
+
+        jewelryWeightUnitSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                if(jewelryWeightUnitSelected != position)
+                {
+                    final int previousWeightUnit = jewelryWeightUnitSelected;
+                    //Log.d("test", "starting jewelryWeightUnitSpinner because:\njewelryWeightUnitSelected= "+jewelryWeightUnitSelected+"\nposition= "+position);
+                    if(parentView.getItemAtPosition(position).toString().equals("Custom…"))
+                    {
+                        final EditText taskEditText = new EditText(getContext());
+                        AlertDialog dialog = new AlertDialog.Builder(getContext())
+                                .setTitle("Custom Weight (Unit):")
+                                .setView(taskEditText)
+                                .setPositiveButton("OK", (dialog13, which) -> {
+                                    String task = String.valueOf(taskEditText.getText());
+                                    if(task.isEmpty())
+                                    {
+                                        jewelryWeightUnitSpinner.setSelection(previousWeightUnit);
+                                        jewelryWeightUnitSelected = previousWeightUnit;
+                                        return;
+                                    }
+                                    while(jewelryWeightUnitList.size() > 4)
+                                    {
+                                        jewelryWeightUnitList.remove(jewelryWeightUnitList.size()-1);
+                                    }
+                                    jewelryWeightUnitList.add(task);
+                                    jewelryWeightUnitList.add("Custom…");
+                                    ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(requireActivity(), android.R.layout.simple_spinner_item, jewelryWeightUnitList);
+                                    spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                    jewelryWeightUnitSpinner.setAdapter(spinnerAdapter);
+                                    jewelryWeightUnitSpinner.setSelection(jewelryWeightUnitList.size()-2);
+                                    spinnerAdapter.notifyDataSetChanged();
+                                })
+                                .setNegativeButton("Cancel", (dialog12, which) -> {
+                                    jewelryWeightUnitSpinner.setSelection(previousWeightUnit);
+                                    jewelryWeightUnitSelected = previousWeightUnit;
+                                })
+                                .create();
+                        dialog.show();
+                        Objects.requireNonNull(dialog.getWindow()).setSoftInputMode (WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+                        dialog.setOnCancelListener(dialog1 -> {
+                            jewelryWeightUnitSpinner.setSelection(previousWeightUnit);
+                            jewelryWeightUnitSelected = previousWeightUnit;
+                        });
+                    }
+                }
+                //Log.d("test", "jewelryWeightUnitSelected="+jewelryWeightUnitSelected+" changed to "+position);
+                jewelryWeightUnitSelected = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parentView) {
+                Toast.makeText(getActivity(), "NOTHING added!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     public void nextButtonClicked() {
         addToBundle();
-        ((AddActivity) Objects.requireNonNull(getActivity())).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
+        ((AddActivity) requireActivity()).replaceFragments(AddFinalInfoFragment.class, bundle, "addFinal");
     }
 
     private void repopulateInfo() {
@@ -188,6 +246,21 @@ public class AddJewelryInfoFragment extends Fragment {
             jewelryMaterialList.add("Custom…");
             jewelryMaterialSelected = jewelryMaterialList.size()-2;
         }
+
+        if(jewelryWeightUnitList.contains(bundle.getString("treasureWeightUnit")))
+        {
+            jewelryWeightUnitSelected = jewelryWeightUnitList.indexOf(bundle.getString("treasureWeightUnit"));
+        }
+        else
+        {
+            while(jewelryWeightUnitList.size() > 4)
+            {
+                jewelryWeightUnitList.remove(jewelryWeightUnitList.size()-1);
+            }
+            jewelryWeightUnitList.add(bundle.getString("treasureWeightUnit"));
+            jewelryWeightUnitList.add("Custom…");
+            jewelryWeightUnitSelected = jewelryWeightUnitList.size()-2;
+        }
     }
 
     public void addToBundle() {
@@ -196,5 +269,6 @@ public class AddJewelryInfoFragment extends Fragment {
         bundle.putString("treasureYear", jewelryYearEditText.getText().toString());
         bundle.putString("treasureMaterial", jewelryMaterialSpinner.getSelectedItem().toString());
         bundle.putString("treasureWeight", jewelryWeightEditText.getText().toString());
+        bundle.putString("treasureWeightUnit", jewelryWeightUnitSpinner.getSelectedItem().toString());
     }
 }

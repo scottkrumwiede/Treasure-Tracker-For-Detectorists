@@ -32,7 +32,6 @@ import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 
 import java.io.File;
-import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
@@ -101,12 +100,7 @@ public class TreasureDetailedActivity extends AppCompatActivity {
                 final String prefix = treasure.getTreasurePhotoPath();
                 Bitmap photo;
 
-                File [] files = subDir.listFiles(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File directory, String name) {
-                        return name.startsWith(prefix);
-                    }
-                });
+                File [] files = subDir.listFiles((directory1, name) -> name.startsWith(prefix));
 
                 //listFiles returns in reverse alphabetical order, so we need to sort to get alphabetical
                 // so that photo order remains the same as when added.
@@ -231,10 +225,17 @@ public class TreasureDetailedActivity extends AppCompatActivity {
 
                 if(value != null)
                 {
+                    //adds empty entries to the bottom of the detailed list
                     if(value.isEmpty())
                     {
                         emptyDetails.put(key,value);
                     }
+                    //adds empty entries only if they are jewelry entries without a weight number.
+                    else if(key.equals("Weight: ") && !value.matches(".*\\d.*") && !value.contains("null"))
+                    {
+                       emptyDetails.put(key, " ");
+                    }
+                    //adds entries with values to the top of the detailed list
                     else
                     {
                         if(key.equals("Date Found: "))
@@ -242,15 +243,17 @@ public class TreasureDetailedActivity extends AppCompatActivity {
                             String[] splitDate = value.split("/");
                             value = splitDate[1]+"/"+splitDate[2]+"/"+splitDate[0];
                         }
-                        TextView tv = new TextView(getApplicationContext());
-                        tv.setLayoutParams(lparamsText);
-                        String keyValue = key + value;
-                        tv.setText(keyValue);
-
-                        tv.setTextColor(R.color.colorPrimaryDark);
-
-                        //Log.d("myTag", ""+tv.getText().toString());
-                        mLinearLayoutText.addView(tv);
+                        //skip weight for all treasure types except jewelry
+                        if(!value.equals("null Grams (g)"))
+                        {
+                            TextView tv = new TextView(getApplicationContext());
+                            tv.setLayoutParams(lparamsText);
+                            String keyValue = key + value;
+                            tv.setText(keyValue);
+                            tv.setTextColor(R.color.colorPrimaryDark);
+                            //Log.d("myTag", ""+tv.getText().toString());
+                            mLinearLayoutText.addView(tv);
+                        }
                     }
                 }
             }
@@ -312,6 +315,7 @@ public class TreasureDetailedActivity extends AppCompatActivity {
             myIntent.putExtra("treasureDateFound", treasure.getTreasureDateFound());
             myIntent.putExtra("treasureInfo", treasure.getTreasureInfo());
             myIntent.putExtra("timeAtAdd", treasure.getTreasurePhotoPath());
+            myIntent.putExtra("treasureWeightUnit", treasure.getTreasureWeightUnit());
             startActivity(myIntent);
         }
         else if(id == R.id.action_share)
@@ -328,12 +332,7 @@ public class TreasureDetailedActivity extends AppCompatActivity {
             {
                 final String prefix = treasure.getTreasurePhotoPath();
 
-                File [] files = subDir.listFiles(new FilenameFilter() {
-                    @Override
-                    public boolean accept(File directory, String name) {
-                        return name.startsWith(prefix);
-                    }
-                });
+                File [] files = subDir.listFiles((directory1, name) -> name.startsWith(prefix));
 
                 for (File file : files) {
                     File newFile = new File(subDir, file.getName());
@@ -361,6 +360,9 @@ public class TreasureDetailedActivity extends AppCompatActivity {
                         }
                     }
                 }
+
+                //add app signature line
+                shareText = shareText+"\nShared from Treasure Tracker for Detectorists App";
 
                 Toast.makeText(this, "Treasure info copied to clipboard!", Toast.LENGTH_SHORT).show();
                 ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);

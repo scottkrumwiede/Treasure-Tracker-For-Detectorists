@@ -1,6 +1,7 @@
 #built application files
 *.apk
 *.ap_
+*.aab
 
 # files for the dex VM
 *.dex
@@ -14,6 +15,7 @@ gen/
 
 # Local configuration file (sdk path, etc)
 local.properties
+gradle.properties
 
 # Windows thumbnail db
 Thumbs.db
@@ -29,11 +31,14 @@ Thumbs.db
 build/
 .navigation
 captures/
-output.json 
+output.json
+build.gradle
 
 #NDK
 obj/
 .externalNativeBuild
 
 app/build.gradle
+app/debug
+app/release
 *build.gradle

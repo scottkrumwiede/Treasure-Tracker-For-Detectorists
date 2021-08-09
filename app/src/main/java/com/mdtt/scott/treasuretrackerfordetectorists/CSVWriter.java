@@ -3,9 +3,6 @@ package com.mdtt.scott.treasuretrackerfordetectorists;
 import java.io.PrintWriter;
 import java.io.Writer;
 
-/**
- * Created by admin on 03-03-2018.
- */
 
 public class CSVWriter {
 

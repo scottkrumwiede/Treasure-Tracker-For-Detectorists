@@ -70,6 +70,7 @@ public class AddActivity extends AppCompatActivity {
                 bundle.putString("treasureLocationFound", Objects.requireNonNull(getIntent().getExtras()).getString("treasureLocationFound"));
                 bundle.putString("treasureDateFound", Objects.requireNonNull(getIntent().getExtras()).getString("treasureDateFound"));
                 bundle.putString("treasureInfo", Objects.requireNonNull(getIntent().getExtras()).getString("treasureInfo"));
+                bundle.putString("treasureWeightUnit", Objects.requireNonNull(getIntent().getExtras()).getString("treasureWeightUnit"));
 
 
             }
@@ -263,7 +264,7 @@ public class AddActivity extends AppCompatActivity {
                                     String newName = file.getName().substring(5);
                                     File newFile = new File(subDir, newName);
                                     //rename file from temp to permanent
-                                    boolean result = file.renameTo(newFile);
+                                    file.renameTo(newFile);
                                 }
                             }
                         }
