@@ -86,6 +86,19 @@
             tools:targetApi="o" />
 
         <TextView
+            android:id="@+id/yearCollectionTextView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginBottom="15dp"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="16sp"
+            android:autoSizeMaxTextSize="100sp"
+            android:autoSizeStepGranularity="2sp"
+            android:text="@string/collections_summary"
+            tools:targetApi="o" />
+
+        <TextView
             android:id="@+id/yearTotalTextView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

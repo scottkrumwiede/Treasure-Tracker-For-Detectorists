@@ -333,6 +333,7 @@
     <string name="tokenTextViewPlaceholder">Tokens: %1$d</string>
     <string name="jewelryTextViewPlaceholder">Jewelry: %1$d</string>
     <string name="relicTextViewPlaceholder">Relics: %1$d</string>
+    <string name="collectionTextViewPlaceholder">Collections: %1$d</string>
     <string name="totalTextViewPlaceholder">Total: %1$d</string>
 
 
