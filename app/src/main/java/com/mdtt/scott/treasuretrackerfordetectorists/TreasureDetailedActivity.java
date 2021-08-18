@@ -230,21 +230,18 @@ public class TreasureDetailedActivity extends AppCompatActivity {
                     {
                         emptyDetails.put(key,value);
                     }
-                    //adds empty entries only if they are jewelry entries without a weight number.
-                    else if(key.equals("Weight: ") && !value.matches(".*\\d.*") && !value.contains("null"))
+                    //handles weight entries
+                    else if(key.equals("Weight: "))
                     {
-                       emptyDetails.put(key, " ");
-                    }
-                    //adds entries with values to the top of the detailed list
-                    else
-                    {
-                        if(key.equals("Date Found: "))
+                        //does not contain number and does not contain null
+                        //only can happen in jewelry entries without a weight number.
+                        if(!value.matches(".*\\d.*") && !value.contains("null"))
                         {
-                            String[] splitDate = value.split("/");
-                            value = splitDate[1]+"/"+splitDate[2]+"/"+splitDate[0];
+                            emptyDetails.put(key, " ");
                         }
-                        //skip weight for all treasure types except jewelry
-                        if(!value.equals("null Grams (g)"))
+                        //contains a number
+                        //only can happen in jewelry entries
+                        else if(value.matches(".*\\d.*"))
                         {
                             TextView tv = new TextView(getApplicationContext());
                             tv.setLayoutParams(lparamsText);
@@ -254,6 +251,25 @@ public class TreasureDetailedActivity extends AppCompatActivity {
                             //Log.d("myTag", ""+tv.getText().toString());
                             mLinearLayoutText.addView(tv);
                         }
+                    }
+                    //adds entries with values to the top of the detailed list
+                    else
+                    {
+                        if(key.equals("Date Found: "))
+                        {
+                            String[] splitDate = value.split("/");
+                            value = splitDate[1]+"/"+splitDate[2]+"/"+splitDate[0];
+                        }
+
+                        //add detail entries
+                        TextView tv = new TextView(getApplicationContext());
+                        tv.setLayoutParams(lparamsText);
+                        String keyValue = key + value;
+                        tv.setText(keyValue);
+                        tv.setTextColor(R.color.colorPrimaryDark);
+                        //Log.d("myTag", ""+tv.getText().toString());
+                        mLinearLayoutText.addView(tv);
+
                     }
                 }
             }
